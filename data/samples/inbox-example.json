@@ -1,0 +1,18 @@
+[
+  {
+    "text": "Slip on Wadestown Road, half the carriageway gone",
+    "source": "neighbourly",
+    "source_class": "human_report",
+    "occurred_at": "2026-08-08T07:55:00+12:00",
+    "lat": -41.2669,
+    "lng": 174.7719,
+    "hazard": "landslide",
+    "source_url": "https://example.org/posts/8821"
+  },
+  {
+    "text": "Two cars stuck in floodwater, Hutt Road near Kaiwharawhara",
+    "source": "fenz-scanner",
+    "source_class": "operator_note",
+    "occurred_at": "2026-08-08T08:05:00+12:00"
+  }
+]

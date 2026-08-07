@@ -41,3 +41,10 @@ yarn-error.log*
 next-env.d.ts
 /.swc
 !.env.example
+
+# drop-folder: integrators' payloads and their processed/failed history are
+# runtime state, not source. Samples live in data/samples/.
+/data/inbox/*.json
+/data/inbox/processed/*
+/data/inbox/failed/*
+!/data/inbox/**/.gitkeep

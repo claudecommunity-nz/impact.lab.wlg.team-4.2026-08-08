@@ -1,0 +1,131 @@
+import { z } from "zod";
+
+/**
+ * The shared vocabulary + the zod contracts for every jsonb column.
+ *
+ * Zod is the source of truth here: `db/schema.ts` types its jsonb columns from
+ * these, repositories re-use them in their entity schemas, and the ingest
+ * boundary validates against them. This file has NO runtime dependency beyond
+ * zod, so any layer (repos, use cases, workflows, adapters) may import it.
+ *
+ * CONVENTIONS, NOT CONSTRAINTS. The suggestion lists below are documentation
+ * for humans and prompts — they are never enforced as enums on stored data.
+ * An unknown `source_class`, an invented annotation key or a new edge rel must
+ * always be accepted; that is how one schema absorbs sources nobody has met yet.
+ */
+
+// ─── source_class ─────────────────────────────────────────────────────────────
+//
+// OPEN TEXT. Suggested values only. Source diversity = COUNT(DISTINCT source_class)
+// across a group's members, so consistency helps, but novelty must never fail.
+export const SOURCE_CLASS_SUGGESTIONS = [
+  "human_report",
+  "official_feed",
+  "sensor",
+  "media",
+  "social",
+  "operator_note",
+] as const;
+
+/** Used when a payload carries no recognisable source_class. */
+export const UNKNOWN_SOURCE_CLASS = "unknown";
+/** Used when a payload carries no recognisable source. */
+export const UNKNOWN_SOURCE = "unknown";
+
+// ─── annotators ───────────────────────────────────────────────────────────────
+//
+// Who asserted an annotation. Written by us, never by callers, so this list is
+// closed in practice — but entity schemas still read it as free text.
+export const ANNOTATORS = ["claude", "feed", "rule", "operator"] as const;
+export type Annotator = (typeof ANNOTATORS)[number];
+
+// ─── edge rels ────────────────────────────────────────────────────────────────
+export const EDGE_RELS = ["member_of", "duplicate_of", "corroborates", "contradicts"] as const;
+export type EdgeRel = (typeof EDGE_RELS)[number];
+
+/** The one rel with a structural rule: a node belongs to at most one group. */
+export const MEMBER_OF: EdgeRel = "member_of";
+
+// ─── annotation keys ──────────────────────────────────────────────────────────
+//
+// Seed vocabulary. Feeds are encouraged to use these; anything else is kept and
+// displayed, it just isn't promoted into ranking.
+export const ANNOTATION_KEY_SUGGESTIONS = [
+  "verified",
+  "confidence",
+  "source_url",
+  "hazard",
+  "location_text",
+  "severity",
+  "urgency",
+  "people_count",
+] as const;
+
+/** Written by the ingest rule when occurred_at was absent and defaulted to now. */
+export const ASSUMED_OCCURRED_AT_KEY = "assumed_occurred_at";
+
+/** Annotation values are text; absurd payload values are truncated, not dropped. */
+export const MAX_ANNOTATION_VALUE_LENGTH = 2000;
+
+// ─── jsonb contracts ──────────────────────────────────────────────────────────
+
+/** signals.raw — the source payload, kept verbatim, forever. Any JSON shape. */
+export const RawPayloadSchema = z.unknown();
+export type RawPayload = z.infer<typeof RawPayloadSchema>;
+
+/** signals.embedding / groups.centroid_embedding — no pgvector; plain number[]. */
+export const EmbeddingSchema = z.array(z.number());
+export type Embedding = z.infer<typeof EmbeddingSchema>;
+
+/**
+ * groups.verification — the reliability picture for a bubble. Loose on purpose:
+ * later phases add fields without a migration, and nothing here is presented as
+ * confirmed fact.
+ */
+export const VerificationSchema = z.looseObject({
+  status: z.string().optional(),
+  distinctSources: z.number().int().optional(),
+  distinctSourceClasses: z.number().int().optional(),
+  corroborations: z.number().int().optional(),
+  contradictions: z.number().int().optional(),
+  notes: z.string().optional(),
+});
+export type Verification = z.infer<typeof VerificationSchema>;
+
+/** projection_models.model — kind-specific fitted parameters (e.g. PCA basis). */
+export const ProjectionModelPayloadSchema = z.record(z.string(), z.unknown());
+export type ProjectionModelPayload = z.infer<typeof ProjectionModelPayloadSchema>;
+
+/** projection_models.kind — one fitted reference model per kind. */
+export const PROJECTION_KINDS = ["pca3"] as const;
+
+// ─── the ingest contract ──────────────────────────────────────────────────────
+//
+// What an adapter produces and the ingest use case consumes. Adapters absorb the
+// entire shape burden of the outside world: everything below is already clean.
+
+export const IncomingAnnotationSchema = z.object({
+  key: z.string().min(1),
+  value: z.string(),
+  confidence: z.number().min(0).max(1).optional(),
+  annotator: z.string().min(1).default("feed"),
+});
+export type IncomingAnnotation = z.infer<typeof IncomingAnnotationSchema>;
+
+export const IncomingSignalSchema = z.object({
+  /** Where it came from, e.g. "wcc-hilltop", "@user", "police-media". */
+  source: z.string().min(1),
+  /** OPEN TEXT — see SOURCE_CLASS_SUGGESTIONS. */
+  sourceClass: z.string().min(1),
+  /** The honest sentence. Text is the universal interface. */
+  text: z.string().min(1),
+  /** Optional: defaults to now at ingest, with an assumed_occurred_at annotation. */
+  occurredAt: z.date().optional(),
+  lat: z.number().min(-90).max(90).optional(),
+  lng: z.number().min(-180).max(180).optional(),
+  geoConfidence: z.number().min(0).max(1).optional(),
+  /** The original payload, untouched. */
+  raw: RawPayloadSchema,
+  annotations: z.array(IncomingAnnotationSchema).default([]),
+});
+export type IncomingSignal = z.infer<typeof IncomingSignalSchema>;
