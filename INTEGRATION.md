@@ -226,13 +226,13 @@ curl -X POST http://localhost:3000/api/trpc/vectors.process \
   -d '{"json":{"limit":50}}'
 ```
 
-One call embeds, groups and projects up to 50 unplaced signals, oldest
+One call embeds, groups, names and projects up to 50 unplaced signals, oldest
 `occurred_at` first. Call it until `pending` comes back `0`. Two callers racing
 is safe: the second gets `locked: false` and does nothing.
 
 ```json
 { "locked": true, "pending": 25, "embedded": 25, "assigned": 25,
-  "groupsCreated": 3, "groupsJoined": 22, "projected": 25,
+  "groupsCreated": 3, "groupsJoined": 22, "projected": 25, "labelled": 3,
   "fittedProjection": true, "stubEmbeddings": true, "failures": [] }
 ```
 
@@ -299,15 +299,172 @@ placed it. Set the key and the same pipeline upgrades with no code change.
 
 ## Reading the bubbles back
 
-Read procedures under `groups.*` land in Phase 3 on the same `/api/trpc` endpoint,
-projected by `(level, time-window)` — the same envelope convention as above. What
-is already guaranteed and already true in the database:
+Three read procedures, and they are one drill-down rather than three views:
+`points` draws the galaxy, `groups` draws the bubbles over it, `groupDetail`
+opens one bubble all the way down to the verbatim payloads behind it.
 
-- Every bubble is reachable down to its members through `member_of` edges, and
-  **every edge carries a weight and a human-readable reason** for why that item
-  was placed there.
-- Every member is a signal, and every signal still holds your original payload in
-  `raw`. So any number on the board traces back to the verbatim source you sent.
+**These shapes are frozen.** We will add fields; we will not rename or remove
+one. Reads are tRPC *queries*, so they are `GET` with the input in the query
+string (mutations above are `POST`) — same superjson envelope either way.
 
-Ask Team 4 if you need a shape locked in earlier than that — if you tell us what
-you need, we will point a procedure at it.
+Every example below was run against a live server; the responses are real.
+
+### `vectors.points` — every signal as a point in the galaxy
+
+```bash
+curl -s -G 'http://localhost:3000/api/trpc/vectors.points' \
+  --data-urlencode 'input={"json":{"windowMins":360,"limit":2}}'
+```
+
+```json
+{"result":{"data":{"json":[
+  { "signalId": "735f1b51-8477-4b79-b8cf-0456fc57df4f",
+    "x": 0.1516786599183387, "y": -0.043746859952825574, "z": 0.07860943740054817,
+    "groupId": "f80d754f-d891-4b19-b73b-05c3fb0d4dfe" },
+  { "signalId": "f0bc8ea5-bd9e-411e-856b-5e256cc52f4b",
+    "x": 0.19418689350412896, "y": 0.1288669986664732, "z": 0.010157244818500466,
+    "groupId": "f80d754f-d891-4b19-b73b-05c3fb0d4dfe" }
+]}}}
+```
+
+**Two nulls are legitimate here and must be rendered, not filtered.** `x/y/z` is
+null when the signal has not been projected yet (the basis is fitted once, on the
+first 20+ embedded signals) — do not substitute the origin, or every unplaced
+point piles up at the centre of your map and reads as a real cluster.
+`groupId` is null when a signal is ingested but not yet grouped; call
+`vectors.process` and it fills in.
+
+### `vectors.groups` — the bubbles (this is the map layer)
+
+```bash
+curl -s -G 'http://localhost:3000/api/trpc/vectors.groups' \
+  --data-urlencode 'input={"json":{"windowMins":360}}'
+```
+
+```json
+{
+  "id": "f80d754f-d891-4b19-b73b-05c3fb0d4dfe",
+  "center": { "x": 0.1783, "y": -0.0137, "z": -0.0005 },
+  "geoCentroid": { "lat": -41.29436666666667, "lng": 174.76170000000002 },
+  "size": 13,
+  "velocity": 5,
+  "sourceDiversity": 6,
+  "verification": {
+    "distinctSources": 7, "distinctSourceClasses": 6,
+    "verifiedCount": 5, "meanConfidence": 0.7437499999999999,
+    "sourceClasses": ["human_report","media","official_feed","operator_note","sensor","social"]
+  },
+  "label": "flooding — Aro Street",
+  "memberCount": 13,
+  "firstSeen": "2026-08-08T06:05:00.000Z",
+  "lastSeen": "2026-08-08T08:53:00.000Z"
+}
+```
+
+**`geoCentroid` is why this is a common-operating-picture layer and not a private
+UI.** It is the mean position of the members that carry coordinates, in plain
+WGS84 lat/lng — plot it straight into MapLibre, ArcGIS or whatever your map is,
+size the marker by `size`, and you have our bubbles on your map with no
+coordinate conversion and no call to us beyond this one. (Our own galaxy view
+uses `center`, which is 3D embedding space, not geography — ignore it on a map.)
+
+`geoCentroid` is null when no member had coordinates; that is a real state (a
+radio call with no location still groups), so draw those in a list, not at 0,0.
+
+Field by field:
+
+| Field | Meaning |
+|---|---|
+| `size` | member count — the bubble's radius |
+| `velocity` | members inside the last hour of the bubble's own `occurred_at` clock |
+| `sourceDiversity` | `COUNT(DISTINCT source_class)` — how independent the corroboration is |
+| `verification` | counts folded from members' `verified` / `confidence` annotations — **never a verdict** |
+| `label` | a short name; null until the pipeline names it (see the caveat below) |
+| `memberCount` | counted from the edges on every read; equals `size` unless the pipeline is mid-run |
+| `firstSeen` / `lastSeen` | the bubble's lifespan, on the `occurred_at` clock |
+
+### `vectors.groupDetail` — bubble → member → findings → verbatim payload
+
+```bash
+curl -s -G 'http://localhost:3000/api/trpc/vectors.groupDetail' \
+  --data-urlencode 'input={"json":{"id":"f80d754f-d891-4b19-b73b-05c3fb0d4dfe"}}'
+```
+
+Returns every field of the group above, plus `members[]` (newest first). One
+member, verbatim from a live response:
+
+```json
+{
+  "signalId": "2e654e4d-e14d-4c68-8a67-639d73e9d672",
+  "occurredAt": "2026-08-08T08:39:00.000Z",
+  "ingestedAt": "2026-08-07T23:53:29.442Z",
+  "source": "radio-log",
+  "sourceClass": "operator_note",
+  "text": "Surface flooding on Aro Street, water over the road outside the shops",
+  "lat": null, "lng": null, "geoConfidence": null,
+  "point": { "x": 0.1966, "y": 0.0868, "z": 0.0531 },
+  "annotations": [
+    { "key": "note", "value": "called in over the radio, no coordinates given", "confidence": null, "annotator": "feed", "createdAt": "2026-08-07T23:53:29.442Z" },
+    { "key": "hazard", "value": "flooding", "confidence": null, "annotator": "feed", "createdAt": "2026-08-07T23:53:29.442Z" },
+    { "key": "embedding_model", "value": "stub/lexical-hash-1536", "confidence": null, "annotator": "rule", "createdAt": "2026-08-07T23:53:29.487Z" }
+  ],
+  "membership": {
+    "weight": 0.9325876,
+    "reason": "cosine 0.93; no coordinates to compare and 14min apart",
+    "createdAt": "2026-08-07T23:53:29.602Z"
+  },
+  "raw": {
+    "note": "called in over the radio, no coordinates given",
+    "text": "Surface flooding on Aro Street, water over the road outside the shops",
+    "hazard": "flooding",
+    "source": "radio-log",
+    "occurred_at": "2026-08-08T08:39:00Z",
+    "source_class": "operator_note"
+  }
+}
+```
+
+This is the part worth reading twice:
+
+- **`annotations` is EVERY annotation on that member**, including keys we have
+  never heard of. If you send us findings, they come back here attributed to
+  `feed` — we do not filter them down to a vocabulary we recognise.
+- **`membership` is the grouping decision, as a number and as a sentence.** An
+  operator who cannot read *why* two reports were merged cannot act on the merge.
+- **`raw` is your payload, byte for byte**, whatever shape it had. It is never
+  rewritten and it outlives every derived number above it. This is the end of the
+  traceability chain: any bubble → any member → the words somebody published.
+
+An unknown id is a `BAD_REQUEST` with `Group <id> not found`, not an empty shell.
+
+### `windowMins` — the same everywhere
+
+Optional on `points` and `groups`; absent means everything we hold. It is the
+last N minutes of the picture, **anchored on the newest observation we hold, or
+now, whichever is later**. Anchoring on the wall clock alone would make a
+replayed or seeded dataset (a drill, a backfill, a demo) entirely invisible, and
+would drop signals from any feed whose clock runs ahead of ours. In live
+operation the newest signal *is* roughly now, so it means exactly what you
+expect.
+
+### Caveats to carry into your UI
+
+- **`label` may be null**, and is written by the pipeline, not at read time.
+  With no `AI_GATEWAY_API_KEY` set, names come from a template built from the
+  hazard and location annotations you send us (`"flooding — Aro Street"`); with a
+  key, Claude names the bubble from the member reports. Either way the name
+  describes what was *reported*, never that it is confirmed.
+- **`stubEmbeddings: true`** from `vectors.process` means grouping was lexical,
+  not semantic (see the caveat in the previous section). Say so in your UI.
+- **`verification` counts corroboration; it never asserts truth.** Please keep
+  that distinction visible when you render it — it is the whole point of this
+  problem statement.
+
+### Proving it yourself
+
+`npm run verify` wipes the database, ingests the fixture set through the ingest
+procedure, runs the pipeline, then reads it all back through these three
+procedures and asserts the chain holds — including that *every* point resolves
+through `groupDetail` to a verbatim payload. It prints the board and one full
+traceability walk. If you change something and that stays green, you have not
+broken us.

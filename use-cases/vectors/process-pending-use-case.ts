@@ -7,10 +7,11 @@ import { getPendingSignalsUseCase } from "@/use-cases/signals/get-pending-signal
 import { updateSignalEmbeddingUseCase } from "@/use-cases/signals/update-signal-embedding-use-case";
 import { createUseCase } from "@/utilities/create-use-case";
 import { assignSignalUseCase } from "./assign-signal-use-case";
+import { labelGroupUseCase } from "./label-group-use-case";
 import { projectSignalsUseCase } from "./project-signals-use-case";
 
 /**
- * The vector layer's one moving part: embed → assign → project, over the
+ * The vector layer's one moving part: embed → assign → name → project, over the
  * signals that have not been placed yet, in occurred_at order.
  *
  * Business-logic use case — it composes other use cases and touches no repo and
@@ -44,6 +45,8 @@ export const ProcessPendingResultSchema = z.object({
   groupsCreated: z.number().int(),
   groupsJoined: z.number().int(),
   projected: z.number().int(),
+  /** Bubbles (re-)named this call — every bubble touched by the batch. */
+  labelled: z.number().int(),
   /** True on the one call that fitted the projection basis. */
   fittedProjection: z.boolean(),
   /** True = embeddings came from the offline stub (lexical, not semantic). */
@@ -62,6 +65,7 @@ const EMPTY_RUN: ProcessPendingResult = {
   groupsCreated: 0,
   groupsJoined: 0,
   projected: 0,
+  labelled: 0,
   fittedProjection: false,
   stubEmbeddings: false,
   failures: [],
@@ -147,6 +151,7 @@ export const processPendingUseCase = createUseCase(
       let groupsCreated = 0;
       let groupsJoined = 0;
       const failures: ProcessPendingResult["failures"] = [];
+      const touched = new Set<string>();
 
       for (const signal of pending.data) {
         const placed = await assignSignalUseCase({ signalId: signal.id, log });
@@ -156,8 +161,28 @@ export const processPendingUseCase = createUseCase(
           continue;
         }
         assigned += 1;
+        touched.add(placed.data.groupId);
         if (placed.data.joined) groupsJoined += 1;
         else groupsCreated += 1;
+      }
+
+      // ─── name ───────────────────────────────────────────────────────────────
+      // Every bubble this batch touched, because a bubble that just gained five
+      // reports may no longer be about what its old name says.
+      //
+      // The ONE place this pipeline does not propagate a composed error: a name
+      // is a convenience on top of a grouping that has already been written and
+      // is already correct. Failing the batch — and telling the caller nothing
+      // was done — because a model call timed out would be a worse answer than
+      // an unnamed bubble, which the read surface already renders as `null`.
+      let labelled = 0;
+      for (const groupId of touched) {
+        const named = await labelGroupUseCase({ groupId, log });
+        if (named.error) {
+          log?.warn({ groupId, error: named.error.message }, "Could not name a bubble — it stays unnamed");
+          continue;
+        }
+        labelled += 1;
       }
 
       // ─── project ────────────────────────────────────────────────────────────
@@ -172,6 +197,7 @@ export const processPendingUseCase = createUseCase(
           groupsCreated,
           groupsJoined,
           projected: projection.data.projected,
+          labelled,
           failed: failures.length,
           stubEmbeddings,
         },
@@ -186,6 +212,7 @@ export const processPendingUseCase = createUseCase(
         groupsCreated,
         groupsJoined,
         projected: projection.data.projected,
+        labelled,
         fittedProjection: projection.data.fitted,
         stubEmbeddings,
         failures,
