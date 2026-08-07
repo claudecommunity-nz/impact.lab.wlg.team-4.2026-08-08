@@ -94,3 +94,16 @@ Three traps worth knowing before you lose an hour to them:
 ## Licence
 
 Code here is MIT unless stated otherwise. The data is not covered by it.
+
+---
+
+## The codebase
+
+Team base template: Next.js 16 + TypeScript + Tailwind/shadcn (+ AI Elements) ·
+tRPC v11 (single transport) · Drizzle + Postgres · Vercel AI SDK via AI Gateway ·
+Vercel Workflows · TanStack Query + Virtual · pino.
+
+Get running: `npm i` → copy `.env.example` to `.env.local` and fill it →
+`npm run db:push` → `npm run dev`. The `/notes` slice is the reference
+implementation of every pattern; layer rules live in `AGENTS.md`, `docs/`, and
+per-folder `CLAUDE.md`s. Adding an entity: use the `new-entity` skill.
