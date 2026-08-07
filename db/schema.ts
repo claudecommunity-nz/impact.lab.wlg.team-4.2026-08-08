@@ -5,6 +5,7 @@ import {
   integer,
   jsonb,
   pgTable,
+  primaryKey,
   real,
   text,
   timestamp,
@@ -164,4 +165,36 @@ export const projectionModels = pgTable(
     fittedAt: timestamp("fitted_at", { withTimezone: true }).notNull().defaultNow(),
   },
   (t) => [uniqueIndex("projection_models_kind_idx").on(t.kind)],
+);
+
+/**
+ * A signal's position in a fitted projection — the galaxy's coordinates.
+ *
+ * A separate table, not three columns on `signals`, for three reasons:
+ *   1. it is DERIVED, not a fact — `TRUNCATE signal_vectors` rebuilds the whole
+ *      galaxy without touching a single immutable observation;
+ *   2. it is PLURAL — (signal, kind) is the key, so a second projection
+ *      (umap3, a per-hazard basis) coexists with pca3 instead of replacing it;
+ *   3. "not yet projected" is then a cheap left-join miss rather than three
+ *      nullable hot columns on the table every read touches.
+ *
+ * Downstream must tolerate a missing row: before the model is fitted, points
+ * legitimately have no vec3.
+ */
+export const signalVectors = pgTable(
+  "signal_vectors",
+  {
+    /** Polymorphic-by-habit like the rest: no FK, so a rebuild order can't deadlock. */
+    signalId: uuid("signal_id").notNull(),
+    /** Matches projection_models.kind — which fitted basis these coordinates are in. */
+    kind: text("kind").notNull(),
+    x: doublePrecision("x").notNull(),
+    y: doublePrecision("y").notNull(),
+    z: doublePrecision("z").notNull(),
+    projectedAt: timestamp("projected_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => [
+    primaryKey({ columns: [t.signalId, t.kind] }),
+    index("signal_vectors_kind_idx").on(t.kind),
+  ],
 );

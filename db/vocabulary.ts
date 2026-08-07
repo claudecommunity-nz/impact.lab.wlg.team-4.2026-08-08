@@ -89,8 +89,20 @@ export const VerificationSchema = z.looseObject({
   corroborations: z.number().int().optional(),
   contradictions: z.number().int().optional(),
   notes: z.string().optional(),
+  /** Members carrying a truthy `verified` annotation — never "this is true". */
+  verifiedCount: z.number().int().optional(),
+  /** Mean of members' `confidence` annotations, when any were supplied. */
+  meanConfidence: z.number().nullable().optional(),
+  /** The distinct source_class values behind the bubble, for the diversity axis. */
+  sourceClasses: z.array(z.string()).optional(),
 });
 export type Verification = z.infer<typeof VerificationSchema>;
+
+/** The annotation keys the verification fold reads. Absent = simply not asserted. */
+export const VERIFIED_KEY = "verified";
+export const CONFIDENCE_KEY = "confidence";
+/** Values counted as an assertion of verification (case-insensitive). */
+export const VERIFIED_TRUE_VALUES = ["true", "yes", "1", "confirmed", "verified"] as const;
 
 /** projection_models.model — kind-specific fitted parameters (e.g. PCA basis). */
 export const ProjectionModelPayloadSchema = z.record(z.string(), z.unknown());
@@ -98,6 +110,26 @@ export type ProjectionModelPayload = z.infer<typeof ProjectionModelPayloadSchema
 
 /** projection_models.kind — one fitted reference model per kind. */
 export const PROJECTION_KINDS = ["pca3"] as const;
+
+/** The galaxy's basis: fitted once, then every point forever transforms through it. */
+export const PCA3: (typeof PROJECTION_KINDS)[number] = "pca3";
+
+/**
+ * The stored PCA basis — deliberately just numbers, not an ml-pca model dump.
+ * Anyone (a notebook, another team, a later rewrite) can reproduce a coordinate
+ * with `dot(embedding - mean, components[i])`; nothing here needs our library.
+ */
+export const Pca3ModelSchema = z.object({
+  mean: z.array(z.number()),
+  /** Exactly three unit rows of `mean.length` — x, y, z. */
+  components: z.array(z.array(z.number())).length(3),
+  /** How much of the spread each axis carries — honesty about a 1536→3 squash. */
+  explainedVariance: z.array(z.number()).length(3),
+  /** How many signals the basis was fitted on. Never refitted (stability rule). */
+  fittedOn: z.number().int(),
+  dimensions: z.number().int(),
+});
+export type Pca3Model = z.infer<typeof Pca3ModelSchema>;
 
 // ─── the ingest contract ──────────────────────────────────────────────────────
 //

@@ -215,19 +215,99 @@ what to fix; re-send just that item.
 
 ---
 
+## Turning signals into bubbles — `POST /api/trpc/vectors.process`
+
+Ingest only stores facts. Grouping is a separate, idempotent verb you (or our
+poller) can call at any time:
+
+```bash
+curl -X POST http://localhost:3000/api/trpc/vectors.process \
+  -H 'content-type: application/json' \
+  -d '{"json":{"limit":50}}'
+```
+
+One call embeds, groups and projects up to 50 unplaced signals, oldest
+`occurred_at` first. Call it until `pending` comes back `0`. Two callers racing
+is safe: the second gets `locked: false` and does nothing.
+
+```json
+{ "locked": true, "pending": 25, "embedded": 25, "assigned": 25,
+  "groupsCreated": 3, "groupsJoined": 22, "projected": 25,
+  "fittedProjection": true, "stubEmbeddings": true, "failures": [] }
+```
+
+### How a signal is placed
+
+Gates first, similarity second — this order is the design, not an optimisation:
+
+1. **Time** — only bubbles active within 6h of the signal's `occurred_at` are candidates.
+2. **Geography — a HARD 1.5km gate** whenever both the signal and the bubble have
+   coordinates. Semantic closeness never overcomes geographic separation:
+   "flooding in Aro Valley" and "flooding in Petone" score ~0.95 and are always two
+   incidents. **A signal with no coordinates skips the gate** and groups on meaning
+   and time alone — missing geography never blocks you.
+3. **Cosine similarity** against surviving bubbles' centroids. Above the join
+   threshold it joins the best one; otherwise it starts a new bubble.
+
+Every `member_of` edge records both the number and the sentence:
+
+```
+weight 0.891  reason "cosine 0.89; 107m and 16min apart"
+weight 1.000  reason "new bubble: closest match scored cosine 0.81 but sits 5.2km away (hard gate 1.5km)"
+weight 0.933  reason "cosine 0.93; no coordinates to compare and 14min apart"
+```
+
+### What each bubble caches
+
+Every number below is a fold over the bubble's members — drop the groups, re-run
+`vectors.process`, and you get the same numbers back.
+
+| Field | Meaning |
+|---|---|
+| `mass` | member count |
+| `velocity` | members inside the last hour of the bubble's own `occurred_at` clock |
+| `sourceDiversity` | `COUNT(DISTINCT source_class)` — how independent the corroboration is |
+| `verification` | `{ verifiedCount, meanConfidence, sourceClasses[], distinctSources }` folded from members' `verified` / `confidence` annotations |
+| `centroidLat` / `centroidLng` | mean position of the members that have coordinates |
+
+`verification` counts corroboration; it never asserts that anything is true. Send
+`verified` and `confidence` on your payloads and they show up here.
+
+### The 3D projection (the galaxy)
+
+Signals get `x, y, z` in a PCA basis **fitted once** on the first 20+ embedded
+signals and then never refitted — otherwise bubbles jump between frames and two
+time ranges cannot be compared. Consequences for you:
+
+- before the basis exists, signals legitimately have **no** coordinates: tolerate a
+  null vec3 rather than assuming the origin;
+- the basis is stored as plain numbers (`mean`, `components`), so you can reproduce
+  any coordinate yourself with `dot(embedding - mean, components[i])`;
+- coordinates are reproducible: the same signals in produce byte-identical
+  coordinates out.
+
+### One caveat to read before you trust a bubble
+
+`stubEmbeddings: true` in the response means no `AI_GATEWAY_API_KEY` was set, so
+grouping used our deterministic **lexical** stand-in rather than a semantic
+embedding model. It groups on shared words, not on meaning — "inundation" will not
+match "flooding". Everything works and the numbers are real, but say so in your UI.
+Each signal also carries an `embedding_model` annotation recording which embedder
+placed it. Set the key and the same pipeline upgrades with no code change.
+
+---
+
 ## Reading the bubbles back
 
-Grouping (embeddings → bubbles with mass, velocity and source diversity, plus the
-3D projection) is Phase 2–3 of our build; the read API lands there and this
-section will be finalised then. What is already guaranteed:
+Read procedures under `groups.*` land in Phase 3 on the same `/api/trpc` endpoint,
+projected by `(level, time-window)` — the same envelope convention as above. What
+is already guaranteed and already true in the database:
 
 - Every bubble is reachable down to its members through `member_of` edges, and
   **every edge carries a weight and a human-readable reason** for why that item
   was placed there.
 - Every member is a signal, and every signal still holds your original payload in
   `raw`. So any number on the board traces back to the verbatim source you sent.
-- Reads will be tRPC queries under `groups.*` on the same `/api/trpc` endpoint,
-  projected by `(level, time-window)` — the same envelope convention as above.
 
 Ask Team 4 if you need a shape locked in earlier than that — if you tell us what
 you need, we will point a procedure at it.

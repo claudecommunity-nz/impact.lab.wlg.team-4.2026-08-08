@@ -1,0 +1,251 @@
+[
+  {
+    "text": "Surface flooding across Aro Street near the dairy, water over the kerb and footpath",
+    "source": "@wgtn_local",
+    "source_class": "social",
+    "occurred_at": "2026-08-08T06:05:00Z",
+    "lat": -41.2942,
+    "lng": 174.7618,
+    "hazard": "flooding",
+    "location_text": "Aro Street"
+  },
+  {
+    "text": "Flooding on Aro Street, stormwater drain overflowing onto the road",
+    "source": "wremo-community-report",
+    "source_class": "human_report",
+    "occurred_at": "2026-08-08T06:12:00Z",
+    "lat": -41.2945,
+    "lng": 174.7611,
+    "hazard": "flooding",
+    "verified": true,
+    "confidence": 0.8
+  },
+  {
+    "text": "Strong wind gusts in Miramar, roofing iron lifted off a house on Broadway",
+    "source": "@miramar_watch",
+    "source_class": "social",
+    "occurred_at": "2026-08-08T06:20:00Z",
+    "lat": -41.3172,
+    "lng": 174.8151,
+    "hazard": "wind",
+    "location_text": "Broadway, Miramar"
+  },
+  {
+    "text": "Aro Valley flooding reported, water rising over the Aro Street footpath",
+    "source": "wcc-service-requests",
+    "source_class": "official_feed",
+    "occurred_at": "2026-08-08T06:28:00Z",
+    "lat": -41.2938,
+    "lng": 174.7625,
+    "hazard": "flooding",
+    "verified": true,
+    "confidence": 0.9
+  },
+  {
+    "text": "Wind damage in Miramar, tree down across Broadway blocking a lane",
+    "source": "wcc-service-requests",
+    "source_class": "official_feed",
+    "occurred_at": "2026-08-08T06:35:00Z",
+    "lat": -41.3168,
+    "lng": 174.8146,
+    "hazard": "wind",
+    "verified": true,
+    "confidence": 0.85
+  },
+  {
+    "text": "Reports of surface flooding in Aro Valley, Aro Street impassable for cars",
+    "source": "rnz-wellington",
+    "source_class": "media",
+    "occurred_at": "2026-08-08T06:41:00Z",
+    "lat": -41.2951,
+    "lng": 174.7607,
+    "hazard": "flooding",
+    "confidence": 0.6
+  },
+  {
+    "text": "Roofing iron loose in the wind on Miramar Avenue, debris on the road",
+    "source": "wremo-community-report",
+    "source_class": "human_report",
+    "occurred_at": "2026-08-08T06:49:00Z",
+    "lat": -41.3181,
+    "lng": 174.8133,
+    "hazard": "wind",
+    "confidence": 0.55
+  },
+  {
+    "text": "Water over the road on Aro Street, flooding around the drain outside the shops",
+    "source": "@aro_valley_res",
+    "source_class": "social",
+    "occurred_at": "2026-08-08T06:56:00Z",
+    "lat": -41.2947,
+    "lng": 174.7614,
+    "hazard": "flooding"
+  },
+  {
+    "text": "Severe wind gusts through Miramar, trampoline and fence panels down on Broadway",
+    "source": "@miramar_watch",
+    "source_class": "social",
+    "occurred_at": "2026-08-08T07:02:00Z",
+    "lat": -41.3175,
+    "lng": 174.8158,
+    "hazard": "wind"
+  },
+  {
+    "text": "Aro Street flooding worsening, stormwater backing up in Aro Valley",
+    "source": "wremo-community-report",
+    "source_class": "human_report",
+    "occurred_at": "2026-08-08T07:09:00Z",
+    "lat": -41.2936,
+    "lng": 174.7629,
+    "hazard": "flooding",
+    "verified": true,
+    "confidence": 0.75
+  },
+  {
+    "text": "Traffic signals out at the Karori Road intersection after a vehicle struck a pole",
+    "source": "police-media",
+    "source_class": "official_feed",
+    "occurred_at": "2026-08-08T07:15:00Z",
+    "lat": -41.283,
+    "lng": 174.735,
+    "hazard": "infrastructure",
+    "location_text": "Karori Road"
+  },
+  {
+    "text": "Tree down in Miramar from wind gusts, branches across the footpath on Broadway",
+    "source": "rnz-wellington",
+    "source_class": "media",
+    "occurred_at": "2026-08-08T07:22:00Z",
+    "lat": -41.3164,
+    "lng": 174.8149,
+    "hazard": "wind",
+    "confidence": 0.7
+  },
+  {
+    "text": "Council crew heading to Aro Street for surface flooding and a blocked stormwater drain",
+    "source": "wcc-service-requests",
+    "source_class": "official_feed",
+    "occurred_at": "2026-08-08T07:29:00Z",
+    "lat": -41.2944,
+    "lng": 174.762,
+    "hazard": "flooding",
+    "verified": true,
+    "confidence": 0.95
+  },
+  {
+    "text": "Wind has taken roofing iron off a shed in Miramar, debris blowing down the street",
+    "source": "wremo-community-report",
+    "source_class": "human_report",
+    "occurred_at": "2026-08-08T07:36:00Z",
+    "lat": -41.3179,
+    "lng": 174.8142,
+    "hazard": "wind"
+  },
+  {
+    "text": "Flooding at the Aro Street end of Devon Street, water pooling deep over the road",
+    "source": "@wgtn_local",
+    "source_class": "social",
+    "occurred_at": "2026-08-08T07:43:00Z",
+    "lat": -41.2953,
+    "lng": 174.7602,
+    "hazard": "flooding"
+  },
+  {
+    "text": "Miramar wind damage, power line down after a tree fell on Broadway",
+    "source": "wcc-service-requests",
+    "source_class": "official_feed",
+    "occurred_at": "2026-08-08T07:50:00Z",
+    "lat": -41.317,
+    "lng": 174.8154,
+    "hazard": "wind",
+    "verified": true,
+    "confidence": 0.9
+  },
+  {
+    "text": "Aro Valley resident reports flooding, water through the front garden and onto Aro Street",
+    "source": "wremo-community-report",
+    "source_class": "human_report",
+    "occurred_at": "2026-08-08T07:57:00Z",
+    "lat": -41.2933,
+    "lng": 174.7631,
+    "hazard": "flooding",
+    "confidence": 0.5
+  },
+  {
+    "text": "Gusty wind in Miramar bringing branches down near the Miramar Avenue shops",
+    "source": "@miramar_watch",
+    "source_class": "social",
+    "occurred_at": "2026-08-08T08:04:00Z",
+    "lat": -41.3184,
+    "lng": 174.813,
+    "hazard": "wind"
+  },
+  {
+    "text": "Heavy surface flooding on Aro Street, drain blocked with leaves and debris",
+    "source": "wcc-service-requests",
+    "source_class": "official_feed",
+    "occurred_at": "2026-08-08T08:11:00Z",
+    "lat": -41.2949,
+    "lng": 174.7609,
+    "hazard": "flooding",
+    "verified": true,
+    "confidence": 0.85
+  },
+  {
+    "text": "Roof damage in Miramar reported after wind gusts, iron sheets down on the road",
+    "source": "wremo-community-report",
+    "source_class": "human_report",
+    "occurred_at": "2026-08-08T08:18:00Z",
+    "lat": -41.3166,
+    "lng": 174.8161,
+    "hazard": "wind",
+    "confidence": 0.65
+  },
+  {
+    "text": "Aro Valley stormwater gauge over threshold, surface flooding likely on Aro Street",
+    "source": "aro-gauge-01",
+    "source_class": "sensor",
+    "occurred_at": "2026-08-08T08:25:00Z",
+    "lat": -41.294,
+    "lng": 174.7622,
+    "hazard": "flooding",
+    "stage_m": 1.42,
+    "trend": "rising"
+  },
+  {
+    "text": "Wind gusts over 100kmh recorded in Miramar, roofing iron reported down on Broadway",
+    "source": "miramar-anemometer",
+    "source_class": "sensor",
+    "occurred_at": "2026-08-08T08:32:00Z",
+    "lat": -41.3173,
+    "lng": 174.8148,
+    "hazard": "wind",
+    "gust_kmh": 104
+  },
+  {
+    "text": "Surface flooding on Aro Street, water over the road outside the shops",
+    "source": "radio-log",
+    "source_class": "operator_note",
+    "occurred_at": "2026-08-08T08:39:00Z",
+    "hazard": "flooding",
+    "note": "called in over the radio, no coordinates given"
+  },
+  {
+    "text": "Wind gusts in Miramar have brought roofing iron down on Broadway",
+    "source": "radio-log",
+    "source_class": "operator_note",
+    "occurred_at": "2026-08-08T08:46:00Z",
+    "hazard": "wind",
+    "note": "called in over the radio, no coordinates given"
+  },
+  {
+    "text": "Aro Street flooding, water across both lanes near the Aro Valley shops",
+    "source": "@aro_valley_res",
+    "source_class": "social",
+    "occurred_at": "2026-08-08T08:53:00Z",
+    "lat": -41.2946,
+    "lng": 174.7616,
+    "hazard": "flooding",
+    "confidence": 0.6
+  }
+]
