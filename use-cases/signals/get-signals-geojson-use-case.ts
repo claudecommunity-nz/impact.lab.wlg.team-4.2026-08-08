@@ -237,9 +237,22 @@ export function toScoredSignal(input: {
     datasetId: group.datasetId,
     grade: input.asAtGrade ? input.asAtGrade.grade : group.grade,
     reasons: input.asAtGrade ? input.asAtGrade.reasons : (group.reasons ?? []),
-    independentSources: input.asAtGrade
-      ? input.asAtGrade.independentSources
-      : fingerprint.independentOrigins,
+    // BOTH figures are recomputed from the items that survived `asAt`, never
+    // read off the grade event — including under a time control.
+    //
+    // Taking the origin count from the event looked more faithful and was
+    // wrong: grade events fire on TRANSITIONS, so a cluster that grew from 13
+    // items to 21 without changing grade froze at the origin count from its
+    // last transition while `itemCount` kept climbing. A time-scrubbed map then
+    // showed 7 origins behind 21 items — two numbers describing different
+    // instants, sitting side by side, and the more alarming of the two moving.
+    //
+    // So: the two FIGURES answer "what evidence had we captured by then", and
+    // the grade and reasons below answer "what was the last verdict taken on
+    // it". Those can legitimately disagree — a verdict nobody has revisited
+    // since more evidence arrived is a real state, and one an intelligence team
+    // should be able to see rather than have smoothed over.
+    independentSources: fingerprint.independentOrigins,
     itemCount: items.length,
     alertWorthy: group.alertWorthy,
     syntheticContributor: items.some((i) => i.synthetic),

@@ -636,6 +636,38 @@ async function main() {
       `${detail.gradeHistory.length} transitions`,
     );
 
+    // ── the time control (AC24) ──────────────────────────────────────────────
+    //
+    // The endpoints of `asAt` must agree with the unfiltered picture, and that
+    // is a stronger check than it looks: it is what catches a figure being
+    // served from the grade EVENT rather than recomputed from the evidence.
+    // Grade events fire on transitions, so a cluster that grew without changing
+    // grade froze its origin count while itemCount kept climbing — 7 origins
+    // behind 21 items, two numbers describing different instants. The far-future
+    // read makes that disagreement fail here rather than on a scrubbed map.
+    const asAtNothing = await query("signals.geojson", { asAt: "1970-01-01T00:00:00.000Z" });
+    const asAtEverything = await query("signals.geojson", { asAt: "2099-01-01T00:00:00.000Z" });
+    const figures = (fc) =>
+      fc.features
+        .map((f) => `${f.properties.signalId}:${f.properties.independentSources}/${f.properties.itemCount}`)
+        .sort()
+        .join(" ");
+    check(
+      asAtNothing.features.length === 0,
+      "asAt before anything was captured returns an empty picture, not the current one (AC24.1)",
+      `${asAtNothing.features.length} features`,
+    );
+    check(
+      figures(asAtEverything) === figures(fc),
+      "asAt after everything was captured matches the live picture, figure for figure (AC24.3)",
+      `${asAtEverything.features.length} vs ${fc.features.length} features`,
+    );
+    check(
+      asAtEverything.features.every((f) => f.properties.independentSources <= f.properties.itemCount),
+      "…and no time-scrubbed cluster reports more origins than it has items",
+      figures(asAtEverything),
+    );
+
     const detailMissing = await queryExpectingError("signals.detail", {
       signalId: "00000000-0000-4000-8000-000000000000",
     });
