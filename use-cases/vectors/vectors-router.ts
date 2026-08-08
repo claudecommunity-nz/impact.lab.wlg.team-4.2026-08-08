@@ -51,6 +51,7 @@ export const vectorsRouter = router({
         windowMins: z.number().int().positive().optional(),
         limit: z.number().int().positive().max(GROUPS_LIMIT).optional(),
         datasetId: z.string().min(1).optional(),
+        asAt: z.coerce.date().optional(),
       }),
     )
     .output(z.array(GroupViewSchema))

@@ -60,7 +60,7 @@ export const signalsRouter = router({
     .query(({ ctx, input }) => callUseCase(getSignalsGeojsonUseCase({ ...input, log: ctx.log }))),
 
   detail: publicProcedure
-    .input(z.object({ signalId: z.uuid() }))
+    .input(z.object({ signalId: z.uuid(), asAt: z.coerce.date().optional() }))
     .output(SignalDetailSchema)
     .query(({ ctx, input }) => callUseCase(getSignalDetailUseCase({ ...input, log: ctx.log }))),
 

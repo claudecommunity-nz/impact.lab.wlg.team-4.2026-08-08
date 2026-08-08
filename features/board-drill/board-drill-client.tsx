@@ -1,6 +1,6 @@
 "use client";
 
-import { useQuery } from "@tanstack/react-query";
+import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { format } from "date-fns";
 import { X } from "lucide-react";
 import type { SignalDetail } from "@/components/board/api-types";
@@ -12,7 +12,8 @@ import { CollapsedOrigins } from "./components/collapsed-origins";
 import { EvidenceFigures } from "./components/evidence-figures";
 import { ProvenanceItem } from "./components/provenance-item";
 
-const POLL_MS = 5000;
+/** The map's cadence, exactly — two panes describing one story must tick together. */
+const POLL_MS = 3000;
 
 /**
  * The walk from a coloured dot back to the words somebody actually published.
@@ -29,13 +30,30 @@ const POLL_MS = 5000;
 export function BoardDrillClient({
   signalId,
   onClose,
+  asAt = null,
 }: {
   signalId: string;
   onClose: () => void;
+  /**
+   * The map's time control, shared so the evidence list describes the same
+   * instant as the pin the operator clicked. null = live. Optional so the
+   * panel still works for any caller without a scrubber.
+   */
+  asAt?: number | null;
 }) {
   const trpc = useTRPC();
   const detail = useQuery(
-    trpc.signals.detail.queryOptions({ signalId }, { refetchInterval: POLL_MS }),
+    trpc.signals.detail.queryOptions(
+      asAt === null ? { signalId } : { signalId, asAt: new Date(asAt) },
+      {
+        // A past instant never changes — poll only when live. keepPreviousData
+        // for the same reason as the map: scrubbing changes the key every step,
+        // and the panel must not flash back to a skeleton between instants.
+        refetchInterval: asAt === null ? POLL_MS : false,
+        placeholderData: keepPreviousData,
+        retry: false,
+      },
+    ),
   );
 
   return (
@@ -60,7 +78,15 @@ export function BoardDrillClient({
       </header>
 
       {detail.isError ? (
-        <FeatureError name="this signal's evidence" />
+        asAt !== null ? (
+          // Scrubbed to before this signal's first capture: an absence, not a
+          // failure — the pin is gone from the map at this instant too.
+          <p className="text-muted-foreground flex flex-1 items-center justify-center px-6 text-center text-[12.5px]">
+            Nothing had been captured for this signal by this point on the timeline.
+          </p>
+        ) : (
+          <FeatureError name="this signal's evidence" />
+        )
       ) : !detail.data ? (
         <BoardDrillSkeleton />
       ) : (

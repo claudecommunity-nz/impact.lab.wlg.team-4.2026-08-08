@@ -2,13 +2,15 @@ import { z } from "zod";
 import { MEMBER_OF, PCA3, VerificationSchema } from "@/db/vocabulary";
 import { type Group } from "@/repositories/groups/group-schema";
 import { type SignalVector } from "@/repositories/signal-vectors/signal-vector-schema";
+import { type Signal } from "@/repositories/signals/signal-schema";
 import { getEdgesForNodesUseCase } from "@/use-cases/edges/get-edges-for-nodes-use-case";
 import { getGroupsUseCase } from "@/use-cases/groups/get-groups-use-case";
 import { getSignalVectorsUseCase } from "@/use-cases/signal-vectors/get-signal-vectors-use-case";
 import { getLatestOccurredAtUseCase } from "@/use-cases/signals/get-latest-occurred-at-use-case";
+import { getSignalsForGroupsUseCase } from "@/use-cases/signals/get-signals-for-groups-use-case";
 import { createUseCase } from "@/utilities/create-use-case";
 import { resolveWindow } from "@/utilities/window";
-import { INCIDENT_LEVEL } from "./assign-signal-use-case";
+import { INCIDENT_LEVEL, VELOCITY_WINDOW_MS } from "./assign-signal-use-case";
 
 /**
  * The board: one row per bubble in the window, with everything needed to draw
@@ -72,10 +74,17 @@ export const getGroupsViewUseCase = createUseCase(
       limit: z.number().int().positive().max(GROUPS_LIMIT).optional(),
       /** Absent = every namespace. A dataset-scoped board must always pass it. */
       datasetId: z.string().min(1).optional(),
+      /**
+       * Only evidence CAPTURED (ingested_at) by this instant. The cached fold
+       * knows only NOW, so size, velocity and the clocks are refolded from the
+       * members that had arrived by then — the board's time control needs every
+       * strip of the scene to replay from one clock.
+       */
+      asAt: z.date().optional(),
     }),
     outputSchema: z.array(GroupViewSchema),
   },
-  async ({ success, error }, { windowMins, limit, datasetId, log }) => {
+  async ({ success, error }, { windowMins, limit, datasetId, asAt, log }) => {
     const latest = await getLatestOccurredAtUseCase({ log });
     if (latest.error) return error(latest.error);
 
@@ -113,17 +122,68 @@ export const getGroupsViewUseCase = createUseCase(
 
     const coordinates = new Map(vectors.data.map((v) => [v.signalId, v]));
 
+    // Time travel: fetch the members that had been captured by the instant, so
+    // each row can be refolded from exactly that evidence.
+    let membersAsAt: Map<string, Signal[]> | null = null;
+    if (asAt) {
+      const members = await getSignalsForGroupsUseCase({
+        groupIds: groups.data.map((g) => g.id),
+        asAt,
+        log,
+      });
+      if (members.error) return error(members.error);
+      membersAsAt = new Map();
+      for (const row of members.data) {
+        const list = membersAsAt.get(row.groupId);
+        if (list) list.push(row.signal);
+        else membersAsAt.set(row.groupId, [row.signal]);
+      }
+    }
+
     return success(
-      groups.data.map((group) =>
-        toGroupView({
+      groups.data.flatMap((group) => {
+        if (membersAsAt === null) {
+          return [
+            toGroupView({ group, memberIds: membersByGroup.get(group.id) ?? [], coordinates }),
+          ];
+        }
+        // A group none of whose members had arrived yet is simply not there —
+        // the same refusal the map's as-at read makes (AC33.2).
+        const present = membersAsAt.get(group.id) ?? [];
+        if (present.length === 0) return [];
+        const presentIds = new Set(present.map((m) => m.id));
+        const view = toGroupView({
           group,
-          memberIds: membersByGroup.get(group.id) ?? [],
+          memberIds: (membersByGroup.get(group.id) ?? []).filter((id) => presentIds.has(id)),
           coordinates,
-        }),
-      ),
+        });
+        return [refoldAsAt(view, present)];
+      }),
     );
   },
 );
+
+/**
+ * A board row as it stood at an instant. Size, velocity, diversity and the
+ * clocks come from the members in hand; `verification` is withheld rather than
+ * restated, because the cached counts describe evidence that had not all
+ * arrived yet. Velocity keeps the fold's own-clock rule: members inside the
+ * last hour of the group's occurred_at clock, not the wall clock.
+ */
+function refoldAsAt(view: GroupView, members: Signal[]): GroupView {
+  const times = members.map((m) => m.occurredAt.getTime());
+  const lastSeen = Math.max(...times);
+  return {
+    ...view,
+    size: members.length,
+    memberCount: members.length,
+    velocity: times.filter((t) => t >= lastSeen - VELOCITY_WINDOW_MS).length,
+    sourceDiversity: new Set(members.map((m) => m.sourceClass)).size,
+    verification: null,
+    firstSeen: new Date(Math.min(...times)),
+    lastSeen: new Date(lastSeen),
+  };
+}
 
 /**
  * The one place a stored group becomes a board row. Shared with the drill-down

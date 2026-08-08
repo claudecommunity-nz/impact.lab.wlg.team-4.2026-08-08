@@ -40,6 +40,12 @@ export function BoardShellClient() {
   const [view, setView] = useState<BoardView>("map");
   const [selectedSignalId, setSelectedSignalId] = useState<string | null>(null);
 
+  // The board's clock is scene state like the selection: one instant for every
+  // strip of the scene. The map owns the scrubber, but the ticker replays from
+  // the same moment — a strip saying "+15/h" over a map showing empty history
+  // would be two different boards. null = live.
+  const [asAt, setAsAt] = useState<number | null>(null);
+
   // Once the galaxy has been asked for it stays mounted, so switching back is
   // instant and the orbit an operator set up is still there. Mounting is driven
   // by the operator's click rather than by an effect watching `view` — the
@@ -68,7 +74,7 @@ export function BoardShellClient() {
           keep only over the map; as one slim strip it is cheap enough to keep
           "picking up speed" on screen whichever way the scene is laid out,
           and clicking a pill selects the same signal in either. */}
-      <BoardLanesClient selectedSignalId={selectedSignalId} onSelect={select} />
+      <BoardLanesClient selectedSignalId={selectedSignalId} onSelect={select} asAt={asAt} />
 
       <div className="relative flex min-h-0 flex-1">
         <div className="board-map bg-muted relative min-h-0 flex-1">
@@ -86,6 +92,8 @@ export function BoardShellClient() {
                 datasetId={BOARD_DATASET}
                 selectedSignalId={selectedSignalId}
                 onSelect={select}
+                asAt={asAt}
+                onAsAtChange={setAsAt}
               />
             </ErrorBoundary>
           </div>
@@ -114,7 +122,7 @@ export function BoardShellClient() {
             aria-label="Signal detail"
             className="drill-panel absolute inset-y-0 right-0 z-20 flex w-full max-w-[460px] flex-col lg:relative lg:z-auto lg:w-[460px] lg:max-w-none"
           >
-            <BoardDrillClient signalId={selectedSignalId} onClose={close} />
+            <BoardDrillClient signalId={selectedSignalId} onClose={close} asAt={asAt} />
           </aside>
         )}
       </div>

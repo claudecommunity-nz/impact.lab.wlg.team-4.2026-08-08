@@ -3,6 +3,8 @@
 **Wellington City Council Emergency Management × Claude Code Community NZ**
 Saturday 8 August 2026 · Waimanga Room, Wellington City Council
 
+**▶ Demo video:** https://www.loom.com/share/f0cb8f9536ff4d31b4f994065b299238
+
 ---
 
 ## Problem 03 — Identify and verify emerging local impacts from public information

@@ -40,6 +40,26 @@ function classify(text) {
   return null;
 }
 
+/** POST with retry: a dev server mid-derive can sit on a request past undici's
+ *  headers timeout, and one slow answer must not kill a 6000-item load. */
+async function post(url, body, attempts = 4) {
+  for (let attempt = 1; ; attempt++) {
+    try {
+      const res = await fetch(url, {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify(body),
+      });
+      if (res.status >= 500) throw new Error(`http ${res.status}`);
+      return (await res.json())?.result?.data?.json;
+    } catch (err) {
+      if (attempt >= attempts) throw err;
+      console.log(`  retry ${attempt}: ${err.cause?.code ?? err.message}`);
+      await new Promise((r) => setTimeout(r, 3000 * attempt));
+    }
+  }
+}
+
 const files = globSync("data/feeds/*.json", { cwd: ROOT }).map((f) => path.join(ROOT, f));
 let total = 0, created = 0, deduped = 0, failed = 0;
 
@@ -67,14 +87,9 @@ for (const file of files) {
       })(),
     }));
 
-  for (let i = 0; i < mapped.length; i += 200) {
-    const batch = mapped.slice(i, i + 200);
-    const res = await fetch(`${BASE}/api/trpc/signals.ingestBatch`, {
-      method: "POST",
-      headers: { "content-type": "application/json" },
-      body: JSON.stringify({ json: { items: batch } }),
-    });
-    const out = (await res.json())?.result?.data?.json;
+  for (let i = 0; i < mapped.length; i += 100) {
+    const batch = mapped.slice(i, i + 100);
+    const out = await post(`${BASE}/api/trpc/signals.ingestBatch`, { json: { items: batch } });
     total += out?.total ?? 0; created += out?.created ?? 0;
     deduped += out?.deduped ?? 0; failed += out?.failed ?? 0;
   }
@@ -83,13 +98,8 @@ for (const file of files) {
 console.log(`ingested: total ${total} · created ${created} · deduped ${deduped} · failed ${failed}`);
 
 // drain the derive queue so the dataset is grouped, graded and named
-for (let round = 0; round < 200; round++) {
-  const res = await fetch(`${BASE}/api/trpc/vectors.process`, {
-    method: "POST",
-    headers: { "content-type": "application/json" },
-    body: JSON.stringify({ json: { limit: 200 } }),
-  });
-  const out = (await res.json())?.result?.data?.json;
+for (let round = 0; round < 500; round++) {
+  const out = await post(`${BASE}/api/trpc/vectors.process`, { json: { limit: 200 } });
   if (!out) break;
   if (!out.locked && out.pending === 0) { console.log(`derive drained in ${round} rounds`); break; }
   if (out.locked) await new Promise((r) => setTimeout(r, 400));

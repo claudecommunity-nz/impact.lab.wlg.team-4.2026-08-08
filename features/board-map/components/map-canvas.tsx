@@ -272,12 +272,15 @@ export function MapCanvas({
         source: ZONES_SOURCE_ID,
         paint: {
           "fill-color": colour,
-          // The suburb under the pointer answers back — same hue, more weight.
+          // Weight follows the band — a heavy suburb is nearly solid, a mild
+          // one is a wash — and the suburb under the pointer answers back with
+          // an extra step of the same hue. Opacity carries hierarchy here;
+          // uniform fills painted the whole city one flat tone.
           "fill-opacity": [
             "case",
             ["boolean", ["feature-state", "hover"], false],
-            0.6,
-            0.42,
+            ["match", ["get", "band"], "hot", 0.72, "warm", 0.56, 0.34],
+            ["match", ["get", "band"], "hot", 0.55, "warm", 0.4, 0.18],
           ] as unknown as ExpressionSpecification,
         },
       },
@@ -288,7 +291,19 @@ export function MapCanvas({
         id: ZONES_OUTLINE_ID,
         type: "line",
         source: ZONES_SOURCE_ID,
-        paint: { "line-color": colour, "line-width": 1, "line-opacity": 0.6 },
+        paint: {
+          "line-color": colour,
+          "line-width": 1,
+          "line-opacity": [
+            "match",
+            ["get", "band"],
+            "hot",
+            0.7,
+            "warm",
+            0.5,
+            0.25,
+          ] as unknown as ExpressionSpecification,
+        },
       },
       beneathLabels,
     );
@@ -358,7 +373,7 @@ export function MapCanvas({
       "case",
       holdsSelection,
       0.95,
-      0.6,
+      ["match", ["get", "band"], "hot", 0.7, "warm", 0.5, 0.25],
     ] as unknown as ExpressionSpecification);
   }, [mapInstance, styleReady, layers, selectedSignalId]);
 

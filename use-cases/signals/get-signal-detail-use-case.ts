@@ -95,22 +95,49 @@ const MISSING_MEMBERSHIP = "membership edge missing — this item's placement is
 export const getSignalDetailUseCase = createUseCase(
   {
     id: "get-signal-detail",
-    inputSchema: z.object({ signalId: z.uuid() }),
+    /** `asAt` = the panel under a time control: evidence captured by then only. */
+    inputSchema: z.object({ signalId: z.uuid(), asAt: z.date().optional() }),
     outputSchema: SignalDetailSchema,
   },
-  async ({ success, error }, { signalId, log }) => {
+  async ({ success, error }, { signalId, asAt, log }) => {
     const group = await getGroupUseCase({ id: signalId, log });
     if (group.error) return error(group.error);
     if (!group.data) return error({ message: `Signal ${signalId} not found`, kind: "not_found" });
 
-    const items = await getSignalsForGroupUseCase({ groupId: signalId, log });
-    if (items.error) return error(items.error);
+    const allItems = await getSignalsForGroupUseCase({ groupId: signalId, log });
+    if (allItems.error) return error(allItems.error);
+
+    // The same clock the map scrubs on: what had been CAPTURED by that instant
+    // (ingested_at), never when it occurred. A panel and a pin describing the
+    // same instant from two different clocks is exactly the desync this exists
+    // to prevent.
+    const inHand = asAt
+      ? allItems.data.filter((item) => item.ingestedAt <= asAt)
+      : allItems.data;
+    if (inHand.length === 0) {
+      return error({
+        message: `Nothing had been captured for ${signalId} by that instant`,
+        kind: "not_found",
+      });
+    }
 
     const edges = await getEdgesForNodesUseCase({ nodeIds: [signalId], log });
     if (edges.error) return error(edges.error);
 
-    const history = await getGradeEventsUseCase({ groupIds: [signalId], order: "asc", log });
+    const history = await getGradeEventsUseCase({ groupIds: [signalId], asAt, order: "asc", log });
     if (history.error) return error(history.error);
+
+    // The grade as at an instant is the last transition at or before it — the
+    // same rule the map applies (AC24.2). No transition yet = same fallback as
+    // the map: the stored grade.
+    const lastEvent = asAt ? history.data.at(-1) : undefined;
+    const asAtGrade = lastEvent
+      ? {
+          grade: lastEvent.toGrade,
+          reasons: lastEvent.reasons,
+          independentSources: lastEvent.independentSources,
+        }
+      : undefined;
 
     const membershipByItem = new Map(
       edges.data.filter((e) => e.rel === MEMBER_OF && e.toId === signalId).map((e) => [e.fromId, e]),
@@ -119,9 +146,9 @@ export const getSignalDetailUseCase = createUseCase(
     // The SAME fingerprint the grade was computed from, recomputed from the
     // same items rather than cached — so the origin count printed beside the
     // grade and the origin groups printed underneath it can never disagree.
-    const fingerprint = fingerprintItems(items.data);
+    const fingerprint = fingerprintItems(inHand);
 
-    const provenance = items.data.map((item) => {
+    const provenance = inHand.map((item) => {
       const edge = membershipByItem.get(item.id);
       return {
         itemId: item.id,
@@ -145,6 +172,7 @@ export const getSignalDetailUseCase = createUseCase(
     log?.info(
       {
         signalId,
+        asAt: asAt?.toISOString() ?? null,
         itemCount: provenance.length,
         independentSources: fingerprint.independentOrigins,
         gradeEvents: history.data.length,
@@ -153,7 +181,7 @@ export const getSignalDetailUseCase = createUseCase(
     );
 
     return success({
-      ...toScoredSignal({ group: group.data, items: items.data, fingerprint }),
+      ...toScoredSignal({ group: group.data, items: inHand, asAtGrade, fingerprint }),
       provenance,
       originGroups: fingerprint.originGroups,
       gradeHistory: history.data.map((event) => ({

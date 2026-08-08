@@ -1,6 +1,6 @@
 "use client";
 
-import { useQuery } from "@tanstack/react-query";
+import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import type { SignalProperties } from "@/components/board/api-types";
 import { BOARD_DATASET } from "@/features/board-shell/board-dataset";
 import { useTRPC } from "@/trpc/client";
@@ -33,20 +33,34 @@ const MIN_REPORTS = 2;
 export function BoardLanesClient({
   selectedSignalId,
   onSelect,
+  asAt,
 }: {
   selectedSignalId: string | null;
   onSelect: (signalId: string) => void;
+  /** The board's clock (epoch ms), owned by the shell; null = live. The strip
+   *  replays from the same instant as the map, so "picking up speed" ramps as
+   *  the scrubber moves rather than describing a present the map isn't showing. */
+  asAt: number | null;
 }) {
   const trpc = useTRPC();
 
   const signals = useQuery(
     trpc.signals.geojson.queryOptions(
-      { datasetId: BOARD_DATASET },
-      { refetchInterval: POLL_MS },
+      asAt === null
+        ? { datasetId: BOARD_DATASET }
+        : { datasetId: BOARD_DATASET, asAt: new Date(asAt) },
+      // Scrubbing changes the key per instant; keep the last strip on screen so
+      // pills grow and reorder instead of the whole row blinking out.
+      { refetchInterval: asAt === null ? POLL_MS : false, placeholderData: keepPreviousData },
     ),
   );
   const groups = useQuery(
-    trpc.vectors.groups.queryOptions({ datasetId: BOARD_DATASET }, { refetchInterval: POLL_MS }),
+    trpc.vectors.groups.queryOptions(
+      asAt === null
+        ? { datasetId: BOARD_DATASET }
+        : { datasetId: BOARD_DATASET, asAt: new Date(asAt) },
+      { refetchInterval: asAt === null ? POLL_MS : false, placeholderData: keepPreviousData },
+    ),
   );
 
   if (!signals.data || !groups.data) return <BoardLanesSkeleton />;

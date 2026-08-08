@@ -45,18 +45,23 @@ export function BoardMapClient({
   datasetId,
   selectedSignalId,
   onSelect,
+  asAt,
+  onAsAtChange,
 }: {
   datasetId: string;
   selectedSignalId: string | null;
   onSelect: (signalId: string) => void;
+  /**
+   * Time travel: null = live (polling); a number = the board as it stood then.
+   * asAt reconstructs counts and grades from what had been CAPTURED by that
+   * instant, so dragging left literally unwinds what we knew. Owned by the
+   * shell — the ticker and the drill panel replay from the same clock.
+   */
+  asAt: number | null;
+  onAsAtChange: (asAt: number | null) => void;
 }) {
   const trpc = useTRPC();
   const { resolvedTheme } = useTheme();
-
-  // Time travel: null = live (polling); a number = the board as it stood then.
-  // asAt reconstructs counts and grades from what had been CAPTURED by that
-  // instant, so dragging left literally unwinds what we knew.
-  const [asAt, setAsAt] = useState<number | null>(null);
 
   const signals = useQuery(
     trpc.signals.geojson.queryOptions(
@@ -91,57 +96,94 @@ export function BoardMapClient({
     const pts = signals.data?.features;
     if (!polys || !pts || pts.length === 0) return null;
 
-    const scored = polys.flatMap((poly) => {
+    type Zone = {
+      poly: (typeof polys)[number];
+      suburb: string;
+      polygons: number[][][][];
+      mass: number;
+      signalIds: string[];
+      top: { id: string; count: number } | null;
+    };
+    const zonesBySuburb = new Map<string, Zone>();
+    const allZones: Zone[] = [];
+    for (const poly of polys) {
       const geom = poly.geometry as {
         type: string;
         coordinates: number[][][] | number[][][][];
       } | null;
-      if (!geom || (geom.type !== "Polygon" && geom.type !== "MultiPolygon")) return [];
-      const polygons = (
-        geom.type === "Polygon" ? [geom.coordinates] : geom.coordinates
-      ) as number[][][][];
+      if (!geom || (geom.type !== "Polygon" && geom.type !== "MultiPolygon")) continue;
+      const zone: Zone = {
+        poly,
+        suburb: (poly.properties as { suburb?: string } | null)?.suburb ?? "",
+        polygons: (geom.type === "Polygon"
+          ? [geom.coordinates]
+          : geom.coordinates) as number[][][][],
+        mass: 0,
+        signalIds: [],
+        top: null,
+      };
+      allZones.push(zone);
+      if (zone.suburb) zonesBySuburb.set(zone.suburb.toLowerCase(), zone);
+    }
 
-      let mass = 0;
-      const signalIds: string[] = [];
-      let top: { id: string; count: number } | null = null;
-      for (const f of pts) {
-        const [lng, lat] = (f.geometry as { coordinates: [number, number] }).coordinates;
-        if (polygons.some((rings) => pointInRings(lng, lat, rings))) {
-          const props = f.properties as { signalId: string; itemCount?: number };
-          const count = props.itemCount ?? 1;
-          mass += count;
-          signalIds.push(props.signalId);
-          if (!top || count > top.count) top = { id: props.signalId, count };
-        }
+    for (const f of pts) {
+      const props = f.properties as {
+        signalId: string;
+        itemCount?: number;
+        label?: string | null;
+      };
+
+      // The label carries the locality the evidence VOTED for ("flooding —
+      // Aro Valley", "… — Clyde Street, Island Bay, Wellington"), so trust a
+      // named suburb before the averaged position: a big cluster's centroid
+      // can drift over a boundary ridge into the neighbouring suburb, and the
+      // 700-item Aro Valley story must not paint Brooklyn red.
+      let target: Zone | undefined;
+      const [, afterHazard] = (props.label ?? "").split(/\s+—\s+/);
+      for (const segment of (afterHazard ?? props.label ?? "").split(",")) {
+        target = zonesBySuburb.get(segment.trim().toLowerCase());
+        if (target) break;
       }
-      if (mass === 0 || !top) return [];
-      const suburb = (poly.properties as { suburb?: string } | null)?.suburb ?? "";
-      return [{ poly, suburb, mass, signalIds, topSignalId: top.id }];
-    });
+      if (!target) {
+        const [lng, lat] = (f.geometry as { coordinates: [number, number] }).coordinates;
+        target = allZones.find((zone) =>
+          zone.polygons.some((rings) => pointInRings(lng, lat, rings)),
+        );
+      }
+      if (!target) continue;
 
+      const count = props.itemCount ?? 1;
+      target.mass += count;
+      target.signalIds.push(props.signalId);
+      if (!target.top || count > target.top.count) target.top = { id: props.signalId, count };
+    }
+
+    const scored = allZones.filter((zone) => zone.mass > 0 && zone.top !== null);
     if (scored.length === 0) return null;
 
-    // Bands are RELATIVE to the busiest suburb at the moment shown, with small
-    // absolute floors so two lone reports never light a suburb red. Absolute
-    // cutoffs were tried first and break twice: they saturate when the full
-    // feed corpus lands, and they park the whole replay in "mild" until the
-    // very end. Relative bands keep the comparison honest at any data volume.
+    // Hybrid bands for a heavy-tailed distribution: HOT is relative — the
+    // suburb(s) carrying the dominant share of the moment's reports — while
+    // warm and mild are absolute, because at the low end "five reports" has a
+    // stable meaning that a percentage of a 700-item story does not.
+    //
+    // Suburbs with a single stray report are not shaded at all. Shading every
+    // suburb that had one report painted the whole city and lifted nothing —
+    // the map's job is to say where attention goes, so quiet suburbs stay
+    // paper. (Their reports remain in the feed and the drill panel.)
     const busiest = Math.max(...scored.map((zone) => zone.mass));
-    const zones = scored.map(({ poly, suburb, mass, signalIds, topSignalId }) => ({
-      ...poly,
-      properties: {
-        suburb,
-        mass,
-        signalIds,
-        topSignalId,
-        band:
-          mass >= Math.max(3, busiest * 0.5)
-            ? "hot"
-            : mass >= Math.max(2, busiest * 0.15)
-              ? "warm"
-              : "mild",
-      },
-    }));
+    const zones = scored
+      .filter(({ mass }) => mass >= 2)
+      .map(({ poly, suburb, mass, signalIds, top }) => ({
+        ...poly,
+        properties: {
+          suburb,
+          mass,
+          signalIds,
+          topSignalId: top ? top.id : signalIds[0],
+          band: mass >= Math.max(8, busiest * 0.4) ? "hot" : mass >= 5 ? "warm" : "mild",
+        },
+      }));
+    if (zones.length === 0) return null;
     return {
       datasetId: "impact-zones",
       displayName: "Impact zones",
@@ -149,7 +191,7 @@ export function BoardMapClient({
       attribution: "Suburb boundaries © Wellington City Council",
       geometryKind: "polygon",
       caveat:
-        "Shading aggregates report counts by suburb. An unshaded suburb means no reports collected there — absence of information, not absence of impact.",
+        "Shading aggregates report counts by suburb; suburbs with only scattered reports are left unshaded so the busy ones stand out. Unshaded is absence of information, not absence of impact.",
       fetchedAt: suburbs.data!.fetchedAt,
       truncated: suburbs.data!.truncated,
       featureCollection: { type: "FeatureCollection", features: zones },
@@ -244,7 +286,7 @@ export function BoardMapClient({
         <BoardScrubber
           domainStart={domainStartRef.current}
           value={asAt}
-          onChange={setAsAt}
+          onChange={onAsAtChange}
         />
       )}
 
