@@ -15,15 +15,21 @@ npm run dev                                       # one only — Next allows one
 Then, **in this order**:
 
 ```bash
-# 1. the source registry (grades come out F for everything without it)
+# 1. the source registry — WITHOUT THIS EVERY CLUSTER GRADES F
 curl -s -X POST -H 'content-type: application/json' -d '{"json":{}}' \
   http://localhost:3000/api/trpc/sources.seed
 
-# 2. the demo story — 39 items through the real ingest, then named and projected
-npm run demo:plumb -- --http
+# 2. the authored story, INTO THE FEED THE BOARD READS
+#    --dataset=live is not optional: demo:plumb still defaults to `demo`,
+#    and the board no longer reads `demo`, so without the flag you get a
+#    correctly-working system showing an empty map.
+npm run demo:plumb -- --http --dataset=live
 ```
 
-Open **`http://localhost:3000/board?dataset=demo`** and leave it there.
+Open **`http://localhost:3000/board`** and leave it there. There is no dataset
+parameter any more and no Live/Demo switch — **one board, one feed**. A stale
+`?dataset=demo` link in anyone's history is silently ignored, so if somebody
+hands you a URL, retype it.
 
 **Open it and WAIT 40 SECONDS before judging it.** A cold `/board` in dev takes
 about 35 seconds to fully paint, and an empty canvas at 20 seconds looks exactly
@@ -32,24 +38,26 @@ well before you are called up.
 
 Check before you speak:
 
-- the map shows **13 pins**, none of them stacked at 0,0;
-- the biggest pin (Aro Valley) reads **14 / 21**;
-- the header says **Demo**, not Live.
+- the map shows **14 pins**, none of them stacked at 0,0;
+- the biggest pin, **flooding — Aro Street**, reads **30 / 36**;
+- pins carrying authored content show a **SYN** badge.
 
 If any of those is wrong, re-run step 2. If the board is empty, the database was
-truncated — run `npm run verify` first, then step 1, then step 2.
+truncated — run step 1 then step 2 again.
 
 > **Do not run `npm run verify` after plumbing.** It truncates every table. It is
 > the proof, not the demo, and it wipes the demo dataset.
 
-**Have a second tab open** on `http://localhost:3000/board?dataset=live` in case
-somebody asks to see it against the fixture set.
+**The SYN badge matters and you should point at it unprompted.** Real collected
+signals and authored demo items now sit in the same feed, because that is what
+an operator's day actually looks like. Nothing hides which is which: `synthetic`
+rides every provenance entry, and the badge is on the pin.
 
 ---
 
 ## The script
 
-The spoken lines below run to 525 words — about four minutes flat at a
+The spoken lines below run to 523 words — about four minutes flat at a
 comfortable pace, which leaves no room for adjectives and just enough for the
 numbers.
 Timings are cumulative. If you are behind at 3:00, drop the Galaxy beat: it is
@@ -68,17 +76,18 @@ the only one that is not load-bearing.
 
 *Point at the map.*
 
-> Thirty-nine public items — posts, community reports, a newsroom, official
-> feeds — became **thirteen candidate events**. Nothing here is presented as
-> verified: every pin carries a grade and the reasons behind it.
+> Sixty-four public items — posts, community reports, newsrooms, official feeds,
+> instrument readings — became **fourteen candidate events**. Nothing is
+> presented as verified: every pin carries a grade and its reasons, and anything
+> authored for this demo is badged SYN.
 
 ### 0:50 — the core: witnesses, not documents (60s)
 
-*Click the Aro Valley pin. Let the drill panel open.*
+*Click the Aro Street pin — the biggest one. Let the drill panel open.*
 
-> This one has **twenty-one items** behind it. It has **fourteen witnesses**.
+> This one has **thirty-six items** behind it. It has **thirty witnesses**.
 >
-> Seven of those twenty-one are one observation. One person posted that Aro
+> Seven of those items are a single observation. One person posted that Aro
 > Street was under water; others quoted their link or re-posted the wording, and
 > a news site picked it up. All seven collapsed into one origin — and it tells
 > you why.
@@ -90,28 +99,26 @@ row off the screen, word for word:*
 > *"quotes social.example.nz/aro_local/status/1188455 — a repost is not a
 > second witness."*
 
-> And the second row: two more items collapsed because they came from the same
-> author. One prolific person cannot manufacture corroboration.
->
-> If we printed twenty-one we would be reporting an echo as evidence, and
-> "twenty-one independent reports" is precisely the sentence that makes somebody
+> If we printed thirty-six we would be reporting an echo as evidence — and
+> "thirty-six independent reports" is exactly the sentence that makes somebody
 > send a truck.
 
 ### 1:50 — who is speaking (35s)
 
 *Point at the grade: A3.*
 
-> Reliability comes from a registry. Fire and Emergency's media feed is
-> registered A — the agency speaking about its own callouts. Their **scanner**
-> feed deliberately is not: that is somebody listening to radio traffic and
-> relaying what they think they heard.
+> Reliability comes from a registry. Seventeen sources feed this cluster. Fire
+> and Emergency's media feed is registered A — the agency speaking about its own
+> callouts. A **radio log** in the same cluster deliberately is not: that is
+> somebody listening to emergency traffic and relaying what they think they
+> heard.
 >
 > And because one official source in a crowd would read as a clean bill of
 > health, the reason says so:
 
 *Read verbatim:*
 
-> *"this axis reports the best source, not the crowd — 5 of the 8 contributing
+> *"this axis reports the best source, not the crowd — 12 of the 17 contributing
 > sources are unregistered and grade F on their own."*
 
 ### 2:25 — the weak signal is still on the map (35s)
@@ -119,7 +126,7 @@ row off the screen, word for word:*
 *Click a single-pin cluster. **Vogeltown power outage** is the one to use — its
 alert carries the uncorroborated line word for word.*
 
-> Nine of the thirteen are a single source. This grades **F4 — reliability
+> Ten of the fourteen are a single source. This grades **F4 — reliability
 > cannot be judged, doubtful**. It is still on the map, and it still alerted.
 >
 *Point at the two facts sitting together: the grade chip reads F4, and
@@ -142,8 +149,8 @@ alert carries the uncorroborated line word for word.*
 
 *Switch the view toggle to Galaxy.*
 
-> Same events, arranged by what was said rather than where — for spotting that
-> two things reported in different suburbs are the same problem.
+> The same fourteen events, arranged by what was said rather than where — for
+> spotting that two things reported in different suburbs are one problem.
 
 *Switch back to Map before you finish.*
 
@@ -175,10 +182,10 @@ alert carries the uncorroborated line word for word.*
 | What | Do this |
 |---|---|
 | Galaxy view stutters or renders black | Stay on Map. Say "the geographic view is the one that matters operationally" and move on. It is a 3D canvas; it is not the argument. |
-| A pin will not open | Click a different one. The Aro Valley cluster is the only *scripted* one — Kelburn AWS (4/4) also shows a collapse-free multi-source event. |
+| A pin will not open | Click a different one. Aro Street is the only *scripted* pin — Karori Road (4/4) also opens on a rich multi-source cluster. |
 | Board is empty | The database was truncated. `npm run demo:plumb -- --http` takes about 20 seconds. Keep talking about the problem statement while it runs. |
 | Grades all read F | The registry was not seeded. Run the `sources.seed` curl above, then re-plumb. |
-| Someone asks for the live picture | Second tab: `?dataset=live` — 26 items, 4 clusters, from `scripts/fixtures.json`. |
+| Asked "is any of this real?" | Yes — real collected signals and authored demo items share the feed. Open any pin: `synthetic` is on every provenance entry and SYN is on the pin. In the Aro Street cluster, 23 of its 36 items are authored. |
 | Asked to prove it | `npm run proof:grading` — 56 assertions, no database, under a second. `npm run verify` — 66 end to end, but it truncates, so only after the demo. |
 
 ---
@@ -188,13 +195,14 @@ alert carries the uncorroborated line word for word.*
 Volunteering these is the demo. The problem statement is explicitly about making
 limitations visible, and a system that hides its own would fail its own test.
 
-- **This is synthetic data.** Every item in the demo dataset is authored and
-  flagged `synthetic` in the API, carried through to every provenance entry. The
-  dataset switch says "Demo" for the same reason. We are demonstrating the
-  reasoning, not claiming a real incident.
-- **No live collectors.** Items arrive by drop-folder or by POST. Anyone's
-  collector can send us anything today (INTEGRATION.md); we did not build
-  scrapers, and Reddit/RNZ ingestion is not wired.
+- **The feed is part real, part authored, and the board says which.** Real
+  collected signals and items written for this demo sit in one feed, because
+  that is what an operator's day looks like. Every authored item carries
+  `synthetic` on every provenance entry and puts a **SYN** badge on its pin —
+  23 of the 36 items behind Aro Street are authored. Say this before anyone
+  asks: we are demonstrating the reasoning, not claiming a live incident.
+- **The storm itself did not happen.** Wellington is not flooding this
+  afternoon. The reasoning is real; the weather is not.
 - **Embeddings are a lexical stub** unless `AI_GATEWAY_API_KEY` is set. Grouping
   is by shared words rather than meaning, so "inundation" will not match
   "flooding". Origin fingerprinting is unaffected — it requires shared *wording*
@@ -206,8 +214,8 @@ limitations visible, and a system that hides its own would fail its own test.
 
 ### The question a sharp judge will ask
 
-Somebody will click **"dam_failure — Karori Road"** and find a rumour that the
-Karori reservoir has been breached sitting in the same cluster as a Greater
+Somebody will click **"infrastructure — Karori Road"** and find a rumour that
+the Karori reservoir has been breached sitting in the same cluster as a Greater
 Wellington gauge reading saying the stream is at 0.42 m, within normal range —
 graded A3, "possibly true". **That is a real limitation and you should say so
 plainly:**
