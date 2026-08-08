@@ -2,13 +2,14 @@
 
 import { useCallback, useMemo, useState } from "react";
 import dynamic from "next/dynamic";
-import { useQuery } from "@tanstack/react-query";
+import { useQueries } from "@tanstack/react-query";
 import { useTheme } from "next-themes";
 import { Badge } from "@/components/ui/badge";
 import { FeatureError } from "@/components/errors/feature-error";
 import { useTRPC } from "@/trpc/client";
 import type { MapLayer } from "@/use-cases/gis/map-layer-schema";
 import { formatRelativeTime } from "@/utilities/format-relative-time";
+import { MAP_LAYER_IDS } from "./map-layers";
 import { MapLegend } from "./components/map-legend";
 import { HazardMapSkeleton } from "./hazard-map-skeleton";
 
@@ -23,13 +24,22 @@ export function HazardMapClient() {
   const trpc = useTRPC();
   const { resolvedTheme } = useTheme();
 
-  const ponding = useQuery(trpc.gis.layer.queryOptions({ datasetId: "ponding-areas" }));
-  const hubs = useQuery(trpc.gis.layer.queryOptions({ datasetId: "community-emergency-hubs" }));
+  // One query per layer, driven off a fixed list so the hook count is stable.
+  const results = useQueries({
+    queries: MAP_LAYER_IDS.map((datasetId) => trpc.gis.layer.queryOptions({ datasetId })),
+  });
 
-  // Polygons first so the hub points draw on top of the ponding fill.
   const layers = useMemo(
-    () => [ponding.data, hubs.data].filter((layer): layer is MapLayer => layer !== undefined),
-    [ponding.data, hubs.data],
+    () => results.map((r) => r.data).filter((layer): layer is MapLayer => layer !== undefined),
+    [results],
+  );
+
+  // These five layers come from three different Council servers. One of them
+  // being slow or down shouldn't blank the map, so we draw what we have and
+  // name what's missing rather than failing the whole feature.
+  const failedDatasetIds = useMemo(
+    () => MAP_LAYER_IDS.filter((_, i) => results[i].isError),
+    [results],
   );
 
   // Which layers are switched off. Held here rather than in the legend because
@@ -44,9 +54,8 @@ export function HazardMapClient() {
     });
   }, []);
 
-  if (ponding.isLoading || hubs.isLoading) return <HazardMapSkeleton />;
-  if (ponding.isError || hubs.isError || layers.length === 0)
-    return <FeatureError name="the hazard map" />;
+  if (results.some((r) => r.isLoading)) return <HazardMapSkeleton />;
+  if (layers.length === 0) return <FeatureError name="the hazard map" />;
 
   const fetchedAt = layers[0].fetchedAt;
 
@@ -69,6 +78,7 @@ export function HazardMapClient() {
           layers={layers}
           hiddenDatasetIds={hiddenDatasetIds}
           onToggleDataset={toggleDataset}
+          failedDatasetIds={failedDatasetIds}
         />
         <MapCanvas
           layers={layers}
@@ -80,7 +90,8 @@ export function HazardMapClient() {
       <footer className="text-muted-foreground space-y-0.5 text-[11px]">
         <p>
           Boundaries are generalised to roughly 10 m for display — read them as approximate
-          extents, not surveyed lines.
+          extents, not surveyed lines. Each layer states its own limitations when you open a
+          feature.
         </p>
         {layers.map((layer) => (
           <p key={layer.datasetId}>{layer.attribution}</p>

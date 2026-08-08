@@ -2,6 +2,7 @@ import { Suspense } from "react";
 import { ErrorBoundary } from "@/components/errors/error-boundary";
 import { FeatureError } from "@/components/errors/feature-error";
 import { trpc, prefetch, HydrateClient } from "@/trpc/server";
+import { MAP_LAYER_IDS } from "./map-layers";
 import { HazardMapClient } from "./hazard-map-client";
 import { HazardMapSkeleton } from "./hazard-map-skeleton";
 
@@ -21,8 +22,9 @@ export function HazardMap() {
 }
 
 async function HazardMapContent() {
-  prefetch(trpc.gis.layer.queryOptions({ datasetId: "ponding-areas" }));
-  prefetch(trpc.gis.layer.queryOptions({ datasetId: "community-emergency-hubs" }));
+  for (const datasetId of MAP_LAYER_IDS) {
+    prefetch(trpc.gis.layer.queryOptions({ datasetId }));
+  }
 
   return (
     <HydrateClient>

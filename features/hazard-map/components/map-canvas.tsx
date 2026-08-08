@@ -35,20 +35,81 @@ const BASEMAP_SOURCE_ID = "basemap";
  */
 setWorkerUrl("/maplibre/maplibre-gl-worker.mjs");
 
-/** ArcGIS bookkeeping columns — noise in a popup. */
-const HIDDEN_PROPERTIES = new Set(["OBJECTID", "objectid", "Shape", "Shape_Length", "Shape_Area", "X", "Y"]);
+/**
+ * ArcGIS bookkeeping columns — noise in a popup. Services vary in how they
+ * spell these (`Shape_Length` on MapServer, `Shape__Length` on FeatureServer),
+ * so both forms are listed rather than pattern-matched.
+ */
+const HIDDEN_PROPERTIES = new Set([
+  "OBJECTID",
+  "OBJECTID_1",
+  "objectid",
+  "FID",
+  "Shape",
+  "Shape_Length",
+  "Shape_Leng",
+  "Shape_Area",
+  "Shape__Length",
+  "Shape__Length_2",
+  "Shape__Area",
+  "X",
+  "Y",
+  // Cartography instructions for the publisher's own map, not facts about the
+  // feature: "Fill colour: #65C7EA. Outline width: 1..." tells an analyst nothing.
+  "Symbology",
+  "Col_Code",
+]);
 const MAX_POPUP_ROWS = 8;
 
 const sourceIdFor = (datasetId: string) => `gis-${datasetId}`;
 const fillLayerIdFor = (datasetId: string) => `gis-${datasetId}-fill`;
 const outlineLayerIdFor = (datasetId: string) => `gis-${datasetId}-outline`;
 const circleLayerIdFor = (datasetId: string) => `gis-${datasetId}-circle`;
+const lineLayerIdFor = (datasetId: string) => `gis-${datasetId}-line`;
 
 /** One dataset can be more than one MapLibre layer — a polygon needs both. */
 function styleLayerIdsFor(layer: MapLayer): string[] {
-  return layer.geometryKind === "polygon"
-    ? [fillLayerIdFor(layer.datasetId), outlineLayerIdFor(layer.datasetId)]
-    : [circleLayerIdFor(layer.datasetId)];
+  switch (layer.geometryKind) {
+    case "polygon":
+      return [fillLayerIdFor(layer.datasetId), outlineLayerIdFor(layer.datasetId)];
+    case "line":
+      return [lineLayerIdFor(layer.datasetId)];
+    default:
+      return [circleLayerIdFor(layer.datasetId)];
+  }
+}
+
+/**
+ * Renders a value as a link when it is one, and as text otherwise.
+ *
+ * Only http(s) survives: an href is the one place third-party data could become
+ * executable (`javascript:`), and these values come from servers we don't own.
+ * Anything that fails to parse, or parses to another scheme, falls back to
+ * plain text — which can't do anything.
+ *
+ * The visible text is the host, not the URL: these are ePlan and ArcGIS item
+ * links that run to 80+ characters and were the thing blowing the popup open.
+ */
+function valueNode(value: unknown): HTMLElement | Text {
+  const text = String(value);
+  if (/^https?:\/\//i.test(text)) {
+    try {
+      const url = new URL(text);
+      if (url.protocol === "http:" || url.protocol === "https:") {
+        const link = document.createElement("a");
+        link.href = url.href;
+        link.target = "_blank";
+        link.rel = "noopener noreferrer";
+        link.title = url.href;
+        link.className = "text-primary underline underline-offset-2";
+        link.textContent = `${url.host} ↗`;
+        return link;
+      }
+    } catch {
+      // Not a parseable URL — fall through to text.
+    }
+  }
+  return document.createTextNode(text);
 }
 
 /**
@@ -58,7 +119,9 @@ function styleLayerIdsFor(layer: MapLayer): string[] {
  */
 function popupContent(layer: MapLayer, properties: Record<string, unknown>): HTMLElement {
   const root = document.createElement("div");
-  root.className = "max-w-72 space-y-1.5 text-xs";
+  // Tall popups scroll rather than run off the map; the width cap is here
+  // because MapLibre's own maxWidth can't restrain a grid (see the dd below).
+  root.className = "max-w-72 max-h-80 overflow-y-auto space-y-1.5 text-xs";
 
   // Colours are named rather than inherited: the popup lives in MapLibre's own
   // chrome, outside anything that sets a foreground colour for us.
@@ -90,8 +153,11 @@ function popupContent(layer: MapLayer, properties: Record<string, unknown>): HTM
     term.className = "text-muted-foreground";
     term.textContent = key;
     const definition = document.createElement("dd");
-    definition.className = "font-medium break-words text-popover-foreground";
-    definition.textContent = String(value);
+    // min-w-0 is load-bearing: a grid item defaults to min-width:auto, so a long
+    // unbroken value sets the track's minimum and the popup grows past its
+    // max-width instead of wrapping. break-words alone can't prevent that.
+    definition.className = "min-w-0 font-medium break-words text-popover-foreground";
+    definition.append(valueNode(value));
     list.append(term, definition);
   }
   root.append(list);
@@ -210,6 +276,21 @@ export function MapCanvas({
             paint: { "line-color": paint.outline, "line-width": 1.5 },
           });
           clickTargets.push(fillLayerIdFor(layer.datasetId));
+        } else if (layer.geometryKind === "line") {
+          map.addLayer({
+            id: lineLayerIdFor(layer.datasetId),
+            type: "line",
+            source: sourceId,
+            layout: { "line-cap": "round", "line-join": "round" },
+            paint: {
+              // Thicker as you zoom in: a 2px line is close to unclickable, and
+              // road-priority routes are only meaningful once you can see streets.
+              "line-width": ["interpolate", ["linear"], ["zoom"], 10, 1.5, 15, 4],
+              "line-color": paint.fill,
+              "line-opacity": paint.opacity,
+            },
+          });
+          clickTargets.push(lineLayerIdFor(layer.datasetId));
         } else {
           map.addLayer({
             id: circleLayerIdFor(layer.datasetId),
@@ -271,8 +352,17 @@ export function MapCanvas({
       }
     };
 
-    if (map.isStyleLoaded()) apply();
-    else map.once("load", apply);
+    // Apply straight away — every write is guarded by getLayer, so calling this
+    // before the layers exist is a no-op rather than an error. Do NOT gate on
+    // isStyleLoaded(): with five sources it reads false while tiles are still
+    // settling, and `once("load")` never fires again once load has happened, so
+    // the toggle would silently stop working. `once` here only covers the very
+    // first paint, and is removed on cleanup so listeners can't accumulate.
+    apply();
+    map.once("load", apply);
+    return () => {
+      map.off("load", apply);
+    };
   }, [layers, hiddenDatasetIds]);
 
   return <div ref={containerRef} className="h-full w-full" aria-label="Map of Wellington hazard layers" role="application" />;

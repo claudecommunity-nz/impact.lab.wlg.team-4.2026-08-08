@@ -1,6 +1,7 @@
 import { ChevronDown, Layers } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
+import { MAP_LAYER_IDS } from "./map-layers";
 
 /**
  * Mirrors the client layout. Heading and map frame render for real; Skeleton
@@ -31,14 +32,12 @@ export function HazardMapSkeleton() {
             <span className="flex-1 text-xs font-medium">Legend</span>
             <ChevronDown className="size-3.5 shrink-0" aria-hidden />
           </div>
-          <div className="space-y-2.5 px-3 pt-0 pb-3">
-            {[0, 1].map((i) => (
-              <div key={i} className="space-y-1">
-                <div className="flex items-center gap-2">
-                  <Skeleton className="size-3 rounded-sm" />
-                  <Skeleton className="h-3 w-28" />
-                </div>
-                <Skeleton className="ml-5 h-2.5 w-32" />
+          <div className="px-1.5 pt-0 pb-2">
+            {MAP_LAYER_IDS.map((datasetId) => (
+              <div key={datasetId} className="flex items-center gap-2 px-1.5 py-1">
+                <Skeleton className="size-3 shrink-0 rounded-sm" />
+                <Skeleton className="h-3 flex-1" />
+                <Skeleton className="h-3 w-4" />
               </div>
             ))}
           </div>

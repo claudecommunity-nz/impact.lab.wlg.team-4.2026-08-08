@@ -16,8 +16,13 @@ export type LayerPaint = {
 };
 
 export const LAYER_PAINT: Record<string, LayerPaint> = {
+  // Hazard extents: cool colours, sitting underneath everything else.
   "ponding-areas": { fill: "#65C7EA", outline: "#114CA8", opacity: 0.7 },
+  "tsunami-evacuation-zones": { fill: "#A78BFA", outline: "#5B21B6", opacity: 0.35 },
+  // Response infrastructure: warm and saturated, so it reads on top of hazard.
+  "emergency-routes": { fill: "#22C55E", outline: "#14532D", opacity: 0.9 },
   "community-emergency-hubs": { fill: "#F59E0B", outline: "#7C2D12", opacity: 0.95 },
+  "emergency-water-tanks": { fill: "#06B6D4", outline: "#164E63", opacity: 0.95 },
 };
 
 /** Anything added to the dataset registry without a paint rule still renders. */

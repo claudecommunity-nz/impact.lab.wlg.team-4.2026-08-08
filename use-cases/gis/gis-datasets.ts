@@ -40,6 +40,35 @@ export const GIS_DATASETS = {
       "Operational locations published by WREMO. Whether a hub is open, staffed or reachable is not shown — this is the published list, not live status.",
     layerUrl: "https://mapping.gw.govt.nz/arcgis/rest/services/GW/Emergencies_P/MapServer/2",
   },
+  "tsunami-evacuation-zones": {
+    displayName: "Tsunami evacuation zones",
+    authority: "Wellington City Council",
+    attribution: "Tsunami Evacuation Zones © Wellington City Council",
+    geometryKind: "polygon",
+    caveat:
+      "Planning zones based on modelled scenarios — not a prediction of any particular wave, and not an indication that one is expected.",
+    layerUrl: "https://gis.wcc.govt.nz/arcgis/rest/services/Environment/TsunamiEvacuationZones/MapServer/1",
+  },
+  "emergency-routes": {
+    displayName: "Post-quake emergency routes",
+    authority: "Wellington City Council",
+    attribution: "Post-Quake Emergency Routes © Wellington City Council",
+    geometryKind: "line",
+    caveat:
+      "The planned order in which WCC intends to reopen roads after a major quake. Not current road status — a route shown here may be blocked.",
+    layerUrl:
+      "https://services1.arcgis.com/CPYspmTk3abe6d7i/arcgis/rest/services/Emergency_Routes/FeatureServer/0",
+  },
+  "emergency-water-tanks": {
+    displayName: "Emergency water tanks",
+    authority: "Wellington City Council",
+    attribution: "Emergency Water Tank Locations © Wellington City Council",
+    geometryKind: "point",
+    caveat:
+      "Published tank locations. Presence here says nothing about whether a tank is full, working or reachable after an event.",
+    layerUrl:
+      "https://services1.arcgis.com/CPYspmTk3abe6d7i/arcgis/rest/services/Emergency_Water_Tank_Location/FeatureServer/0",
+  },
   "ponding-areas": {
     displayName: "Ponding inundation areas",
     authority: "Wellington City Council",

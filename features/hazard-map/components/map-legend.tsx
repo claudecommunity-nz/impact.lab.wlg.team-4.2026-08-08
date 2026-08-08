@@ -8,9 +8,11 @@ import type { MapLayer } from "@/use-cases/gis/map-layer-schema";
 import { paintFor } from "./layer-paint";
 
 /**
- * Carries each layer's publisher, feature count and caveat because the map is
- * only honest if you can see whose data it is, how much of it loaded, and what
- * it doesn't tell you — and the caveat differs per layer.
+ * Names each layer, counts it, and switches it on and off. Deliberately terse:
+ * with five layers the full publisher-and-caveat text made the panel taller
+ * than the map was useful. The detail hasn't been dropped — the publisher is in
+ * the page footer and the caveat is in every feature popup, both of which are
+ * read at the moment they matter.
  *
  * Doubles as the layer filter: the legend already names the layers and shows
  * their colours, so putting the on/off control anywhere else would duplicate
@@ -18,17 +20,18 @@ import { paintFor } from "./layer-paint";
  * it for the map too. Only the open/closed state is local widget state.
  *
  * Collapsible because it sits over the top-left of the map and hides the city
- * underneath it. Open by default: the caveats are the point, so you have to
- * choose to dismiss them rather than choose to find them.
+ * underneath it.
  */
 export function MapLegend({
   layers,
   hiddenDatasetIds,
   onToggleDataset,
+  failedDatasetIds,
 }: {
   layers: MapLayer[];
   hiddenDatasetIds: ReadonlySet<string>;
   onToggleDataset: (datasetId: string) => void;
+  failedDatasetIds: readonly string[];
 }) {
   const [open, setOpen] = useState(true);
 
@@ -51,12 +54,12 @@ export function MapLegend({
         />
       </CollapsibleTrigger>
 
-      <CollapsibleContent className="space-y-2.5 px-3 pt-0 pb-3">
+      <CollapsibleContent className="px-1.5 pt-0 pb-2">
         {layers.map((layer) => {
           const paint = paintFor(layer.datasetId);
           const visible = !hiddenDatasetIds.has(layer.datasetId);
           return (
-            <div key={layer.datasetId} className="space-y-0.5">
+            <div key={layer.datasetId}>
               {/*
                 A toggle button rather than a checkbox: this repo's checkbox
                 primitive renders a <button>, and a <label htmlFor> pointing at
@@ -68,7 +71,7 @@ export function MapLegend({
                 size="sm"
                 aria-pressed={visible}
                 onClick={() => onToggleDataset(layer.datasetId)}
-                className="h-auto w-full justify-start gap-2 px-1 py-0.5 font-normal"
+                className="h-auto w-full justify-start gap-2 px-1.5 py-1 font-normal"
               >
                 <span
                   className="size-3 shrink-0 rounded-sm border"
@@ -80,27 +83,31 @@ export function MapLegend({
                   }}
                   aria-hidden
                 />
-                <span className={`text-xs font-medium ${visible ? "" : "text-muted-foreground"}`}>
+                <span
+                  className={`flex-1 text-left text-xs ${visible ? "" : "text-muted-foreground"}`}
+                >
                   {layer.displayName}
                 </span>
+                <span className="text-muted-foreground text-[11px] tabular-nums">
+                  {layer.featureCollection.features.length}
+                </span>
               </Button>
-              <p className="text-muted-foreground pl-5 text-[11px]">
-                {layer.featureCollection.features.length} features · {layer.authority}
-                {!visible && " · hidden"}
-              </p>
-              {/* Muted and tight: it must be readable over the map without
-                  crowding out the layer names it qualifies. */}
-              <p className="text-muted-foreground pl-5 text-[11px] leading-snug text-pretty">
-                {layer.caveat}
-              </p>
               {layer.truncated && (
-                <p className="text-destructive pl-5 text-[11px]">
-                  Showing a subset — the server had more features than we requested.
+                <p className="text-destructive px-1.5 pb-1 pl-8 text-[11px]">
+                  Showing a subset of this layer.
                 </p>
               )}
             </div>
           );
         })}
+
+        {/* A layer that failed to load is a hole in the picture, so it gets
+            named rather than just going missing. */}
+        {failedDatasetIds.length > 0 && (
+          <p className="text-destructive px-1.5 pt-1 text-[11px] leading-snug">
+            Couldn&apos;t load: {failedDatasetIds.join(", ")}
+          </p>
+        )}
       </CollapsibleContent>
     </Collapsible>
   );
