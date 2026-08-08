@@ -1,0 +1,262 @@
+{
+ "2026p576644": {
+  "label": "M5.2 Porirua 2026-08-02",
+  "suburbs": {
+   "Karori": {
+    "reports_within_3km": 19,
+    "mmi_max": 4,
+    "mmi_mean": 3.4
+   },
+   "Johnsonville": {
+    "reports_within_3km": 12,
+    "mmi_max": 6,
+    "mmi_mean": 3.7
+   },
+   "Porirua": {
+    "reports_within_3km": 14,
+    "mmi_max": 4,
+    "mmi_mean": 3.3
+   },
+   "Te Aro": {
+    "reports_within_3km": 114,
+    "mmi_max": 8,
+    "mmi_mean": 4.3
+   },
+   "Newtown": {
+    "reports_within_3km": 111,
+    "mmi_max": 8,
+    "mmi_mean": 4.4
+   },
+   "Miramar": {
+    "reports_within_3km": 31,
+    "mmi_max": 4,
+    "mmi_mean": 3.5
+   },
+   "Island Bay": {
+    "reports_within_3km": 16,
+    "mmi_max": 4,
+    "mmi_mean": 3.7
+   },
+   "Lower Hutt": {
+    "reports_within_3km": 31,
+    "mmi_max": 8,
+    "mmi_mean": 3.5
+   },
+   "Petone": {
+    "reports_within_3km": 8,
+    "mmi_max": 4,
+    "mmi_mean": 3.1
+   },
+   "Upper Hutt": {
+    "reports_within_3km": 8,
+    "mmi_max": 8,
+    "mmi_mean": 4.4
+   },
+   "Tawa": {
+    "reports_within_3km": 16,
+    "mmi_max": 5,
+    "mmi_mean": 4.1
+   },
+   "Kelburn": {
+    "reports_within_3km": 112,
+    "mmi_max": 8,
+    "mmi_mean": 4.3
+   }
+  }
+ },
+ "2025p836054": {
+  "label": "M4.9 2025-11-06",
+  "suburbs": {
+   "Karori": {
+    "reports_within_3km": 2210,
+    "mmi_max": 8,
+    "mmi_mean": 5.8
+   },
+   "Johnsonville": {
+    "reports_within_3km": 2421,
+    "mmi_max": 8,
+    "mmi_mean": 6.1
+   },
+   "Porirua": {
+    "reports_within_3km": 918,
+    "mmi_max": 6,
+    "mmi_mean": 5.5
+   },
+   "Te Aro": {
+    "reports_within_3km": 5105,
+    "mmi_max": 8,
+    "mmi_mean": 6.1
+   },
+   "Newtown": {
+    "reports_within_3km": 4826,
+    "mmi_max": 8,
+    "mmi_mean": 6.0
+   },
+   "Miramar": {
+    "reports_within_3km": 1959,
+    "mmi_max": 8,
+    "mmi_mean": 5.7
+   },
+   "Island Bay": {
+    "reports_within_3km": 1717,
+    "mmi_max": 8,
+    "mmi_mean": 5.9
+   },
+   "Lower Hutt": {
+    "reports_within_3km": 2074,
+    "mmi_max": 8,
+    "mmi_mean": 6.0
+   },
+   "Petone": {
+    "reports_within_3km": 898,
+    "mmi_max": 8,
+    "mmi_mean": 6.0
+   },
+   "Upper Hutt": {
+    "reports_within_3km": 912,
+    "mmi_max": 6,
+    "mmi_mean": 5.3
+   },
+   "Tawa": {
+    "reports_within_3km": 908,
+    "mmi_max": 8,
+    "mmi_mean": 6.1
+   },
+   "Kelburn": {
+    "reports_within_3km": 4885,
+    "mmi_max": 8,
+    "mmi_mean": 6.1
+   }
+  }
+ },
+ "2026p571526": {
+  "label": "M4.6 2026-07-31",
+  "suburbs": {
+   "Karori": {
+    "reports_within_3km": 678,
+    "mmi_max": 7,
+    "mmi_mean": 4.6
+   },
+   "Johnsonville": {
+    "reports_within_3km": 726,
+    "mmi_max": 8,
+    "mmi_mean": 4.9
+   },
+   "Porirua": {
+    "reports_within_3km": 390,
+    "mmi_max": 7,
+    "mmi_mean": 4.8
+   },
+   "Te Aro": {
+    "reports_within_3km": 1463,
+    "mmi_max": 8,
+    "mmi_mean": 5.0
+   },
+   "Newtown": {
+    "reports_within_3km": 1239,
+    "mmi_max": 8,
+    "mmi_mean": 5.1
+   },
+   "Miramar": {
+    "reports_within_3km": 450,
+    "mmi_max": 8,
+    "mmi_mean": 4.9
+   },
+   "Island Bay": {
+    "reports_within_3km": 320,
+    "mmi_max": 6,
+    "mmi_mean": 4.5
+   },
+   "Lower Hutt": {
+    "reports_within_3km": 334,
+    "mmi_max": 5,
+    "mmi_mean": 4.2
+   },
+   "Petone": {
+    "reports_within_3km": 123,
+    "mmi_max": 5,
+    "mmi_mean": 4.1
+   },
+   "Upper Hutt": {
+    "reports_within_3km": 110,
+    "mmi_max": 8,
+    "mmi_mean": 3.8
+   },
+   "Tawa": {
+    "reports_within_3km": 370,
+    "mmi_max": 6,
+    "mmi_mean": 4.8
+   },
+   "Kelburn": {
+    "reports_within_3km": 1457,
+    "mmi_max": 8,
+    "mmi_mean": 4.9
+   }
+  }
+ },
+ "2026p576643": {
+  "label": "M5.7 Te Araroa 2026-08-02",
+  "suburbs": {
+   "Karori": {
+    "reports_within_3km": 19,
+    "mmi_max": 4,
+    "mmi_mean": 3.4
+   },
+   "Johnsonville": {
+    "reports_within_3km": 11,
+    "mmi_max": 6,
+    "mmi_mean": 3.5
+   },
+   "Porirua": {
+    "reports_within_3km": 14,
+    "mmi_max": 4,
+    "mmi_mean": 3.3
+   },
+   "Te Aro": {
+    "reports_within_3km": 112,
+    "mmi_max": 7,
+    "mmi_mean": 4.2
+   },
+   "Newtown": {
+    "reports_within_3km": 109,
+    "mmi_max": 7,
+    "mmi_mean": 4.2
+   },
+   "Miramar": {
+    "reports_within_3km": 31,
+    "mmi_max": 4,
+    "mmi_mean": 3.5
+   },
+   "Island Bay": {
+    "reports_within_3km": 16,
+    "mmi_max": 4,
+    "mmi_mean": 3.7
+   },
+   "Lower Hutt": {
+    "reports_within_3km": 31,
+    "mmi_max": 8,
+    "mmi_mean": 3.5
+   },
+   "Petone": {
+    "reports_within_3km": 8,
+    "mmi_max": 4,
+    "mmi_mean": 3.1
+   },
+   "Upper Hutt": {
+    "reports_within_3km": 7,
+    "mmi_max": 8,
+    "mmi_mean": 3.9
+   },
+   "Tawa": {
+    "reports_within_3km": 16,
+    "mmi_max": 5,
+    "mmi_mean": 4.1
+   },
+   "Kelburn": {
+    "reports_within_3km": 110,
+    "mmi_max": 7,
+    "mmi_mean": 4.2
+   }
+  }
+ }
+}
