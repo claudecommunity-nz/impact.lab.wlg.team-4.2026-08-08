@@ -6,13 +6,13 @@ import { cn } from "@/lib/utils";
  * The one place the board turns an Admiralty grade into words and a colour.
  *
  * Two audiences, one grade. On the map and the cards it reads in plain English
- * — "could be true", "unclear" — because the first question anyone asks is
+ * — "corroborated", "unclear" — because the first question anyone asks is
  * whether to believe it, and "C3" answers that only for someone who already
  * knows the Admiralty system. The letters are not dropped: they stay in the
  * drill panel, where an operator has chosen to look at the expert layer.
  *
  * Colour is drawn from the theme tokens, never hardcoded, so both themes and
- * any future palette change stay consistent: sage = could be true, amber =
+ * any future palette change stay consistent: sage = corroborated, amber =
  * unclear, terracotta = doubtful, muted = cannot be judged. Grey for "truth
  * cannot be judged" is deliberate — that is an absence of assessment, not a
  * severity, and colouring it red would claim we know something bad.
@@ -31,7 +31,7 @@ export function credibilityTone(grade: Grade | null): CredibilityTone {
 /** What a non-specialist should read off the surface. */
 export const PLAIN_CREDIBILITY: Record<CredibilityTone, string> = {
   confirmed: "confirmed",
-  plausible: "could be true",
+  plausible: "corroborated",
   unclear: "unclear",
   doubtful: "doubtful",
   unjudged: "can't judge yet",
@@ -107,9 +107,10 @@ export function CredibilityChip({
 }
 
 /**
- * The legend. A colour ramp nobody can read invents its own meaning in the
- * viewer's head, so the board states what its colours mean in the same plain
- * words the chips use.
+ * The legend, one line tall. A colour ramp nobody can read invents its own
+ * meaning in the viewer's head — but the words here are the same words the
+ * chips wear, so a dot and a word each is the whole key. The longer
+ * explanations ride on hover, where they cost no pixels.
  */
 export function CredibilityLegend({ className }: { className?: string }) {
   const rows: { tone: CredibilityTone; hint: string }[] = [
@@ -120,25 +121,21 @@ export function CredibilityLegend({ className }: { className?: string }) {
   ];
 
   return (
-    <div className={cn("flex flex-col gap-1.5", className)}>
-      <p className="text-muted-foreground text-[10px] font-semibold tracking-[0.12em] uppercase">
-        How much to believe it
-      </p>
-      <ul className="flex flex-col gap-1">
-        {rows.map((row) => (
-          <li key={row.tone} className="flex items-baseline gap-2">
-            <span
-              aria-hidden
-              className="size-2 shrink-0 translate-y-[3px] rounded-full"
-              style={{ background: TONE_COLOUR[row.tone] }}
-            />
-            <span className="text-[11px] leading-snug">
-              <span className="font-medium">{PLAIN_CREDIBILITY[row.tone]}</span>
-              <span className="text-muted-foreground"> — {row.hint}</span>
-            </span>
-          </li>
-        ))}
-      </ul>
+    <div className={cn("flex flex-wrap items-center gap-x-3 gap-y-1", className)}>
+      {rows.map((row) => (
+        <span
+          key={row.tone}
+          title={row.hint}
+          className="flex items-center gap-1.5 text-[11px] font-medium"
+        >
+          <span
+            aria-hidden
+            className="size-2 shrink-0 rounded-full"
+            style={{ background: TONE_COLOUR[row.tone] }}
+          />
+          {PLAIN_CREDIBILITY[row.tone]}
+        </span>
+      ))}
     </div>
   );
 }

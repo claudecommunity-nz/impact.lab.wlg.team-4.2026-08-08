@@ -163,9 +163,12 @@ alert carries the uncorroborated line word for word.*
 
 *Switch the view toggle to Trends.*
 
-> The same events on two axes a duty officer already has words for: how many
-> reports have arrived, and how fast they are still arriving. Top right answers
-> "what do I look at first" — big, and still climbing.
+> The board's own words: **matters needing confirmation** — the problem
+> statement as a screen. The top card is the story arriving fastest, and the
+> bar under its name is the brief's central question drawn as a picture: each
+> cell is a report, the filled ones are independent voices, the empty ones
+> repeat something already counted. Nothing here is presented as fact — it is
+> a worklist for a human.
 
 *Switch back to Map before you finish.*
 

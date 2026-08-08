@@ -18,13 +18,13 @@ export function BoardShellSkeleton() {
         {/* The view toggle is real chrome, but inert until the board is live. */}
         <div className="border-border flex overflow-hidden rounded-lg border opacity-50">
           <span className="text-muted-foreground px-3.5 py-1.5 text-[11.5px] font-semibold">Map</span>
-          <span className="text-muted-foreground px-3.5 py-1.5 text-[11.5px] font-semibold">Galaxy</span>
+          <span className="text-muted-foreground px-3.5 py-1.5 text-[11.5px] font-semibold">Trends</span>
         </div>
       </header>
 
       <div className="bg-muted relative min-h-0 flex-1 p-4">
         <Skeleton className="h-full w-full rounded-lg" />
-        <div className="bg-card border-border absolute bottom-6 left-6 rounded-lg border p-3">
+        <div className="bg-card border-border absolute bottom-6 left-6 rounded-full border px-3 py-1.5">
           <CredibilityLegend />
         </div>
       </div>

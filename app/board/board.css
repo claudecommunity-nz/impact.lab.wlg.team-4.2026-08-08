@@ -25,14 +25,48 @@
   font-family: var(--font-plex-mono), ui-monospace, Menlo, monospace;
 }
 /* Width, height and glow are set per-marker from the report count — the dot is
-   the primary quantity display on this map, so its size is data. */
+   the primary quantity display on this map, so its size is data. Size, colour
+   and glow are TRANSITIONED: when the time control replays history, a cluster
+   that accumulates reports should be seen growing, not flickering between
+   sizes, and a grade change should read as a shift, not a swap. */
 .signal-marker .dot {
   border-radius: 50%;
   flex: none;
-  transition: transform 0.18s ease;
+  transition:
+    transform 0.18s ease,
+    width 0.45s cubic-bezier(0.22, 1, 0.36, 1),
+    height 0.45s cubic-bezier(0.22, 1, 0.36, 1),
+    background-color 0.45s ease,
+    box-shadow 0.45s ease;
+  animation: signal-bloom 0.45s cubic-bezier(0.34, 1.56, 0.64, 1) backwards;
 }
 .signal-marker:hover .dot {
   transform: scale(1.08);
+}
+/* A report arriving is the event this board exists for — let it land. */
+@keyframes signal-bloom {
+  0% {
+    transform: scale(0);
+    opacity: 0;
+  }
+  60% {
+    transform: scale(1.18);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+/* Time-travel exits: scrubbing left un-collects a report, so its marker shrinks
+   back out rather than blinking off. The canvas sets the class, waits out the
+   fade, then removes the marker. */
+.signal-marker.leaving {
+  opacity: 0;
+  transition: opacity 0.22s ease;
+  pointer-events: none;
+}
+.signal-marker.leaving .dot {
+  transform: scale(0.3);
 }
 /* Ungraded is a hollow ring: the absence of a grade must not look like a grade. */
 .signal-marker .dot.ungraded {
@@ -130,6 +164,7 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .signal-marker,
   .signal-marker .dot,
   .drill-panel {
     transition: none !important;

@@ -96,7 +96,12 @@ type MarkerRecord = {
   chipDot: HTMLSpanElement;
   chipText: HTMLSpanElement;
   flag: HTMLSpanElement;
+  /** Set while the marker is fading out; cancelled if the signal reappears. */
+  leaveTimer: ReturnType<typeof setTimeout> | null;
 };
+
+/** Slightly past the CSS fade (0.22s) so the removal never clips it. */
+const LEAVE_MS = 260;
 
 /**
  * The board's single canvas: Council hazard geography underneath, our signal
@@ -261,7 +266,10 @@ export function MapCanvas({
     setMapInstance(map);
 
     return () => {
-      for (const record of markers.values()) record.marker.remove();
+      for (const record of markers.values()) {
+        if (record.leaveTimer !== null) clearTimeout(record.leaveTimer);
+        record.marker.remove();
+      }
       markers.clear();
       map.remove();
       setMapInstance(null);
@@ -390,16 +398,26 @@ export function MapCanvas({
         record.marker.setLngLat(feature.geometry.coordinates).addTo(map);
         markersRef.current.set(id, record);
       } else {
+        // Scrubbing forward can bring a signal back mid-fade — reclaim it.
+        if (record.leaveTimer !== null) {
+          clearTimeout(record.leaveTimer);
+          record.leaveTimer = null;
+          record.element.classList.remove("leaving");
+        }
         record.marker.setLngLat(feature.geometry.coordinates);
       }
 
       paintMarker(record, feature, id === selectedSignalId, busiest);
     }
 
+    // Exits fade rather than blink: mark, wait out the CSS transition, remove.
     for (const [id, record] of markersRef.current) {
-      if (seen.has(id)) continue;
-      record.marker.remove();
-      markersRef.current.delete(id);
+      if (seen.has(id) || record.leaveTimer !== null) continue;
+      record.element.classList.add("leaving");
+      record.leaveTimer = setTimeout(() => {
+        record.marker.remove();
+        markersRef.current.delete(id);
+      }, LEAVE_MS);
     }
   }, [mapInstance, features, selectedSignalId]);
 
@@ -466,7 +484,7 @@ function createMarkerRecord(
   chip.className = "chip";
 
   // Credibility travels as a coloured dot inside the pill, not as words. The
-  // words ("could be true") belong to the drill panel; on the map they turned
+  // words ("corroborated") belong to the drill panel; on the map they turned
   // every marker into a sentence.
   const chipDot = document.createElement("span");
   chipDot.className = "chip-dot";
@@ -493,7 +511,7 @@ function createMarkerRecord(
   // pulls it back by half a dot so the DOT sits on the point, not the chip.
   const marker = new Marker({ element, anchor: "left", offset: [-6, 0] });
 
-  return { marker, element, dot, chip, chipDot, chipText, flag };
+  return { marker, element, dot, chip, chipDot, chipText, flag, leaveTimer: null };
 }
 
 function paintMarker(

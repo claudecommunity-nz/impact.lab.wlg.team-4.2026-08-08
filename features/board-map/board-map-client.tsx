@@ -156,15 +156,15 @@ export function BoardMapClient({
     });
   }, []);
 
-  // The slider's left edge: the earliest first-report ever seen this session.
-  // A ref rather than a memo of the current response — scrubbing SHRINKS the
-  // response, and the time domain must not shrink with it.
+  // The slider's left edge: the earliest CAPTURE ever seen this session — the
+  // clock asAt actually filters on. firstSeen runs on the event's own clock
+  // and can predate collection by days, which would park most of the track
+  // before anything had arrived. A ref rather than a memo of the current
+  // response — scrubbing SHRINKS the response, and the time domain must not
+  // shrink with it.
   const domainStartRef = useRef<number | null>(null);
-  const earliest = signals.data
-    ? Math.min(
-        Infinity,
-        ...signals.data.features.map((f) => new Date(f.properties.firstSeen).getTime()),
-      )
+  const earliest = signals.data?.captureStart
+    ? new Date(signals.data.captureStart).getTime()
     : Infinity;
   if (Number.isFinite(earliest)) {
     domainStartRef.current = Math.min(domainStartRef.current ?? earliest, earliest);

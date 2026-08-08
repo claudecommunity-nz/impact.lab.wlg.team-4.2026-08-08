@@ -19,18 +19,17 @@ import { ViewToggle, type BoardView } from "./components/view-toggle";
  * The map and the galaxy are not two pages and not two tabs — they are the same
  * signals laid out two ways, and the board is built so an operator never feels
  * they left. Both modes stay MOUNTED and cross-fade: the map keeps its camera,
- * the galaxy keeps its orbit, the selection carries across, and the same drill
- * panel serves whichever mode is showing. Unmounting on every toggle would
- * reset the map's position and re-run three.js's whole setup, which is exactly
- * the "I've gone somewhere else" feeling this is meant to avoid.
+ * the selection carries across, and the same drill panel serves whichever mode
+ * is showing. Unmounting on every toggle would reset the map's position, which
+ * is exactly the "I've gone somewhere else" feeling this is meant to avoid.
  *
  * Selection and mode are view state, not server state — nothing that comes back
  * from the API is copied into useState here. The modes hold their own queries
  * and the drill panel fetches its own detail from the id.
  *
- * three.js is ~600kB before a single point is drawn, so the galaxy is behind a
- * dynamic import with `ssr: false` (WebGL has no server render worth having)
- * and is not mounted at all until the operator first asks for it.
+ * The trends mode stays behind a dynamic import out of habit from its three.js
+ * ancestry; it is a plain list now, but deferring it still keeps the map-first
+ * load lean and costs nothing.
  */
 const BoardGalaxyClient = dynamic(
   () => import("@/features/board-galaxy/board-galaxy-client").then((m) => m.BoardGalaxyClient),
@@ -65,11 +64,11 @@ export function BoardShellClient() {
         <ViewToggle view={view} onChange={changeView} />
       </header>
 
-      {/* Above the map, and only above the map: the lanes rank what the map is
-          showing, and in Trends the same ranking is the whole view. */}
-      {view === "map" && (
-        <BoardLanesClient selectedSignalId={selectedSignalId} onSelect={select} />
-      )}
+      {/* The ticker rides above both modes. As a band of cards it earned its
+          keep only over the map; as one slim strip it is cheap enough to keep
+          "picking up speed" on screen whichever way the scene is laid out,
+          and clicking a pill selects the same signal in either. */}
+      <BoardLanesClient selectedSignalId={selectedSignalId} onSelect={select} />
 
       <div className="relative flex min-h-0 flex-1">
         <div className="board-map bg-muted relative min-h-0 flex-1">

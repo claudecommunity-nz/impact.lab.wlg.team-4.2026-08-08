@@ -96,6 +96,13 @@ export const FeatureCollectionSchema = z.object({
    * happening there". Renderers ignore unknown members; humans should not.
    */
   unmappable: z.array(z.object({ signalId: z.uuid(), itemCount: z.number().int() })),
+  /**
+   * The earliest capture (`ingested_at`) among the evidence in hand — the time
+   * control's left edge. `firstSeen` runs on the event's OWN clock and can
+   * predate collection by days, so a scrubber anchored to it spends most of
+   * its track before anything had been captured. Null when nothing is in hand.
+   */
+  captureStart: z.date().nullable(),
 });
 
 export type FeatureCollection = z.infer<typeof FeatureCollectionSchema>;
@@ -145,7 +152,7 @@ export const getSignalsGeojsonUseCase = createUseCase(
     });
     if (groups.error) return error(groups.error);
     if (groups.data.length === 0) {
-      return success({ type: "FeatureCollection", features: [], unmappable: [] });
+      return success({ type: "FeatureCollection", features: [], unmappable: [], captureStart: null });
     }
 
     const members = await getSignalsForGroupsUseCase({
@@ -156,10 +163,14 @@ export const getSignalsGeojsonUseCase = createUseCase(
     if (members.error) return error(members.error);
 
     const itemsByGroup = new Map<string, Signal[]>();
+    let captureStart: Date | null = null;
     for (const row of members.data) {
       const existing = itemsByGroup.get(row.groupId);
       if (existing) existing.push(row.signal);
       else itemsByGroup.set(row.groupId, [row.signal]);
+      if (captureStart === null || row.signal.ingestedAt < captureStart) {
+        captureStart = row.signal.ingestedAt;
+      }
     }
 
     // With `asAt` the CURRENT grade is the wrong answer — it was computed from
@@ -233,7 +244,7 @@ export const getSignalsGeojsonUseCase = createUseCase(
       "Published the GeoJSON map layer",
     );
 
-    return success({ type: "FeatureCollection", features, unmappable });
+    return success({ type: "FeatureCollection", features, unmappable, captureStart });
   },
 );
 
