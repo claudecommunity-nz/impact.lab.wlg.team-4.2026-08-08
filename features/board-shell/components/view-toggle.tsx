@@ -2,11 +2,11 @@
 
 import { cn } from "@/lib/utils";
 
-export type BoardView = "map" | "galaxy";
+export type BoardView = "map" | "trends";
 
 const VIEWS: { id: BoardView; label: string; hint: string }[] = [
   { id: "map", label: "Map", hint: "Where reports are coming from" },
-  { id: "galaxy", label: "Galaxy", hint: "What reports are saying, grouped by meaning" },
+  { id: "trends", label: "Trends", hint: "Which stories are biggest and growing fastest" },
 ];
 
 /**

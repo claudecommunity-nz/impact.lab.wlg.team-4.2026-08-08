@@ -2,78 +2,55 @@
 
 import { useQuery } from "@tanstack/react-query";
 import { FeatureError } from "@/components/errors/feature-error";
+import { BOARD_DATASET } from "@/features/board-shell/board-dataset";
 import { useTRPC } from "@/trpc/client";
 import { BoardGalaxySkeleton } from "./board-galaxy-skeleton";
-import { ClusterList } from "./components/cluster-list";
-import { GalaxyScene } from "./components/galaxy-scene";
+import { BubbleField } from "./components/bubble-field";
 
 const POLL_MS = 3000;
 
 /**
- * The galaxy mode's only hook caller: every signal as a point, every cluster as
- * a bubble over it. Two queries rather than one because they are two reads with
- * two limits — and tRPC's httpBatchLink folds them into a single request per
- * poll anyway.
+ * The trends mode's only hook caller.
  *
- * Both are scoped to the board's dataset. Clustering never crosses datasets, so
- * a galaxy showing every namespace at once would put the demo story, the verify
- * fixtures and the live picture in one cloud and imply they are one event.
+ * It reads `vectors.groups` and nothing else now. The three.js point cloud that
+ * used to live here also needed `vectors.points`; the bubble field works from
+ * the cluster rows alone, which is one fewer query per poll and one fewer way
+ * for the mode to be half-loaded.
  */
 export function BoardGalaxyClient({
   active,
-  datasetId,
   selectedSignalId,
   onSelect,
 }: {
-  /** False while the map mode is showing — this mode stays mounted but idle. */
+  /** False while the map is showing — this mode stays mounted but idle. */
   active: boolean;
-  datasetId: string;
   selectedSignalId: string | null;
   onSelect: (signalId: string) => void;
 }) {
   const trpc = useTRPC();
-  // Mounted-but-hidden must not cost anything: polling stops while the map is
-  // showing, and the scene and the operator's orbit survive.
-  const poll = active ? POLL_MS : false;
-
-  const points = useQuery(
-    trpc.vectors.points.queryOptions({ datasetId }, { refetchInterval: poll }),
-  );
   const groups = useQuery(
-    trpc.vectors.groups.queryOptions({ datasetId }, { refetchInterval: poll }),
+    trpc.vectors.groups.queryOptions(
+      { datasetId: BOARD_DATASET },
+      { refetchInterval: active ? POLL_MS : false },
+    ),
   );
 
-  if (points.isError || groups.isError) return <FeatureError name="the galaxy" />;
-  if (!points.data || !groups.data) return <BoardGalaxySkeleton />;
-
-  const unprojected = points.data.filter((point) => point.x === null).length;
+  if (groups.isError) return <FeatureError name="the trends view" />;
+  if (!groups.data) return <BoardGalaxySkeleton />;
 
   return (
-    <div className="absolute inset-0">
-      <GalaxyScene
-        points={points.data}
-        groups={groups.data}
-        selectedSignalId={selectedSignalId}
-        onSelect={onSelect}
-      />
-
-      <p className="text-muted-foreground/80 pointer-events-none absolute top-3 right-4 z-10 text-right font-mono text-[10px] leading-relaxed">
-        Position = what was said, not where.
-        <br />
-        {points.data.length - unprojected} of {points.data.length} points projected
-        {unprojected > 0 && (
-          <>
-            <br />
-            {unprojected} awaiting projection — not drawn
-          </>
-        )}
+    <div className="absolute inset-0 flex flex-col p-4">
+      <p className="text-muted-foreground shrink-0 text-[12px]">
+        Every cluster by how much has been reported and how fast it is still arriving.
+        Top-right is where to look first.
       </p>
-
-      <ClusterList
-        groups={groups.data}
-        selectedSignalId={selectedSignalId}
-        onSelect={onSelect}
-      />
+      <div className="min-h-0 flex-1">
+        <BubbleField
+          groups={groups.data}
+          selectedSignalId={selectedSignalId}
+          onSelect={onSelect}
+        />
+      </div>
     </div>
   );
 }

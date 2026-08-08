@@ -45,9 +45,9 @@ export function BoardShellClient() {
   // by the operator's click rather than by an effect watching `view` — the
   // click is the actual cause, and an effect would only re-derive it a render
   // later.
-  const [galaxyMounted, setGalaxyMounted] = useState(false);
+  const [trendsMounted, setTrendsMounted] = useState(false);
   const changeView = useCallback((next: BoardView) => {
-    if (next === "galaxy") setGalaxyMounted(true);
+    if (next === "trends") setTrendsMounted(true);
     setView(next);
   }, []);
 
@@ -69,9 +69,9 @@ export function BoardShellClient() {
           <div
             className={cn(
               "absolute inset-0 transition-opacity duration-300",
-              view === "galaxy" && "pointer-events-none opacity-0",
+              view === "trends" && "pointer-events-none opacity-0",
             )}
-            aria-hidden={view === "galaxy"}
+            aria-hidden={view === "trends"}
           >
             {/* Per-mode boundaries: a map that fails must cost the operator the
                 map, not the header, the galaxy and the open evidence panel. */}
@@ -84,7 +84,7 @@ export function BoardShellClient() {
             </ErrorBoundary>
           </div>
 
-          {galaxyMounted && (
+          {trendsMounted && (
             <div
               className={cn(
                 "absolute inset-0 transition-opacity duration-300",
@@ -94,8 +94,7 @@ export function BoardShellClient() {
             >
               <ErrorBoundary fallback={<FeatureError name="the galaxy" />}>
                 <BoardGalaxyClient
-                  active={view === "galaxy"}
-                  datasetId={BOARD_DATASET}
+                  active={view === "trends"}
                   selectedSignalId={selectedSignalId}
                   onSelect={select}
                 />
