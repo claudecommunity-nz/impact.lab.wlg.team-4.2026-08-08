@@ -13,18 +13,6 @@ export const metadata: Metadata = {
  */
 export const dynamic = "force-dynamic";
 
-/**
- * The dataset is a URL parameter rather than a toggle with hidden state, so a
- * board showing fabricated demo data always says so in its address bar. `live`
- * is the default because that is the operational picture; the demo fixture
- * lives in `demo` (see data/demo/demo-items.json).
- */
-export default async function BoardPage({
-  searchParams,
-}: {
-  searchParams: Promise<{ dataset?: string }>;
-}) {
-  const { dataset } = await searchParams;
-
-  return <Board datasetId={dataset?.trim() || "live"} />;
+export default function BoardPage() {
+  return <Board />;
 }

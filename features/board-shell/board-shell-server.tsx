@@ -3,6 +3,7 @@ import { ErrorBoundary } from "@/components/errors/error-boundary";
 import { FeatureError } from "@/components/errors/feature-error";
 import { trpc, HydrateClient } from "@/trpc/server";
 import { getQueryClientServer } from "@/utilities/get-query-client-server";
+import { BOARD_DATASET } from "./board-dataset";
 import { BoardShellClient } from "./board-shell-client";
 import { BoardShellSkeleton } from "./board-shell-skeleton";
 
@@ -20,17 +21,17 @@ import { BoardShellSkeleton } from "./board-shell-skeleton";
  * dynamic import, and paying for three.js plus a point cloud on a request that
  * may only ever show the map would slow down the one view that always renders.
  */
-export function Board({ datasetId }: { datasetId: string }) {
+export function Board() {
   return (
     <ErrorBoundary fallback={<FeatureError name="the signal board" />}>
       <Suspense fallback={<BoardShellSkeleton />}>
-        <BoardContent datasetId={datasetId} />
+        <BoardContent />
       </Suspense>
     </ErrorBoundary>
   );
 }
 
-async function BoardContent({ datasetId }: { datasetId: string }) {
+async function BoardContent() {
   // AWAITED, unlike the notes reference's fire-and-forget `prefetch()`.
   //
   // An unawaited prefetch dehydrates a query that is still PENDING, so the
@@ -45,12 +46,12 @@ async function BoardContent({ datasetId }: { datasetId: string }) {
   // The input object must match the client query's exactly, or the entry
   // hydrates under a different key and the map opens empty.
   await getQueryClientServer().prefetchQuery(
-    trpc.signals.geojson.queryOptions({ datasetId }),
+    trpc.signals.geojson.queryOptions({ datasetId: BOARD_DATASET }),
   );
 
   return (
     <HydrateClient>
-      <BoardShellClient datasetId={datasetId} />
+      <BoardShellClient />
     </HydrateClient>
   );
 }

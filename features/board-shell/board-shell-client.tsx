@@ -8,8 +8,8 @@ import { BoardDrillClient } from "@/features/board-drill/board-drill-client";
 import { BoardGalaxySkeleton } from "@/features/board-galaxy/board-galaxy-skeleton";
 import { BoardMapClient } from "@/features/board-map/board-map-client";
 import { cn } from "@/lib/utils";
+import { BOARD_DATASET } from "./board-dataset";
 import { BoardBanner, BoardBrand } from "./components/board-chrome";
-import { DatasetSwitch } from "./components/dataset-switch";
 import { ViewToggle, type BoardView } from "./components/view-toggle";
 
 /**
@@ -36,7 +36,7 @@ const BoardGalaxyClient = dynamic(
   { ssr: false, loading: () => <BoardGalaxySkeleton /> },
 );
 
-export function BoardShellClient({ datasetId }: { datasetId: string }) {
+export function BoardShellClient() {
   const [view, setView] = useState<BoardView>("map");
   const [selectedSignalId, setSelectedSignalId] = useState<string | null>(null);
 
@@ -61,7 +61,6 @@ export function BoardShellClient({ datasetId }: { datasetId: string }) {
         <BoardBrand />
         <BoardBanner />
         <div className="flex-1" />
-        <DatasetSwitch datasetId={datasetId} />
         <ViewToggle view={view} onChange={changeView} />
       </header>
 
@@ -78,7 +77,7 @@ export function BoardShellClient({ datasetId }: { datasetId: string }) {
                 map, not the header, the galaxy and the open evidence panel. */}
             <ErrorBoundary fallback={<FeatureError name="the map" />}>
               <BoardMapClient
-                datasetId={datasetId}
+                datasetId={BOARD_DATASET}
                 selectedSignalId={selectedSignalId}
                 onSelect={select}
               />
@@ -96,7 +95,7 @@ export function BoardShellClient({ datasetId }: { datasetId: string }) {
               <ErrorBoundary fallback={<FeatureError name="the galaxy" />}>
                 <BoardGalaxyClient
                   active={view === "galaxy"}
-                  datasetId={datasetId}
+                  datasetId={BOARD_DATASET}
                   selectedSignalId={selectedSignalId}
                   onSelect={select}
                 />
