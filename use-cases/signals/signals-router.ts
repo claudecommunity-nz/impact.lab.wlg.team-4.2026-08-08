@@ -50,6 +50,8 @@ export const signalsRouter = router({
         // superjson still hands us a real Date from the tRPC client; both land here.
         asAt: z.coerce.date().optional(),
         bbox: BboxSchema.optional(),
+        /** true = the whole region. Absent = the Wellington-City default frame. */
+        unbounded: z.boolean().optional(),
         minCredibility: z.number().int().min(1).max(6).optional(),
         limit: z.number().int().positive().max(GEOJSON_LIMIT).optional(),
       }),

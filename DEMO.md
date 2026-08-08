@@ -47,9 +47,9 @@ well before you are called up.
 
 Check before you speak:
 
-- the map shows **74 pins**, none of them stacked at 0,0;
+- the map shows **69 pins**, none of them stacked at 0,0;
 - **flooding — Aro Valley** reads **9 / 16** and carries a **SYN** badge;
-- most pins have **no** SYN badge — only 14 of the 74 carry authored content.
+- most pins have **no** SYN badge — only 14 of the 69 carry authored content.
 
 If any of those is wrong, run the canonical rebuild again. It is idempotent and
 takes about two minutes.
@@ -66,10 +66,11 @@ rides every provenance entry, and the badge is on the pin.
 
 ## The script
 
-The spoken lines below run to 523 words — about four minutes flat at a
-comfortable pace, which leaves no room for adjectives and just enough for the
-numbers.
-Timings are cumulative. If you are behind at 3:00, drop the Galaxy beat: it is
+The spoken lines below run to 542 words — 4:10 at a measured pace, 3:50 if you
+speak at normal conference speed. That is deliberately at the limit: drop the
+Trends beat and you are back to 3:40 with room to breathe. No adjectives, and
+just enough room for the numbers.
+Timings are cumulative. If you are behind at 3:00, drop the Trends beat: it is
 the only one that is not load-bearing.
 
 ### 0:00 — the problem, in the duty officer's words (20s)
@@ -85,9 +86,10 @@ the only one that is not load-bearing.
 *Point at the map.*
 
 > A hundred and sixty-nine public items — posts, fault reports, newsrooms,
-> official feeds, instrument readings — became **seventy-four candidate
-> events**. Nothing is presented as verified: every pin carries a grade and its
-> reasons, and anything authored for this demo is badged SYN. Most are not.
+> official feeds, instruments — became **seventy-four candidate events**, and
+> this frame is the sixty-nine inside Council's patch. Nothing is presented as
+> verified: every pin carries a grade and its reasons, and anything authored for
+> this demo is badged SYN. Most are not.
 
 ### 0:50 — the core: witnesses, not documents (60s)
 
@@ -108,8 +110,8 @@ row off the screen, word for word:*
 
 > "Sixteen independent reports" is exactly the sentence that makes somebody send
 > a truck. And this is not a trick that only works on our own writing — the
-> biggest cluster here is thirty-five real collected posts, five of which are
-> also one observation.
+> biggest cluster here is thirty-five real collected posts, five of them also
+> one observation.
 
 ### 1:50 — who is speaking (35s)
 
@@ -118,7 +120,7 @@ row off the screen, word for word:*
 > Reliability comes from a registry. Fire and Emergency's media feed is
 > registered A — the agency speaking about its own callouts. A **radio log**
 > deliberately is not: somebody listening to emergency traffic, relaying what
-> they think they heard. Same event, different standing.
+> they think they heard.
 >
 > And because one official source in a crowd would read as a clean bill of
 > health, the reason says so:
@@ -133,7 +135,7 @@ row off the screen, word for word:*
 *Click a single-pin cluster. **Vogeltown power outage** is the one to use — its
 alert carries the uncorroborated line word for word.*
 
-> Fifty of the seventy-four are a single source. This grades **F4 — reliability
+> Forty-six of the sixty-nine are a single source. This grades **F4 — reliability
 > cannot be judged, doubtful**. It is still on the map, and it still alerted.
 >
 *Point at the two facts sitting together: the grade chip reads F4, and
@@ -151,12 +153,13 @@ alert carries the uncorroborated line word for word.*
 
 > We never hide a weak signal. We label it.
 
-### 3:00 — the same signals, arranged by meaning (25s)
+### 3:00 — which of these is growing (25s)
 
-*Switch the view toggle to Galaxy.*
+*Switch the view toggle to Trends.*
 
-> The same events, arranged by what was said rather than where — for spotting
-> that two things reported in different suburbs are one problem.
+> The same events on two axes a duty officer already has words for: how many
+> reports have arrived, and how fast they are still arriving. Top right answers
+> "what do I look at first" — big, and still climbing.
 
 *Switch back to Map before you finish.*
 
@@ -169,7 +172,7 @@ alert carries the uncorroborated line word for word.*
 > *"no applicable layer — nothing has confirmed or denied this"* rather than
 > implying agreement.
 >
-> **Credibility 1**, "confirmed", is unreachable by design: the grading module
+> **Credibility 1**, "confirmed", is unreachable by design — the grading module
 > throws rather than write it. Confirmation is a human's word.
 >
 > The machine's job ends at *this is worth someone looking at, and here is why*
@@ -187,11 +190,12 @@ alert carries the uncorroborated line word for word.*
 
 | What | Do this |
 |---|---|
-| Galaxy view stutters or renders black | Stay on Map. Say "the geographic view is the one that matters operationally" and move on. It is a 3D canvas; it is not the argument. |
+| Trends view looks wrong or empty | Stay on Map. Say "the geographic view is the one that matters operationally" and move on. It is a summary, not the argument. |
 | A pin will not open | Click a different one. Aro Valley is the only *scripted* pin — Kelburn AWS (4/4) and Karori Road (3/3) both open on rich multi-source clusters. |
 | Board is empty | The database was truncated. `npm run demo:plumb -- --http` takes about 20 seconds. Keep talking about the problem statement while it runs. |
 | Grades all read F | The registry was not seeded. Run the `sources.seed` curl above, then re-plumb. |
-| Asked "is any of this real?" | Most of it. 60 of the 74 pins carry no authored content at all. Open any pin: `synthetic` is on every provenance entry and SYN is on the pin. Aro Valley is authored end to end; the 35-item Queens Drive cluster is almost entirely real. |
+| Asked "is any of this real?" | Most of it. 55 of the 69 pins carry no authored content at all. Open any pin: `synthetic` is on every provenance entry and SYN is on the pin. Aro Valley is authored end to end; the 35-item Queens Drive cluster is almost entirely real. |
+| Asked to see beyond the city | `signals.geojson` with `unbounded: true` returns all 74 — the five extra are GeoNet felt-reports from as far as Kaikoura. Say it rather than be caught by it. |
 | Asked to prove it | `npm run proof:grading` — 56 assertions, no database, under a second. `npm run verify` — 66 end to end, but it truncates, so only after the demo. |
 
 ---
@@ -205,11 +209,18 @@ limitations visible, and a system that hides its own would fail its own test.
   collected signals and items written for this demo sit in one feed, because
   that is what an operator's day looks like. Every authored item carries
   `synthetic` on every provenance entry and puts a **SYN** badge on its pin.
-  Only **14 of the 74** pins carry any authored content; the Aro Valley cluster
+  Only **14 of the 69** pins carry any authored content; the Aro Valley cluster
   is authored end to end. Say this before anyone asks: the storm is a
   demonstration, the collection and the reasoning are not.
 - **The storm itself did not happen.** Wellington is not flooding this
   afternoon. The reasoning is real; the weather is not.
+- **The map is framed to Council's patch; the pipeline is not.** The view
+  defaults to Wellington City plus Miramar, Island Bay and the Petone
+  shoreline — 69 of the 74 events we hold. Nothing is filtered at ingest and
+  nothing is hidden: the five outside are real GeoNet felt-reports from
+  Kaikoura, Culverden, Dannevirke and Upper Hutt, correctly graded and 200km
+  outside the area this board is an operating picture for. Any caller gets the
+  lot with `unbounded: true`.
 - **Embeddings are a lexical stub** unless `AI_GATEWAY_API_KEY` is set. Grouping
   is by shared words rather than meaning, so "inundation" will not match
   "flooding". Origin fingerprinting is unaffected — it requires shared *wording*

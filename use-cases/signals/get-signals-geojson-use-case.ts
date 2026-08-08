@@ -37,6 +37,29 @@ import { ScoredSignalSchema, type ScoredSignal } from "./scored-signal-schema";
 /** More clusters than a four-minute demo — or an operator — can look at. */
 export const GEOJSON_LIMIT = 500;
 
+/**
+ * The frame this board is FOR: Wellington City plus Miramar, Island Bay and the
+ * Petone shoreline — Wellington City Council's patch, roughly.
+ *
+ * Applied when a caller names no bbox, which is a deliberate narrowing of a
+ * published read and worth defending. The pipeline ingests whatever it is sent,
+ * and some of what it is sent is a GeoNet felt-report from Kaikoura or
+ * Dannevirke — real, correctly graded, and 200km outside the area this map is
+ * an operating picture for. Drawing those on a WCC board does not make it more
+ * honest, it makes it harder to read, and a map an operator cannot read in four
+ * minutes is a map they will not open in hour one.
+ *
+ * The data is untouched: nothing is filtered at ingest, `signals.detail` still
+ * opens every cluster by id, and any caller that wants the wider region asks
+ * for it — an explicit `bbox`, or `unbounded: true` for everything we hold.
+ */
+export const WELLINGTON_CITY_BBOX = {
+  minLng: 174.6,
+  minLat: -41.4,
+  maxLng: 175.0,
+  maxLat: -41.1,
+} as const;
+
 /** Year 2100: past any feed's clock skew, inside every timestamp encoder. */
 const FAR_FUTURE = new Date("2100-01-01T00:00:00.000Z");
 
@@ -86,6 +109,12 @@ export const getSignalsGeojsonUseCase = createUseCase(
       asAt: z.date().optional(),
       bbox: BboxSchema.optional(),
       /**
+       * Ask for everything we hold, wherever it is. Absent means the default
+       * Wellington-City frame — this is the escape hatch for a caller who wants
+       * the whole region and should not have to name coordinates to get it.
+       */
+      unbounded: z.boolean().optional(),
+      /**
        * Admiralty credibility, where 1 is best and 6 is "cannot be judged".
        * A feature is kept when it is AT LEAST this credible, i.e. when
        * `infoCredibility <= minCredibility`. Ungraded clusters never survive it.
@@ -95,8 +124,12 @@ export const getSignalsGeojsonUseCase = createUseCase(
     }),
     outputSchema: FeatureCollectionSchema,
   },
-  async ({ success, error }, { datasetId, asAt, bbox, minCredibility, limit, log }) => {
+  async ({ success, error }, { datasetId, asAt, bbox, unbounded, minCredibility, limit, log }) => {
     const dataset = datasetId ?? DATASET_LIVE;
+    // Named bbox wins; `unbounded` means no frame at all; silence means the
+    // city. A default a caller cannot turn off would be a filter pretending to
+    // be a view.
+    const frame = bbox ?? (unbounded ? undefined : WELLINGTON_CITY_BBOX);
 
     const groups = await getGroupsUseCase({
       level: INCIDENT_LEVEL,
@@ -179,7 +212,7 @@ export const getSignalsGeojsonUseCase = createUseCase(
         continue;
       }
 
-      if (bbox && !inBbox(placed, bbox)) continue;
+      if (frame && !inBbox(placed, frame)) continue;
 
       features.push({
         type: "Feature",
@@ -194,7 +227,7 @@ export const getSignalsGeojsonUseCase = createUseCase(
         features: features.length,
         unmappable: unmappable.length,
         asAt: asAt?.toISOString() ?? null,
-        bbox: bbox ? true : false,
+        frame: frame ? (bbox ? "caller" : "wellington-city-default") : "unbounded",
         minCredibility: minCredibility ?? null,
       },
       "Published the GeoJSON map layer",
