@@ -8,6 +8,7 @@ import { GradeChip, gradeSentence } from "@/components/board/grade";
 import { FeatureError } from "@/components/errors/feature-error";
 import { useTRPC } from "@/trpc/client";
 import { BoardDrillSkeleton } from "./board-drill-skeleton";
+import { CollapsedOrigins } from "./components/collapsed-origins";
 import { EvidenceFigures } from "./components/evidence-figures";
 import { ProvenanceItem } from "./components/provenance-item";
 
@@ -76,6 +77,12 @@ function DrillBody({ detail }: { detail: SignalDetail }) {
     detail.originGroups.map((group) => [group.originId, group.itemIds.length]),
   );
 
+  // The alert feed is a separate read this panel does not make — but the same
+  // sentences ride along on the grade events it already has, so the newest
+  // firing transition tells us why this was raised, with no extra query.
+  const latestAlertReasons =
+    [...detail.gradeHistory].reverse().find((event) => event.alertFired)?.alertReasons ?? [];
+
   return (
     <div className="min-h-0 flex-1 space-y-4 overflow-y-auto px-4 py-4">
       {detail.syntheticContributor && (
@@ -131,6 +138,8 @@ function DrillBody({ detail }: { detail: SignalDetail }) {
         originGroupCount={detail.originGroups.length}
       />
 
+      <CollapsedOrigins originGroups={detail.originGroups} />
+
       <section className="board-panel-2 board-line grid grid-cols-2 gap-x-3 gap-y-2 rounded-md border p-2.5 font-mono text-[10.5px]">
         <Fact label="Issue type" value={detail.issueType.replace(/_/g, " ")} />
         <Fact label="Location" value={detail.locationCertainty} />
@@ -140,6 +149,30 @@ function DrillBody({ detail }: { detail: SignalDetail }) {
         <Fact label="First seen" value={format(detail.firstSeen, "d MMM HH:mm")} />
         <Fact label="Last seen" value={format(detail.lastSeen, "d MMM HH:mm")} />
       </section>
+
+      {latestAlertReasons.length > 0 && (
+        <section className="space-y-1">
+          <h3 className="board-muted font-mono text-[10px] tracking-[0.12em] uppercase">
+            Why it is worth someone&apos;s attention
+          </h3>
+          {/* Alert-worthiness is computed INDEPENDENTLY of the grade, so an
+              early single-source report can raise a flag WITH its weakness
+              stated rather than being silenced by a threshold in exactly the
+              hour it matters most. Printing only "Alert-worthy: yes" would hide
+              the half of that sentence which does the work. */}
+          <ul className="space-y-1">
+            {latestAlertReasons.map((reason) => (
+              <li
+                key={reason}
+                className="text-[11.5px] leading-relaxed"
+                style={reason.startsWith("WEAK EVIDENCE") ? { color: "#fbbf24" } : undefined}
+              >
+                {reason}
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
 
       <section>
         <h3 className="board-muted font-mono text-[10px] tracking-[0.12em] uppercase">
