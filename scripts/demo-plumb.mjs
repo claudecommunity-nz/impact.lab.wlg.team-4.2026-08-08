@@ -217,9 +217,20 @@ function slideToNow(authored) {
 
   const offset = Date.now() - NEWEST_AGE_MINUTES * 60_000 - Math.max(...stamped);
 
-  return authored.map((item) => {
+  return authored.map((item, index) => {
     const original = Date.parse(item.occurred_at ?? "");
     if (!Number.isFinite(original)) return item;
-    return { ...item, occurred_at: new Date(original + offset).toISOString() };
+    const occurred = original + offset;
+    // Capture clock (intel 9331d51): collection TRAILS occurrence by a plausible
+    // lag, deterministic per item, and never lands in the future. This is what
+    // lets asAt scrub a real history instead of a 0.7s ingest burst. Ingest
+    // records declared_captured_at beside it — the honesty valve; don't strip.
+    const lagMs = (3 + ((index * 7) % 6)) * 60_000;
+    const captured = Math.min(occurred + lagMs, Date.now() - 30_000);
+    return {
+      ...item,
+      occurred_at: new Date(occurred).toISOString(),
+      captured_at: new Date(Math.max(captured, occurred)).toISOString(),
+    };
   });
 }
