@@ -4,7 +4,7 @@
 Saturday 8 August 2026 · Waimanga Room, Wellington City Council
 
 **▶ Demo video:** https://www.loom.com/share/f0cb8f9536ff4d31b4f994065b299238
-**▤ Slide deck:** https://claude.ai/code/artifact/b2e7ae49-ff6b-4b12-b2e6-bcd329ddba8c
+**▤ Slide deck:** [https://claude.ai/code/artifact/b2e7ae49-ff6b-4b12-b2e6-bcd329ddba8c](https://claude.ai/code/artifact/b2e7ae49-ff6b-4b12-b2e6-bcd329ddba8c)
 
 ---
 
