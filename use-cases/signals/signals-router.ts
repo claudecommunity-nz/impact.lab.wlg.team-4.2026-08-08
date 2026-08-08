@@ -11,6 +11,7 @@ import {
 } from "./get-signals-geojson-use-case";
 import { IngestBatchResultSchema, ingestBatchUseCase } from "./ingest-batch-use-case";
 import { IngestSignalResultSchema, ingestSignalUseCase } from "./ingest-signal-use-case";
+import { collectSignalsUseCase } from "./collect-signals-use-case";
 
 /**
  * The published contract — the intake boundary AND the trust surface, under the
@@ -71,4 +72,21 @@ export const signalsRouter = router({
     )
     .output(z.array(AlertSchema))
     .query(({ ctx, input }) => callUseCase(getAlertsUseCase({ ...input, log: ctx.log }))),
+
+  // ─── live collection (data-team) ───────────────────────────────────────────
+  // A read of the outside world: the UI can put it behind refetchInterval.
+  collect: publicProcedure
+    .input(
+      z
+        .object({
+          query: z.string().optional(),
+          sinceHours: z.number().int().positive().optional(),
+          datasetId: z.string().optional(),
+          upload: z.boolean().optional(),
+        })
+        .optional(),
+    )
+    .query(({ ctx, input }) =>
+      callUseCase(collectSignalsUseCase({ ...(input ?? {}), log: ctx.log })),
+    ),
 });

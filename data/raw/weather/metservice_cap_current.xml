@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<rss version="2.0">
+  <channel>
+    <title>Metservice Public CAP Alerts</title>
+    <link>https://www.metservice.com</link>
+    <description>Current Watches, Warnings and Advisories for New Zealand issued by MetService</description>
+    <copyright>Copyright Meteorological Service of New Zealand Limited, 2026. Licensed under Creative Commons BY 4.0.</copyright>
+    <pubDate>Sat, 08 Aug 2026 12:59:08 +1200</pubDate>
+    <item>
+      <title>Heavy Rain Watch</title>
+      <guid>2.49.0.0.554.0.severeweather.nz.20260807210130883.1</guid>
+      <category>Met</category>
+      <pubDate>Sat, 08 Aug 2026 09:01:30 +1200</pubDate>
+      <description>Periods of heavy rain, and amounts may approach warning criteria. Chance of upgrading to a Warning: Moderate.</description>
+      <link>https://alerts.metservice.com/cap/alert?id=2.49.0.0.554.0.severeweather.nz.20260807210130883.1</link>
+    </item>
+    <item>
+      <title>Heavy Rain Watch</title>
+      <guid>2.49.0.0.554.0.severeweather.nz.20260807210130883.2</guid>
+      <category>Met</category>
+      <pubDate>Sat, 08 Aug 2026 09:01:30 +1200</pubDate>
+      <description>Periods of heavy rain, and amounts may approach warning criteria. Chance of upgrading to a Warning: Moderate.</description>
+      <link>https://alerts.metservice.com/cap/alert?id=2.49.0.0.554.0.severeweather.nz.20260807210130883.2</link>
+    </item>
+    <item>
+      <title>Road Snowfall Warning</title>
+      <guid>2.49.0.0.554.0.roadsnow.crownrangeroad.20260807212715963.0</guid>
+      <category>Met</category>
+      <pubDate>Sat, 08 Aug 2026 09:27:15 +1200</pubDate>
+      <description>Rain may turn to snow about the summit for a time tonight and before dawn on Sunday, where 1 to 3 cm of snow may accumulate.</description>
+      <link>https://alerts.metservice.com/cap/alert?id=2.49.0.0.554.0.roadsnow.crownrangeroad.20260807212715963.0</link>
+    </item>
+  </channel>
+</rss>

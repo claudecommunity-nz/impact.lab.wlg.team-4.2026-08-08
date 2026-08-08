@@ -8,6 +8,7 @@ import {
   Popup,
   ScaleControl,
   setWorkerUrl,
+  type FillLayerSpecification,
   type GeoJSONSource,
   type RasterTileSource,
 } from "maplibre-gl";
@@ -263,11 +264,26 @@ export function MapCanvas({
         const clickTargets: string[] = [];
 
         if (layer.geometryKind === "polygon") {
+          // A `match` on one of the feature's own attributes, so severity is
+          // shaded per polygon. Falls back to the flat fill for any value the
+          // registry doesn't list — an unknown class shouldn't vanish.
+          const fillColor = paint.graded
+            ? [
+                "match",
+                ["get", paint.graded.property],
+                ...paint.graded.stops.flatMap((stop) => [stop.value, stop.colour]),
+                paint.fill,
+              ]
+            : paint.fill;
+
           map.addLayer({
             id: fillLayerIdFor(layer.datasetId),
             type: "fill",
             source: sourceId,
-            paint: { "fill-color": paint.fill, "fill-opacity": paint.opacity },
+            paint: {
+              "fill-color": fillColor as NonNullable<FillLayerSpecification["paint"]>["fill-color"],
+              "fill-opacity": paint.opacity,
+            },
           });
           map.addLayer({
             id: outlineLayerIdFor(layer.datasetId),
