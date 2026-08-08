@@ -8,9 +8,9 @@
  * anything. One board, one feed.
  *
  * What it does NOT mean is that the honesty went away. Every item authored for
- * a demo or a drill still carries `synthetic`, that flag still rides every
- * provenance entry, and the map still badges those clusters SYN. The warning
- * moved from a mode switch onto the individual pieces of evidence, which is
- * where it belongs: it is a fact about a report, not about a viewing mode.
+ * a demo or a drill still carries `synthetic` in the data and on every
+ * provenance entry via the API. Per Jacob's call the INTERFACE no longer badges
+ * it — the disclosure lives in the demo script's own words and the data itself,
+ * not as chrome on the board.
  */
 export const BOARD_DATASET = "live";
