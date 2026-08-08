@@ -48,8 +48,9 @@ well before you are called up.
 Check before you speak:
 
 - the map shows **69 pins**, none of them stacked at 0,0;
-- **flooding — Aro Valley** reads **9 / 16** and carries a **SYN** badge;
-- most pins have **no** SYN badge — only 14 of the 69 carry authored content.
+- **flooding — Aro Valley** reads **9 / 16**;
+- you know, because it is not on screen, that **14 of the 69** carry authored
+  content and 55 do not.
 
 If any of those is wrong, run the canonical rebuild again. It is idempotent and
 takes about two minutes.
@@ -57,28 +58,33 @@ takes about two minutes.
 > **Do not run `npm run verify` after plumbing.** It truncates every table. It is
 > the proof, not the demo, and it wipes the demo dataset.
 
-**The SYN badge matters and you should point at it unprompted.** Real collected
-signals and authored demo items now sit in the same feed, because that is what
-an operator's day actually looks like. Nothing hides which is which: `synthetic`
-rides every provenance entry, and the badge is on the pin.
+**You are now the only disclosure.** Real collected signals and authored demo
+items sit in one feed and the interface no longer distinguishes them — the SYN
+badging was removed so the board treats one feed as one thing. The `synthetic`
+flag is still on every provenance entry in the API, but nothing on screen will
+say it for you.
+
+So the honesty is entirely verbal, and it is not optional. **Say the numbers in
+the 0:20 beat, before anyone asks.** A judge who works out unaided that some of
+this was authored, after four minutes of being told the system never overstates
+what it knows, has found the one flaw that would discredit everything else.
 
 ---
 
 ## The script
 
-The spoken lines below run to 542 words — 4:10 at a measured pace, 3:50 if you
-speak at normal conference speed. That is deliberately at the limit: drop the
-Trends beat and you are back to 3:40 with room to breathe. No adjectives, and
-just enough room for the numbers.
-Timings are cumulative. If you are behind at 3:00, drop the Trends beat: it is
-the only one that is not load-bearing.
+The spoken lines below run to 543 words — about 4:10 at a measured pace, 3:50 at
+conference speed. That is at the limit deliberately: no adjectives, just enough
+room for the numbers. Timings are cumulative, and if you are behind at 3:00,
+drop the Trends beat — it is the only one that is not load-bearing, and without
+it you are back near 3:40 with room to breathe.
 
 ### 0:00 — the problem, in the duty officer's words (20s)
 
 > Council is blind for the first zero to three hours of an incident — when the
 > biggest decisions get made. A duty officer told us *"we don't use social media
 > at all… we don't trust social media"*, then described checking it anyway and
-> thinking *"I'm seeing five reports versus one."* Counting corroboration by
+> thinking *"I'm seeing five reports versus one."* Corroboration counted by
 > hand, with no way to defend it. That is the gap.
 
 ### 0:20 — the board (30s)
@@ -86,10 +92,10 @@ the only one that is not load-bearing.
 *Point at the map.*
 
 > A hundred and sixty-nine public items — posts, fault reports, newsrooms,
-> official feeds, instruments — became **seventy-four candidate events**, and
-> this frame is the sixty-nine inside Council's patch. Nothing is presented as
-> verified: every pin carries a grade and its reasons, and anything authored for
-> this demo is badged SYN. Most are not.
+> official feeds, instruments — became **seventy-four candidate events**;
+> sixty-nine are inside Council's patch. Fourteen of those contain content we
+> authored for this demo, the other fifty-five are real. Nothing is presented as
+> verified: every pin carries a grade and the reasons behind it.
 
 ### 0:50 — the core: witnesses, not documents (60s)
 
@@ -194,7 +200,7 @@ alert carries the uncorroborated line word for word.*
 | A pin will not open | Click a different one. Aro Valley is the only *scripted* pin — Kelburn AWS (4/4) and Karori Road (3/3) both open on rich multi-source clusters. |
 | Board is empty | The database was truncated. `npm run demo:plumb -- --http` takes about 20 seconds. Keep talking about the problem statement while it runs. |
 | Grades all read F | The registry was not seeded. Run the `sources.seed` curl above, then re-plumb. |
-| Asked "is any of this real?" | Most of it. 55 of the 69 pins carry no authored content at all. Open any pin: `synthetic` is on every provenance entry and SYN is on the pin. Aro Valley is authored end to end; the 35-item Queens Drive cluster is almost entirely real. |
+| Asked "is any of this real?" | Most of it — 55 of the 69 pins carry no authored content. The interface does not mark which is which, so say it: Aro Valley is authored end to end, the 35-item Queens Drive cluster is almost entirely real. `synthetic` is on every provenance entry in the API if they want to check. |
 | Asked to see beyond the city | `signals.geojson` with `unbounded: true` returns all 74 — the five extra are GeoNet felt-reports from as far as Kaikoura. Say it rather than be caught by it. |
 | Asked to prove it | `npm run proof:grading` — 56 assertions, no database, under a second. `npm run verify` — 66 end to end, but it truncates, so only after the demo. |
 
@@ -208,10 +214,11 @@ limitations visible, and a system that hides its own would fail its own test.
 - **The feed is part real, part authored, and the board says which.** Real
   collected signals and items written for this demo sit in one feed, because
   that is what an operator's day looks like. Every authored item carries
-  `synthetic` on every provenance entry and puts a **SYN** badge on its pin.
-  Only **14 of the 69** pins carry any authored content; the Aro Valley cluster
-  is authored end to end. Say this before anyone asks: the storm is a
-  demonstration, the collection and the reasoning are not.
+  `synthetic` on every provenance entry in the API — but **the interface no
+  longer marks it**, so this disclosure is yours to make out loud. Only **14 of
+  the 69** pins carry authored content; the Aro Valley cluster is authored end
+  to end. Say it before anyone asks: the storm is a demonstration, the
+  collection and the reasoning are not.
 - **The storm itself did not happen.** Wellington is not flooding this
   afternoon. The reasoning is real; the weather is not.
 - **The map is framed to Council's patch; the pipeline is not.** The view
