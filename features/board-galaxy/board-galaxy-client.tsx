@@ -16,15 +16,21 @@ const POLL_MS = 3000;
  * poll anyway.
  */
 export function BoardGalaxyClient({
+  active,
   selectedSignalId,
   onSelect,
 }: {
+  /** False while the map mode is showing — this mode stays mounted but idle. */
+  active: boolean;
   selectedSignalId: string | null;
   onSelect: (signalId: string) => void;
 }) {
   const trpc = useTRPC();
-  const points = useQuery(trpc.vectors.points.queryOptions({}, { refetchInterval: POLL_MS }));
-  const groups = useQuery(trpc.vectors.groups.queryOptions({}, { refetchInterval: POLL_MS }));
+  // Mounted-but-hidden must not cost anything: polling stops and the WebGL
+  // render loop stops, while the scene and the operator's orbit survive.
+  const poll = active ? POLL_MS : false;
+  const points = useQuery(trpc.vectors.points.queryOptions({}, { refetchInterval: poll }));
+  const groups = useQuery(trpc.vectors.groups.queryOptions({}, { refetchInterval: poll }));
 
   if (points.isError || groups.isError) return <FeatureError name="the galaxy" />;
   if (!points.data || !groups.data) return <BoardGalaxySkeleton />;
@@ -34,6 +40,7 @@ export function BoardGalaxyClient({
   return (
     <div className="absolute inset-0">
       <GalaxyScene
+        active={active}
         points={points.data}
         groups={groups.data}
         selectedSignalId={selectedSignalId}

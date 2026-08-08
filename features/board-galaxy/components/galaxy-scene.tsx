@@ -29,11 +29,14 @@ type PlacedGroup = { group: GalaxyGroup; x: number; y: number; z: number; radius
  * dense cluster that does not exist. The count is reported instead.
  */
 export function GalaxyScene({
+  active,
   points,
   groups,
   selectedSignalId,
   onSelect,
 }: {
+  /** Drives the render loop: a hidden scene must not burn a GPU frame budget. */
+  active: boolean;
   points: GalaxyPoint[];
   groups: GalaxyGroup[];
   selectedSignalId: string | null;
@@ -42,7 +45,11 @@ export function GalaxyScene({
   const scene = useMemo(() => layout(points, groups), [points, groups]);
 
   return (
-    <Canvas camera={{ position: [12, 9, 14], fov: 50 }} dpr={[1, 2]}>
+    <Canvas
+      camera={{ position: [12, 9, 14], fov: 50 }}
+      dpr={[1, 2]}
+      frameloop={active ? "always" : "never"}
+    >
       <color attach="background" args={["#0b1017"]} />
       {/* Lit brightly and flatly on purpose: this is a data display, not a
           scene. Dramatic falloff makes the far half of the cloud unreadable,

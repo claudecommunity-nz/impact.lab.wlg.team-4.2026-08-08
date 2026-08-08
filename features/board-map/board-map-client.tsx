@@ -1,9 +1,13 @@
 "use client";
 
-import { useQuery } from "@tanstack/react-query";
+import { useQueries, useQuery } from "@tanstack/react-query";
+import { useCallback, useMemo, useState } from "react";
 import { CredibilityLegend } from "@/components/board/grade";
 import { FeatureError } from "@/components/errors/feature-error";
+import { MapLegend } from "@/features/hazard-map/components/map-legend";
+import { MAP_LAYER_IDS } from "@/features/hazard-map/map-layers";
 import { useTRPC } from "@/trpc/client";
+import type { MapLayer } from "@/use-cases/gis/map-layer-schema";
 import { BoardMapSkeleton } from "./board-map-skeleton";
 import { MapCanvas } from "./components/map-canvas";
 import { UnmappableGutter } from "./components/unmappable-gutter";
@@ -12,9 +16,14 @@ import { UnmappableGutter } from "./components/unmappable-gutter";
 const POLL_MS = 3000;
 
 /**
- * The map pane's only hook caller. Reads `signals.geojson` straight off the tRPC
- * proxy — the shell prefetched it, so the first paint is real data and these
- * loading branches only ever show on a client-side refetch.
+ * The map mode's only hook caller: Council hazard geography and our signal
+ * clusters, fetched separately and drawn on one canvas.
+ *
+ * The two reads are deliberately NOT gated on each other. Hazard layers come
+ * from three different Council ArcGIS servers and can take seconds or fail
+ * outright; signals come from our own database in milliseconds. Waiting for the
+ * slowest of them before drawing anything would mean an operator stares at a
+ * skeleton while we already know where the flooding is being reported.
  */
 export function BoardMapClient({
   datasetId,
@@ -26,9 +35,37 @@ export function BoardMapClient({
   onSelect: (signalId: string) => void;
 }) {
   const trpc = useTRPC();
+
   const signals = useQuery(
     trpc.signals.geojson.queryOptions({ datasetId }, { refetchInterval: POLL_MS }),
   );
+
+  // One query per layer, driven off a fixed list so the hook count is stable.
+  // These are static Council datasets — no refetchInterval, unlike the signals.
+  const layerResults = useQueries({
+    queries: MAP_LAYER_IDS.map((id) => trpc.gis.layer.queryOptions({ datasetId: id })),
+  });
+
+  const layers = useMemo(
+    () => layerResults.map((r) => r.data).filter((layer): layer is MapLayer => layer !== undefined),
+    [layerResults],
+  );
+
+  const failedDatasetIds = useMemo(
+    () => MAP_LAYER_IDS.filter((_, index) => layerResults[index].isError),
+    [layerResults],
+  );
+
+  // Held here rather than in the legend because the canvas needs it too, and
+  // stored as the hidden set so the default — everything visible — is empty.
+  const [hiddenDatasetIds, setHiddenDatasetIds] = useState<ReadonlySet<string>>(new Set());
+  const toggleDataset = useCallback((id: string) => {
+    setHiddenDatasetIds((current) => {
+      const next = new Set(current);
+      if (!next.delete(id)) next.add(id);
+      return next;
+    });
+  }, []);
 
   if (signals.isError) return <FeatureError name="the map" />;
   if (!signals.data) return <BoardMapSkeleton />;
@@ -39,12 +76,26 @@ export function BoardMapClient({
     <div className="absolute inset-0">
       <MapCanvas
         features={features}
+        layers={layers}
+        hiddenDatasetIds={hiddenDatasetIds}
+        // The board is a committed dark ops console, so the basemap is too —
+        // it does not follow the app's light/dark preference.
+        basemap="dark"
         selectedSignalId={selectedSignalId}
         onSelect={onSelect}
       />
 
-      <div className="pointer-events-none absolute inset-x-0 bottom-0 z-10 flex items-end justify-between gap-3 p-3">
-        <div className="board-panel pointer-events-auto rounded-lg border p-2.5">
+      {layers.length > 0 && (
+        <MapLegend
+          layers={layers}
+          hiddenDatasetIds={hiddenDatasetIds}
+          onToggleDataset={toggleDataset}
+          failedDatasetIds={failedDatasetIds}
+        />
+      )}
+
+      <div className="pointer-events-none absolute inset-x-0 bottom-0 z-10 flex items-end justify-between gap-3 p-3 pb-8">
+        <div className="board-panel pointer-events-auto ml-24 rounded-lg border p-2.5">
           <CredibilityLegend />
           <p className="board-faint mt-2 max-w-[190px] font-mono text-[9.5px] leading-relaxed">
             Dashed ring = location inferred; the circle is how far the contributing

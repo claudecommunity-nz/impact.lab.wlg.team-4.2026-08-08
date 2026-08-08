@@ -132,6 +132,7 @@ function DrillBody({ detail }: { detail: SignalDetail }) {
       />
 
       <section className="board-panel-2 board-line grid grid-cols-2 gap-x-3 gap-y-2 rounded-md border p-2.5 font-mono text-[10.5px]">
+        <Fact label="Issue type" value={detail.issueType.replace(/_/g, " ")} />
         <Fact label="Location" value={detail.locationCertainty} />
         <Fact label="Dataset" value={detail.datasetId} />
         <Fact label="Source classes" value={detail.sourceClasses.join(", ") || "—"} />
