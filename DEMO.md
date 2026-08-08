@@ -44,8 +44,9 @@ somebody asks to see it against the fixture set.
 
 ## The script
 
-The spoken lines below run to 510 words — about 3 minutes 55 at a comfortable
-pace, which leaves no room for adjectives and just enough for the numbers.
+The spoken lines below run to 526 words — about four minutes flat at a
+comfortable pace, which leaves no room for adjectives and just enough for the
+numbers.
 Timings are cumulative. If you are behind at 3:00, drop the Galaxy beat: it is
 the only one that is not load-bearing.
 
@@ -78,13 +79,14 @@ the only one that is not load-bearing.
 > a news site picked it up. All seven collapsed into a single origin — and it
 > tells you why.
 
-*Read one collapse reason aloud, verbatim from the panel:*
+*The panel says it under the figures — **"21 items trace back to 14 distinct
+observations"** — and every echoed item in the provenance list below carries a
+**SAME ORIGIN AS ANOTHER ITEM** badge. Point at those, and say the rule in your
+own voice; the rule itself is not printed on screen:*
 
-> *"quotes social.example.nz/aro_local/status/1188455 — a repost is not a second
-> witness."*
-
-> Two more collapsed as the same author posting twice — one prolific person
-> cannot manufacture corroboration.
+> The rule is: a repost is not a second witness. Two more items collapsed
+> because they came from the same author — one prolific person cannot
+> manufacture corroboration.
 >
 > If we printed twenty-one we would be reporting an echo as evidence, and
 > "twenty-one independent reports" is precisely the sentence that makes somebody
@@ -114,20 +116,24 @@ the only one that is not load-bearing.
 > Nine of the thirteen are a single source. This grades **F4 — reliability
 > cannot be judged, doubtful**. It is still on the map, and it still alerted.
 >
-> In hour zero there are no independent origins yet, so the first report of
-> anything grades badly — and a grade threshold would go silent in exactly the
-> hour Council is most blind. So alert-worthiness is decided separately from
-> belief, and weak signals arrive labelled: *"WEAK EVIDENCE: one independent
-> origin behind one item — this is uncorroborated."*
+*Point at the two facts sitting together: the grade chip reads F4, and
+**Alert-worthy: yes**.*
+
+> Those two are computed separately, and that is the design. In hour zero there
+> are no independent origins yet, so the first report of anything grades badly —
+> and a grade threshold would go silent in exactly the hour Council is most
+> blind. So we ask a different question: is there somewhere to send someone, and
+> is anything authoritative saying it did not happen?
 >
-> We never hide a weak signal. We label it.
+> The alert carries its own weakness in writing. We never hide a weak signal —
+> we label it.
 
 ### 3:00 — the same signals, arranged by meaning (25s)
 
 *Switch the view toggle to Galaxy.*
 
-> Same thirteen events, arranged by what was said rather than where — for
-> spotting that two things reported in different suburbs are the same problem.
+> Same events, arranged by what was said rather than where — for spotting that
+> two things reported in different suburbs are the same problem.
 
 *Switch back to Map before you finish.*
 
@@ -145,6 +151,13 @@ the only one that is not load-bearing.
 >
 > The machine's job ends at *this is worth someone looking at, and here is
 > exactly why* — the thing Council said it could not do by hand.
+
+> **If the drill panel gains a collapse-reasons list before 16:30** (asked of
+> present-builder, not committed as of writing), the 0:50 beat gets sharper:
+> read the reason verbatim off the screen instead of narrating it — *"quotes
+> social.example.nz/aro_local/status/1188455 — a repost is not a second
+> witness."* Check the panel before you rely on it. Everything else in the
+> script is on screen today; this is the one line that is not.
 
 ---
 
