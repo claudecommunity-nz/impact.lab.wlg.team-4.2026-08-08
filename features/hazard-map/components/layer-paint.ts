@@ -81,6 +81,20 @@ export const LAYER_PAINT: Record<string, LayerPaint> = {
 };
 
 /** Anything added to the dataset registry without a paint rule still renders. */
+LAYER_PAINT["impact-zones"] = {
+  fill: "#3f7d6e",
+  outline: "rgba(42,39,36,0.18)",
+  opacity: 0.24,
+  graded: {
+    property: "band",
+    stops: [
+      { value: "hot", colour: "#c25a41", label: "many reports", title: "8+ reports in this suburb" },
+      { value: "warm", colour: "#d99a2b", label: "several", title: "3\u20137 reports in this suburb" },
+      { value: "mild", colour: "#3f7d6e", label: "a few", title: "1\u20132 reports in this suburb" },
+    ],
+  },
+};
+
 export const FALLBACK_PAINT: LayerPaint = { fill: "#94A3B8", outline: "#334155", opacity: 0.6 };
 
 export function paintFor(datasetId: string): LayerPaint {

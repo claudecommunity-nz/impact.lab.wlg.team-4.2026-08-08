@@ -80,6 +80,16 @@ export const GIS_DATASETS = {
     layerUrl:
       "https://gis.wcc.govt.nz/arcgis/rest/services/DistrictPlanProposed/DistrictPlanProposed/MapServer/52",
   },
+  "suburb-boundaries": {
+    displayName: "Suburb boundaries",
+    authority: "Wellington City Council",
+    attribution: "Suburb boundaries © Wellington City Council",
+    geometryKind: "polygon",
+    caveat:
+      "Administrative boundaries only. The impact-zone shading derived from them aggregates report counts by suburb — absence of reports is absence of information, not absence of impact.",
+    layerUrl:
+      "https://gis.wcc.govt.nz/arcgis/rest/services/PropertyAndBoundaries/WCC_Boundaries/MapServer/2",
+  },
 } as const satisfies Record<string, GisDataset>;
 
 export type GisDatasetId = keyof typeof GIS_DATASETS;
