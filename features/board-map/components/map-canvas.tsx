@@ -59,17 +59,6 @@ const HAZARD_FILL_OPACITY = 0.12;
 const DOT_MIN_PX = 11;
 const DOT_MAX_PX = 34;
 
-/**
- * How many reports a cluster needs before it earns a name on the map.
- *
- * A live feed is mostly singletons — one person, one post, one address. Giving
- * every one of them a pill turns the city into a wall of overlapping labels and
- * buries the handful of clusters that several people independently reported,
- * which is the entire point of the board. Singletons stay as dots, at full
- * colour and fully clickable, with their name on the marker's accessible name
- * and in the drill panel.
- */
-const LABEL_FROM_ITEMS = 2;
 
 const EMPTY_COLLECTION = { type: "FeatureCollection" as const, features: [] };
 
@@ -104,7 +93,8 @@ type MarkerRecord = {
   element: HTMLButtonElement;
   dot: HTMLSpanElement;
   chip: HTMLSpanElement;
-  chipTone: HTMLSpanElement;
+  chipDot: HTMLSpanElement;
+  chipText: HTMLSpanElement;
   flag: HTMLSpanElement;
 };
 
@@ -162,6 +152,7 @@ export function MapCanvas({
   const [mapInstance, setMapInstance] = useState<MapLibreMap | null>(null);
   const [styleReady, setStyleReady] = useState(false);
   const [basemapDown, setBasemapDown] = useState(false);
+  const [hoveredSignalId, setHoveredSignalId] = useState<string | null>(null);
   const [initialBasemap] = useState(basemap);
 
   // The click handler is bound once per marker, so it reads the latest callback
@@ -392,7 +383,10 @@ export function MapCanvas({
 
       let record = markersRef.current.get(id);
       if (!record) {
-        record = createMarkerRecord(() => onSelectRef.current(id));
+        record = createMarkerRecord(
+          () => onSelectRef.current(id),
+          (hovering) => setHoveredSignalId(hovering ? id : null),
+        );
         record.marker.setLngLat(feature.geometry.coordinates).addTo(map);
         markersRef.current.set(id, record);
       } else {
@@ -417,10 +411,18 @@ export function MapCanvas({
     const source = mapInstance.getSource<GeoJSONSource>("signal-halos");
     if (!source) return;
 
+    // Rings appear on approach too. A dozen permanent dashed circles competed
+    // with the dots they were supposed to qualify; one ring, on the signal you
+    // are actually looking at, says the same thing and says it louder.
+    const inFocus = new Set([hoveredSignalId, selectedSignalId].filter(Boolean));
+
     source.setData({
       type: "FeatureCollection",
       features: features
-        .filter((feature) => feature.properties.radiusM !== null)
+        .filter(
+          (feature) =>
+            feature.properties.radiusM !== null && inFocus.has(feature.properties.signalId),
+        )
         .map((feature) =>
           groundCircle(
             feature.geometry.coordinates,
@@ -429,7 +431,7 @@ export function MapCanvas({
           ),
         ),
     });
-  }, [mapInstance, styleReady, features]);
+  }, [mapInstance, styleReady, features, hoveredSignalId, selectedSignalId]);
 
   return (
     <div className="absolute inset-0">
@@ -449,7 +451,10 @@ export function MapCanvas({
 
 // ─── internals ────────────────────────────────────────────────────────────────
 
-function createMarkerRecord(onClick: () => void): MarkerRecord {
+function createMarkerRecord(
+  onClick: () => void,
+  onHover: (hovering: boolean) => void,
+): MarkerRecord {
   const element = document.createElement("button");
   element.type = "button";
   element.className = "signal-marker";
@@ -460,26 +465,35 @@ function createMarkerRecord(onClick: () => void): MarkerRecord {
   const chip = document.createElement("span");
   chip.className = "chip";
 
-  const chipTone = document.createElement("span");
-  chipTone.className = "chip-tone";
-  chip.append(chipTone);
+  // Credibility travels as a coloured dot inside the pill, not as words. The
+  // words ("could be true") belong to the drill panel; on the map they turned
+  // every marker into a sentence.
+  const chipDot = document.createElement("span");
+  chipDot.className = "chip-dot";
+
+  const chipText = document.createElement("span");
 
   const flag = document.createElement("span");
-  flag.className = "synthetic-flag";
+  flag.className = "chip-syn";
   flag.textContent = "SYN";
   flag.hidden = true;
 
-  element.append(dot, chip, flag);
+  chip.append(chipDot, chipText, flag);
+  element.append(dot, chip);
   element.addEventListener("click", (event) => {
     event.stopPropagation();
     onClick();
   });
+  element.addEventListener("pointerenter", () => onHover(true));
+  element.addEventListener("pointerleave", () => onHover(false));
+  element.addEventListener("focus", () => onHover(true));
+  element.addEventListener("blur", () => onHover(false));
 
   // anchor:"left" puts the element's left edge on the coordinate; the offset
   // pulls it back by half a dot so the DOT sits on the point, not the chip.
   const marker = new Marker({ element, anchor: "left", offset: [-6, 0] });
 
-  return { marker, element, dot, chip, chipTone, flag };
+  return { marker, element, dot, chip, chipDot, chipText, flag };
 }
 
 function paintMarker(
@@ -529,14 +543,12 @@ function paintMarker(
   // Plain English on the map, with the evidence count beside the place. The
   // Admiralty letters live in the drill panel, where somebody has chosen the
   // expert layer.
-  const worthNaming = properties.itemCount >= LABEL_FROM_ITEMS;
-  record.chip.hidden = !worthNaming;
-  if (worthNaming) {
-    record.chip.textContent = `${localityOf(properties.label)} · ${properties.itemCount}`;
-    record.chip.append(record.chipTone);
-    record.chipTone.textContent = plainCredibility(properties.grade);
-    record.chipTone.style.color = colour;
-  }
+  // The pill is written always and SHOWN only on approach (CSS: hover, focus,
+  // or selected). A dozen permanent labels is the noise Jacob rejected; the
+  // same dozen on hover is a map you can read.
+  record.chipText.textContent = `${localityOf(properties.label)} · ${properties.itemCount}`;
+  record.chipDot.style.background = colour;
+  record.flag.hidden = !properties.syntheticContributor;
 
   record.flag.hidden = !properties.syntheticContributor;
 }

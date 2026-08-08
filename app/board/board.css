@@ -40,31 +40,49 @@
   border-style: dashed;
   border-color: var(--muted-foreground);
 }
-/* A white pill, per the design mock's "Aro Valley · 21" — legible over any
-   ground, and carrying the two things worth reading at a glance: where, and
-   how much evidence. */
+/* The pill is written for every marker and SHOWN only on approach — hover,
+   keyboard focus, or while its drill panel is open. Default state is dots: the
+   map's job is geography plus quantity, and a dozen permanent labels buried
+   both. */
 .signal-marker .chip {
-  display: inline-flex;
-  align-items: baseline;
-  gap: 5px;
-  font-size: 11px;
+  display: none;
+  align-items: center;
+  gap: 6px;
+  font-size: 11.5px;
   font-weight: 600;
   line-height: 1;
-  padding: 4px 9px;
+  padding: 5px 10px;
   border-radius: 999px;
   border: 1px solid var(--border);
   background: var(--card);
   color: var(--foreground);
   white-space: nowrap;
-  box-shadow: 0 1px 4px rgb(0 0 0 / 0.1);
+  box-shadow: 0 2px 8px rgb(0 0 0 / 0.12);
 }
-.signal-marker .chip-tone {
-  font-size: 9.5px;
-  font-weight: 600;
+.signal-marker:hover .chip,
+.signal-marker:focus-visible .chip,
+.signal-marker[aria-pressed="true"] .chip {
+  display: inline-flex;
+}
+.signal-marker .chip-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  flex: none;
+}
+/* Synthetic honesty rides inside the pill now, rather than as a chip floating
+   beside every marker on the map. */
+.signal-marker .chip-syn {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: var(--warning-foreground);
+  background: color-mix(in oklab, var(--warning) 22%, var(--card));
+  border-radius: 4px;
+  padding: 2px 4px;
 }
 .signal-marker[aria-pressed="true"] .chip {
   border-color: var(--primary);
-  box-shadow: 0 0 0 2px color-mix(in oklab, var(--primary) 25%, transparent);
 }
 .signal-marker:focus-visible {
   outline: 2px solid var(--ring);
@@ -72,18 +90,6 @@
   border-radius: 999px;
 }
 
-/* Synthetic provenance is flagged on the marker, not only in a panel — a drill
-   item must be impossible to mistake for a real report at a glance. */
-.signal-marker .synthetic-flag {
-  font-size: 9px;
-  font-weight: 600;
-  letter-spacing: 0.06em;
-  color: var(--warning-foreground);
-  background: color-mix(in oklab, var(--warning) 18%, var(--card));
-  border: 1px solid color-mix(in oklab, var(--warning) 45%, transparent);
-  border-radius: 4px;
-  padding: 2px 4px;
-}
 
 /* ── MapLibre's own chrome, wearing the app's tokens ──────────────────────── */
 .board-map .maplibregl-ctrl-attrib {
