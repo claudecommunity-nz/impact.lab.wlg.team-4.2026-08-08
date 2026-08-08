@@ -68,9 +68,13 @@ export const LAYER_PAINT: Record<string, LayerPaint> = {
     opacity: 0.95,
     marker: "square",
   },
+  // Magenta because every other candidate is taken: green is the routes,
+  // violet the tsunami zones, and the old cyan was near enough to the ponding
+  // blue underneath it that tanks disappeared into the layer they most often
+  // sit on top of. Nothing else on the map is in the pink range.
   "emergency-water-tanks": {
-    fill: "#06B6D4",
-    outline: "#164E63",
+    fill: "#EC4899",
+    outline: "#831843",
     opacity: 0.95,
     marker: "circle",
   },

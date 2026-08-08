@@ -87,6 +87,26 @@ function styleLayerIdsFor(layer: MapLayer): string[] {
   }
 }
 
+/**
+ * The style layer that `layers[index]` must be inserted BEFORE to keep the
+ * declared draw order, or undefined to append on top.
+ *
+ * Necessary because layers stream in: they are added in whatever order the
+ * Council servers answer, not the order they are listed. Water tanks come back
+ * in well under a second and ponding takes about seven, so appending would put
+ * the ponding polygons on top of the markers — which is exactly what happened.
+ * Inserting against the next layer that is already present keeps the stack
+ * right no matter what order the responses arrive in.
+ */
+function insertBefore(map: MapLibreMap, layers: MapLayer[], index: number): string | undefined {
+  for (let above = index + 1; above < layers.length; above++) {
+    for (const styleLayerId of styleLayerIdsFor(layers[above])) {
+      if (map.getLayer(styleLayerId)) return styleLayerId;
+    }
+  }
+  return undefined;
+}
+
 /** The one layer per dataset that a click should hit. */
 function clickTargetFor(layer: MapLayer): string {
   switch (layer.geometryKind) {
@@ -389,7 +409,7 @@ export function MapCanvas({
     layerByTargetRef.current = new Map(layers.map((layer) => [clickTargetFor(layer), layer]));
 
     const draw = () => {
-      for (const layer of layers) {
+      for (const [index, layer] of layers.entries()) {
         const sourceId = sourceIdFor(layer.datasetId);
         // Geometry is `unknown` through the tRPC boundary by design — it is
         // never inspected here, only handed to MapLibre.
@@ -403,6 +423,7 @@ export function MapCanvas({
 
         map.addSource(sourceId, { type: "geojson", data });
         const paint = paintFor(layer.datasetId);
+        const before = insertBefore(map, layers, index);
 
         if (layer.geometryKind === "polygon") {
           // A `match` on one of the feature's own attributes, so severity is
@@ -417,35 +438,46 @@ export function MapCanvas({
               ]
             : paint.fill;
 
-          map.addLayer({
-            id: fillLayerIdFor(layer.datasetId),
-            type: "fill",
-            source: sourceId,
-            paint: {
-              "fill-color": fillColor as NonNullable<FillLayerSpecification["paint"]>["fill-color"],
-              "fill-opacity": paint.opacity,
+          map.addLayer(
+            {
+              id: fillLayerIdFor(layer.datasetId),
+              type: "fill",
+              source: sourceId,
+              paint: {
+                "fill-color": fillColor as NonNullable<
+                  FillLayerSpecification["paint"]
+                >["fill-color"],
+                "fill-opacity": paint.opacity,
+              },
             },
-          });
-          map.addLayer({
-            id: outlineLayerIdFor(layer.datasetId),
-            type: "line",
-            source: sourceId,
-            paint: { "line-color": paint.outline, "line-width": 1.5 },
-          });
+            before,
+          );
+          map.addLayer(
+            {
+              id: outlineLayerIdFor(layer.datasetId),
+              type: "line",
+              source: sourceId,
+              paint: { "line-color": paint.outline, "line-width": 1.5 },
+            },
+            before,
+          );
         } else if (layer.geometryKind === "line") {
-          map.addLayer({
-            id: lineLayerIdFor(layer.datasetId),
-            type: "line",
-            source: sourceId,
-            layout: { "line-cap": "round", "line-join": "round" },
-            paint: {
-              // Thicker as you zoom in: a 2px line is close to unclickable, and
-              // road-priority routes are only meaningful once you can see streets.
-              "line-width": ["interpolate", ["linear"], ["zoom"], 10, 1.5, 15, 4],
-              "line-color": paint.fill,
-              "line-opacity": paint.opacity,
+          map.addLayer(
+            {
+              id: lineLayerIdFor(layer.datasetId),
+              type: "line",
+              source: sourceId,
+              layout: { "line-cap": "round", "line-join": "round" },
+              paint: {
+                // Thicker as you zoom in: a 2px line is close to unclickable, and
+                // road-priority routes are only meaningful once you can see streets.
+                "line-width": ["interpolate", ["linear"], ["zoom"], 10, 1.5, 15, 4],
+                "line-color": paint.fill,
+                "line-opacity": paint.opacity,
+              },
             },
-          });
+            before,
+          );
         } else if (paint.marker) {
           // A symbol layer with a generated icon, so the shape distinguishes the
           // layer. addImage must precede addLayer or the symbol renders blank.
@@ -454,32 +486,38 @@ export function MapCanvas({
             const image = markerImage(paint.marker, paint.fill, paint.outline);
             if (image) map.addImage(imageId, image, { pixelRatio: 2 });
           }
-          map.addLayer({
-            id: markerLayerIdFor(layer.datasetId),
-            type: "symbol",
-            source: sourceId,
-            layout: {
-              "icon-image": imageId,
-              // Markers must not be dropped where they crowd: a missing hub reads
-              // as "no hub here", which is worse than an overlapping pair.
-              "icon-allow-overlap": true,
-              "icon-ignore-placement": true,
-              "icon-size": ["interpolate", ["linear"], ["zoom"], 10, 0.3, 15, 0.7],
+          map.addLayer(
+            {
+              id: markerLayerIdFor(layer.datasetId),
+              type: "symbol",
+              source: sourceId,
+              layout: {
+                "icon-image": imageId,
+                // Markers must not be dropped where they crowd: a missing hub reads
+                // as "no hub here", which is worse than an overlapping pair.
+                "icon-allow-overlap": true,
+                "icon-ignore-placement": true,
+                "icon-size": ["interpolate", ["linear"], ["zoom"], 10, 0.3, 15, 0.7],
+              },
             },
-          });
+            before,
+          );
         } else {
-          map.addLayer({
-            id: circleLayerIdFor(layer.datasetId),
-            type: "circle",
-            source: sourceId,
-            paint: {
-              "circle-radius": ["interpolate", ["linear"], ["zoom"], 10, 3.5, 15, 8],
-              "circle-color": paint.fill,
-              "circle-opacity": paint.opacity,
-              "circle-stroke-color": paint.outline,
-              "circle-stroke-width": 1,
+          map.addLayer(
+            {
+              id: circleLayerIdFor(layer.datasetId),
+              type: "circle",
+              source: sourceId,
+              paint: {
+                "circle-radius": ["interpolate", ["linear"], ["zoom"], 10, 3.5, 15, 8],
+                "circle-color": paint.fill,
+                "circle-opacity": paint.opacity,
+                "circle-stroke-color": paint.outline,
+                "circle-stroke-width": 1,
+              },
             },
-          });
+            before,
+          );
         }
       }
     };
