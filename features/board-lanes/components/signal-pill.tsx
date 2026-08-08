@@ -55,7 +55,7 @@ export function VelocityPill({
 }) {
   return (
     <SignalPill signalId={signal.signalId} selected={selected} onSelect={onSelect}>
-      <span className="text-destructive font-mono text-[12px] font-semibold tabular-nums">
+      <span className="text-destructive font-mono text-[12px] font-semibold tabular-nums whitespace-nowrap">
         ▲ +{perHour}/h
       </span>
       <span className="max-w-[220px] truncate text-[12.5px] font-medium">

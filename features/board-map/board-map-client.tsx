@@ -3,7 +3,6 @@
 import { keepPreviousData, useQueries, useQuery } from "@tanstack/react-query";
 import { useTheme } from "next-themes";
 import { useCallback, useMemo, useRef, useState } from "react";
-import { CredibilityLegend } from "@/components/board/grade";
 import { FeatureError } from "@/components/errors/feature-error";
 import { MapLegend } from "@/features/hazard-map/components/map-legend";
 import { MAP_LAYER_IDS } from "@/features/hazard-map/map-layers";
@@ -83,15 +82,16 @@ export function BoardMapClient({
     trpc.gis.layer.queryOptions({ datasetId: "suburb-boundaries" }, { staleTime: Infinity }),
   );
 
-  // Impact zones: Council communicates in suburb names, so affected areas are
-  // shaded per suburb — report mass aggregated by point-in-polygon. Dots stay
-  // on top for precision; the zones answer "which areas" at a glance.
+  // Impact zones: Council communicates in suburb names, so affected areas ARE
+  // suburbs — report mass aggregated by point-in-polygon, shaded in place. The
+  // suburbs are the display itself, not an underlay: Jacob's call, after the
+  // dots-over-polygons version read as clutter.
   const impactZones = useMemo<MapLayer | null>(() => {
     const polys = suburbs.data?.featureCollection.features;
     const pts = signals.data?.features;
     if (!polys || !pts || pts.length === 0) return null;
 
-    const zones = polys.flatMap((poly) => {
+    const scored = polys.flatMap((poly) => {
       const geom = poly.geometry as {
         type: string;
         coordinates: number[][][] | number[][][][];
@@ -102,19 +102,46 @@ export function BoardMapClient({
       ) as number[][][][];
 
       let mass = 0;
+      const signalIds: string[] = [];
+      let top: { id: string; count: number } | null = null;
       for (const f of pts) {
         const [lng, lat] = (f.geometry as { coordinates: [number, number] }).coordinates;
         if (polygons.some((rings) => pointInRings(lng, lat, rings))) {
-          mass += (f.properties as { itemCount?: number }).itemCount ?? 1;
+          const props = f.properties as { signalId: string; itemCount?: number };
+          const count = props.itemCount ?? 1;
+          mass += count;
+          signalIds.push(props.signalId);
+          if (!top || count > top.count) top = { id: props.signalId, count };
         }
       }
-      if (mass === 0) return [];
-      const band = mass >= 8 ? "hot" : mass >= 3 ? "warm" : "mild";
+      if (mass === 0 || !top) return [];
       const suburb = (poly.properties as { suburb?: string } | null)?.suburb ?? "";
-      return [{ ...poly, properties: { suburb, mass, band } }];
+      return [{ poly, suburb, mass, signalIds, topSignalId: top.id }];
     });
 
-    if (zones.length === 0) return null;
+    if (scored.length === 0) return null;
+
+    // Bands are RELATIVE to the busiest suburb at the moment shown, with small
+    // absolute floors so two lone reports never light a suburb red. Absolute
+    // cutoffs were tried first and break twice: they saturate when the full
+    // feed corpus lands, and they park the whole replay in "mild" until the
+    // very end. Relative bands keep the comparison honest at any data volume.
+    const busiest = Math.max(...scored.map((zone) => zone.mass));
+    const zones = scored.map(({ poly, suburb, mass, signalIds, topSignalId }) => ({
+      ...poly,
+      properties: {
+        suburb,
+        mass,
+        signalIds,
+        topSignalId,
+        band:
+          mass >= Math.max(3, busiest * 0.5)
+            ? "hot"
+            : mass >= Math.max(2, busiest * 0.15)
+              ? "warm"
+              : "mild",
+      },
+    }));
     return {
       datasetId: "impact-zones",
       displayName: "Impact zones",
@@ -178,7 +205,6 @@ export function BoardMapClient({
   return (
     <div className="absolute inset-0">
       <MapCanvas
-        features={features}
         layers={layers}
         hiddenDatasetIds={hiddenDatasetIds}
         // Follows the app theme: dark tiles under a light interface is the one
@@ -198,11 +224,10 @@ export function BoardMapClient({
         />
       )}
 
-      <div className="pointer-events-none absolute inset-x-0 bottom-0 z-10 flex items-end justify-between gap-3 p-3 pb-8">
-        <div className="bg-card/90 border-border pointer-events-auto ml-24 rounded-full border px-3 py-1.5">
-          <CredibilityLegend />
-        </div>
-
+      {/* The credibility colour key left with the dots — zone colour means
+          report volume, and the map legend explains that. Credibility words
+          live in the drill panel, next to the evidence they grade. */}
+      <div className="pointer-events-none absolute inset-x-0 bottom-0 z-10 flex items-end justify-end gap-3 p-3 pb-8">
         <UnmappableGutter entries={unmappable} onSelect={onSelect} />
       </div>
 

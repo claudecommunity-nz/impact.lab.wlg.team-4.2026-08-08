@@ -38,20 +38,20 @@ export function BoardScrubber({
   // The thumb's own position while dragging or playing; null = follow `value`.
   const [thumb, setThumb] = useState<number | null>(null);
   const thumbRef = useRef(thumb);
-  thumbRef.current = thumb;
   const settleRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const lastEmitRef = useRef(0);
   const valueRef = useRef(value);
-  valueRef.current = value;
   const onChangeRef = useRef(onChange);
-  onChangeRef.current = onChange;
+  useEffect(() => {
+    thumbRef.current = thumb;
+    valueRef.current = value;
+    onChangeRef.current = onChange;
+  });
 
   const now = Date.now();
   const span = Math.max(now - domainStart, 60_000);
   // Frozen on mount so the quantisation grid never shifts under the cache.
-  const stepRef = useRef<number | null>(null);
-  if (stepRef.current === null) stepRef.current = Math.max(Math.round(span / 200), 1_000);
-  const stepMs = stepRef.current;
+  const [stepMs] = useState(() => Math.max(Math.round(span / 200), 1_000));
 
   const quantise = (v: number) => domainStart + Math.round((v - domainStart) / stepMs) * stepMs;
 

@@ -3,23 +3,16 @@
 import "maplibre-gl/dist/maplibre-gl.css";
 import {
   AttributionControl,
+  type ExpressionSpecification,
   type GeoJSONSource,
+  type MapLayerMouseEvent,
   MapLibreMap,
-  Marker,
   NavigationControl,
   type RasterTileSource,
   ScaleControl,
   setWorkerUrl,
 } from "maplibre-gl";
 import { useEffect, useRef, useState } from "react";
-import type { SignalFeature } from "@/components/board/api-types";
-import {
-  credibilityColour,
-  gradeSentence,
-  humanizeLabel,
-  localityOf,
-  plainCredibility,
-} from "@/components/board/grade";
 import {
   BASEMAP_ATTRIBUTION,
   WELLINGTON_CENTER,
@@ -33,32 +26,23 @@ import type { MapLayer } from "@/use-cases/gis/map-layer-schema";
 
 const BASEMAP_SOURCE_ID = "basemap";
 const LABELS_SOURCE_ID = "basemap-labels";
-const HALO_LAYER_ID = "halo-fill";
 const LABELS_LAYER_ID = "basemap-labels";
 
-/** Uncertainty is about WHERE, not about how credible — so the halo is one neutral hue. */
-const HALO_COLOUR = "#8e877f";
+const ZONES_SOURCE_ID = "impact-zones";
+const ZONES_FILL_ID = "impact-zones-fill";
+const ZONES_OUTLINE_ID = "impact-zones-outline";
 
 /**
  * Hazard geography is CONTEXT, not content.
  *
  * These layers are Council polygons covering most of the city; drawn at the
- * strength /map uses they win on sheer area and the signals disappear into
- * them. An operator is here to read the reports, so the geography sits back to
- * roughly a tenth of its natural weight — present enough to place a signal in a
- * ponding basin or a tsunami zone, quiet enough that the dots are what the eye
- * lands on.
+ * strength /map uses they win on sheer area and the impact picture disappears
+ * into them. An operator is here to read the reports, so the geography sits
+ * back to roughly a tenth of its natural weight — present enough to place a
+ * suburb in a ponding basin or a tsunami zone, quiet enough that the shaded
+ * suburbs are what the eye lands on.
  */
 const HAZARD_FILL_OPACITY = 0.12;
-
-/**
- * Marker size carries report count — "bigger dot = more reports" from the
- * design brief. Colour is NOT reused for this: colour already means
- * credibility, and one channel cannot honestly carry two meanings.
- */
-const DOT_MIN_PX = 11;
-const DOT_MAX_PX = 34;
-
 
 const EMPTY_COLLECTION = { type: "FeatureCollection" as const, features: [] };
 
@@ -78,7 +62,7 @@ const BACKDROP: Record<"light" | "dark", string> = {
  * pre-bundled dist, so the worker is served from /public instead (copied there
  * by scripts/copy-maplibre-worker.mjs, which runs on `prebuild`). Without this
  * the worker fails to load and every GeoJSON source — the hazard layers AND the
- * uncertainty circles — silently never renders, while raster tiles still do.
+ * impact zones — silently never renders, while raster tiles still do.
  *
  * `prebuild` does NOT run for `next dev`: run `node scripts/copy-maplibre-worker.mjs`
  * once after a fresh install if vector layers are missing in development.
@@ -88,50 +72,42 @@ const BACKDROP: Record<"light" | "dark", string> = {
  */
 setWorkerUrl("/maplibre/maplibre-gl-worker.mjs");
 
-type MarkerRecord = {
-  marker: Marker;
-  element: HTMLButtonElement;
-  dot: HTMLSpanElement;
-  chip: HTMLSpanElement;
-  chipDot: HTMLSpanElement;
-  chipText: HTMLSpanElement;
-  flag: HTMLSpanElement;
-  /** Set while the marker is fading out; cancelled if the signal reappears. */
-  leaveTimer: ReturnType<typeof setTimeout> | null;
-};
-
-/** Slightly past the CSS fade (0.22s) so the removal never clips it. */
-const LEAVE_MS = 260;
+/** Band colours restated as a GPU expression, from the one paint registry. */
+function bandColourExpression(): ExpressionSpecification {
+  const paint = paintFor("impact-zones");
+  const stops = paint.graded?.stops ?? [];
+  return [
+    "match",
+    ["get", "band"],
+    ...stops.flatMap((stop) => [stop.value, stop.colour]),
+    paint.fill,
+  ] as unknown as ExpressionSpecification;
+}
 
 /**
- * The board's single canvas: Council hazard geography underneath, our signal
- * clusters on top of it.
+ * The board's single canvas: Council hazard geography underneath, the impact
+ * picture — WCC suburbs shaded by report volume — on top of it.
  *
  * The basemap, the region bounds and every hazard layer's paint come from
  * `features/hazard-map` rather than being restated here — the two maps in this
  * repo must not drift into two different Wellingtons.
  *
+ * Suburb FILLS are the display, not dots. Size-scaled cluster markers with
+ * uncertainty rings were built first and rejected: circles over polygon layers
+ * read as clutter, and Council communicates in suburb names anyway. The suburb
+ * is the unit an operator says out loud, so the suburb is the thing that lights
+ * up. Hovering names it with its report count; clicking opens the evidence for
+ * the busiest cluster inside it.
+ *
  * Hazard features are deliberately NOT clickable here, unlike on /map. On this
- * screen a click means "open this signal's evidence", and a second click target
+ * screen a click means "open this suburb's evidence", and a second click target
  * underneath the first would make that gesture ambiguous. The hazard layers are
- * context for the signals; /map remains the place to interrogate them.
- *
- * Two rendering choices worth knowing:
- *
- *   - **Signals are DOM markers, not a circle layer.** A signal has to be
- *     reachable by keyboard and readable by a screen reader ("Aro Valley
- *     flooding, grade C3, 2 independent sources across 7 items"), and a canvas
- *     hit-test cannot be either.
- *   - **Inferred locations get a CIRCLE, not a pin.** `radiusM` is the distance
- *     from the averaged position to the furthest item that voted for it, drawn
- *     as a true ground-distance polygon so it stays honest at every zoom. A pin
- *     would claim a precision the evidence does not have.
+ * context for the zones; /map remains the place to interrogate them.
  *
  * The camera is never moved by data. Polling every three seconds must not slide
  * the map out from under an operator mid-read.
  */
 export function MapCanvas({
-  features,
   // Defaulted rather than merely typed as required: during a hot reload the
   // browser can briefly hold a module whose props do not match the one that
   // rendered it, and `for (const layer of undefined)` there would throw inside
@@ -143,7 +119,6 @@ export function MapCanvas({
   selectedSignalId,
   onSelect,
 }: {
-  features: SignalFeature[];
   layers: MapLayer[];
   hiddenDatasetIds: ReadonlySet<string>;
   basemap: "light" | "dark";
@@ -151,17 +126,25 @@ export function MapCanvas({
   onSelect: (signalId: string) => void;
 }) {
   const containerRef = useRef<HTMLDivElement | null>(null);
-  const markersRef = useRef(new Map<string, MarkerRecord>());
-  // The map lives in STATE, not a ref: the marker, hazard and halo effects have
-  // to run the moment it exists, and a ref assignment does not re-render.
+  // The map lives in STATE, not a ref: the zone and hazard effects have to run
+  // the moment it exists, and a ref assignment does not re-render.
   const [mapInstance, setMapInstance] = useState<MapLibreMap | null>(null);
   const [styleReady, setStyleReady] = useState(false);
   const [basemapDown, setBasemapDown] = useState(false);
-  const [hoveredSignalId, setHoveredSignalId] = useState<string | null>(null);
   const [initialBasemap] = useState(basemap);
 
-  // The click handler is bound once per marker, so it reads the latest callback
-  // through a ref rather than being rebound on every poll.
+  // The suburb under the pointer, for the hover pill. Position is in container
+  // pixels so the pill rides with the cursor.
+  const [hoverZone, setHoverZone] = useState<{
+    x: number;
+    y: number;
+    suburb: string;
+    mass: number;
+  } | null>(null);
+  const hoveredZoneIdRef = useRef<number | string | null>(null);
+
+  // The click handler is bound once when the zone layer is created, so it reads
+  // the latest callback through a ref rather than being rebound on every poll.
   const onSelectRef = useRef(onSelect);
   useEffect(() => {
     onSelectRef.current = onSelect;
@@ -170,8 +153,6 @@ export function MapCanvas({
   useEffect(() => {
     const container = containerRef.current;
     if (!container) return;
-
-    const markers = markersRef.current;
 
     const map = new MapLibreMap({
       container,
@@ -186,7 +167,7 @@ export function MapCanvas({
           },
           // Place names ship separately from the ground so overlays can go
           // between them. Ours do not: the labels stay on top, because an
-          // operator naming a suburb out loud matters more than a hazard
+          // operator naming a suburb out loud matters more than a zone
           // polygon's edge being unbroken.
           [LABELS_SOURCE_ID]: {
             type: "raster",
@@ -195,10 +176,10 @@ export function MapCanvas({
           },
         },
         layers: [
-          // Drawn under the tiles on purpose: if CARTO is unreachable — a
-          // conference wifi is not a guarantee — the map degrades to the page's
-          // own paper colour with the signals still on it, rather than to white
-          // voids or, worse, a black rectangle in a light interface.
+          // Drawn under the tiles on purpose: if the tile CDN is unreachable —
+          // a conference wifi is not a guarantee — the map degrades to the
+          // page's own paper colour with the zones still on it, rather than to
+          // white voids or, worse, a black rectangle in a light interface.
           {
             id: "backdrop",
             type: "background",
@@ -239,38 +220,11 @@ export function MapCanvas({
       if ((event as { sourceId?: string }).sourceId === BASEMAP_SOURCE_ID) setBasemapDown(true);
     });
 
-    map.on("load", () => {
-      // Added first so every hazard layer can be inserted BENEATH it later —
-      // our evidence must never end up buried under a hazard polygon.
-      map.addSource("signal-halos", { type: "geojson", data: EMPTY_COLLECTION });
-      map.addLayer({
-        id: HALO_LAYER_ID,
-        type: "fill",
-        source: "signal-halos",
-        paint: { "fill-color": HALO_COLOUR, "fill-opacity": 0.09 },
-      });
-      map.addLayer({
-        id: "halo-line",
-        type: "line",
-        source: "signal-halos",
-        paint: {
-          "line-color": HALO_COLOUR,
-          "line-opacity": 0.5,
-          "line-width": 1,
-          "line-dasharray": [2, 2],
-        },
-      });
-      setStyleReady(true);
-    });
+    map.on("load", () => setStyleReady(true));
 
     setMapInstance(map);
 
     return () => {
-      for (const record of markers.values()) {
-        if (record.leaveTimer !== null) clearTimeout(record.leaveTimer);
-        record.marker.remove();
-      }
-      markers.clear();
       map.remove();
       setMapInstance(null);
       setStyleReady(false);
@@ -285,11 +239,136 @@ export function MapCanvas({
       ?.setTiles(basemapLabelTiles(basemap));
   }, [mapInstance, basemap]);
 
-  // Council hazard geography, drawn beneath the signals.
+  // The impact picture: suburb polygons shaded by report volume, hoverable and
+  // clickable. Created once, then updated in place so a poll or a scrub step
+  // recolours the suburbs instead of tearing the layer down under the pointer.
+  useEffect(() => {
+    const map = mapInstance;
+    if (!map || !styleReady) return;
+
+    const zones = layers.find((layer) => layer.datasetId === "impact-zones");
+    const data = (zones?.featureCollection ??
+      EMPTY_COLLECTION) as unknown as GeoJSON.FeatureCollection;
+
+    const existing = map.getSource<GeoJSONSource>(ZONES_SOURCE_ID);
+    if (existing) {
+      // generateId reassigns feature ids on setData, so the held hover state
+      // would point at the wrong suburb — drop it; the next mousemove re-arms.
+      hoveredZoneIdRef.current = null;
+      existing.setData(data);
+      return;
+    }
+    if (!zones) return;
+
+    map.addSource(ZONES_SOURCE_ID, { type: "geojson", data, generateId: true });
+
+    const colour = bandColourExpression();
+    const beneathLabels = map.getLayer(LABELS_LAYER_ID) ? LABELS_LAYER_ID : undefined;
+
+    map.addLayer(
+      {
+        id: ZONES_FILL_ID,
+        type: "fill",
+        source: ZONES_SOURCE_ID,
+        paint: {
+          "fill-color": colour,
+          // The suburb under the pointer answers back — same hue, more weight.
+          "fill-opacity": [
+            "case",
+            ["boolean", ["feature-state", "hover"], false],
+            0.6,
+            0.42,
+          ] as unknown as ExpressionSpecification,
+        },
+      },
+      beneathLabels,
+    );
+    map.addLayer(
+      {
+        id: ZONES_OUTLINE_ID,
+        type: "line",
+        source: ZONES_SOURCE_ID,
+        paint: { "line-color": colour, "line-width": 1, "line-opacity": 0.6 },
+      },
+      beneathLabels,
+    );
+
+    map.on("mousemove", ZONES_FILL_ID, (event: MapLayerMouseEvent) => {
+      const feature = event.features?.[0];
+      if (!feature) return;
+      map.getCanvas().style.cursor = "pointer";
+      if (hoveredZoneIdRef.current !== null && hoveredZoneIdRef.current !== feature.id) {
+        map.setFeatureState(
+          { source: ZONES_SOURCE_ID, id: hoveredZoneIdRef.current },
+          { hover: false },
+        );
+      }
+      if (feature.id !== undefined) {
+        hoveredZoneIdRef.current = feature.id;
+        map.setFeatureState({ source: ZONES_SOURCE_ID, id: feature.id }, { hover: true });
+      }
+      const properties = feature.properties as { suburb?: string; mass?: number };
+      setHoverZone({
+        x: event.point.x,
+        y: event.point.y,
+        suburb: properties.suburb || "Unnamed area",
+        mass: properties.mass ?? 0,
+      });
+    });
+
+    map.on("mouseleave", ZONES_FILL_ID, () => {
+      map.getCanvas().style.cursor = "";
+      if (hoveredZoneIdRef.current !== null) {
+        map.setFeatureState(
+          { source: ZONES_SOURCE_ID, id: hoveredZoneIdRef.current },
+          { hover: false },
+        );
+        hoveredZoneIdRef.current = null;
+      }
+      setHoverZone(null);
+    });
+
+    // A suburb click opens the evidence for the busiest cluster inside it —
+    // the drill panel carries on from there.
+    map.on("click", ZONES_FILL_ID, (event: MapLayerMouseEvent) => {
+      const topSignalId = (event.features?.[0]?.properties as { topSignalId?: string } | undefined)
+        ?.topSignalId;
+      if (topSignalId) onSelectRef.current(topSignalId);
+    });
+  }, [mapInstance, styleReady, layers]);
+
+  // The suburb holding the selected signal gets a firmer edge. `signalIds` is
+  // an array property on each zone, so membership is testable on the GPU.
+  useEffect(() => {
+    const map = mapInstance;
+    if (!map || !styleReady || !map.getLayer(ZONES_OUTLINE_ID)) return;
+
+    const holdsSelection = [
+      "in",
+      selectedSignalId ?? " none",
+      ["get", "signalIds"],
+    ] as unknown as ExpressionSpecification;
+    map.setPaintProperty(ZONES_OUTLINE_ID, "line-width", [
+      "case",
+      holdsSelection,
+      2.5,
+      1,
+    ] as unknown as ExpressionSpecification);
+    map.setPaintProperty(ZONES_OUTLINE_ID, "line-opacity", [
+      "case",
+      holdsSelection,
+      0.95,
+      0.6,
+    ] as unknown as ExpressionSpecification);
+  }, [mapInstance, styleReady, layers, selectedSignalId]);
+
+  // Council hazard geography, drawn beneath the impact zones.
   useEffect(() => {
     if (!mapInstance || !styleReady) return;
 
     for (const layer of layers) {
+      if (layer.datasetId === "impact-zones") continue; // drawn above, interactively
+
       const sourceId = `hazard-${layer.datasetId}`;
       // Geometry is `unknown` through the tRPC boundary by design — it is never
       // inspected here, only handed to MapLibre.
@@ -304,10 +383,11 @@ export function MapCanvas({
       mapInstance.addSource(sourceId, { type: "geojson", data });
       const paint = paintFor(layer.datasetId);
       const id = `hazard-layer-${layer.datasetId}`;
-      const beneathSignals = mapInstance.getLayer(LABELS_LAYER_ID)
-        ? LABELS_LAYER_ID
-        : mapInstance.getLayer(HALO_LAYER_ID)
-          ? HALO_LAYER_ID
+      // Beneath the zones when they exist, beneath the place names regardless.
+      const beneathZones = mapInstance.getLayer(ZONES_FILL_ID)
+        ? ZONES_FILL_ID
+        : mapInstance.getLayer(LABELS_LAYER_ID)
+          ? LABELS_LAYER_ID
           : undefined;
 
       if (layer.geometryKind === "polygon") {
@@ -318,7 +398,7 @@ export function MapCanvas({
             source: sourceId,
             paint: { "fill-color": paint.fill, "fill-opacity": HAZARD_FILL_OPACITY },
           },
-          beneathSignals,
+          beneathZones,
         );
         mapInstance.addLayer(
           {
@@ -327,7 +407,7 @@ export function MapCanvas({
             source: sourceId,
             paint: { "line-color": paint.outline, "line-width": 0.6, "line-opacity": 0.35 },
           },
-          beneathSignals,
+          beneathZones,
         );
       } else if (layer.geometryKind === "line") {
         mapInstance.addLayer(
@@ -342,7 +422,7 @@ export function MapCanvas({
               "line-opacity": 0.3,
             },
           },
-          beneathSignals,
+          beneathZones,
         );
       } else {
         mapInstance.addLayer(
@@ -358,98 +438,28 @@ export function MapCanvas({
               "circle-stroke-width": 0.5,
             },
           },
-          beneathSignals,
+          beneathZones,
         );
       }
     }
   }, [mapInstance, styleReady, layers]);
 
-  // Hazard layer visibility, driven by the shared legend.
+  // Layer visibility, driven by the shared legend. The impact zones live in
+  // their own pair of layers; hazard layers follow the hazard-layer-* naming.
   useEffect(() => {
     if (!mapInstance || !styleReady) return;
 
     for (const layer of layers) {
       const visibility = hiddenDatasetIds.has(layer.datasetId) ? "none" : "visible";
-      for (const id of [`hazard-layer-${layer.datasetId}`, `hazard-layer-${layer.datasetId}-outline`]) {
+      const ids =
+        layer.datasetId === "impact-zones"
+          ? [ZONES_FILL_ID, ZONES_OUTLINE_ID]
+          : [`hazard-layer-${layer.datasetId}`, `hazard-layer-${layer.datasetId}-outline`];
+      for (const id of ids) {
         if (mapInstance.getLayer(id)) mapInstance.setLayoutProperty(id, "visibility", visibility);
       }
     }
   }, [mapInstance, styleReady, layers, hiddenDatasetIds]);
-
-  // Signals → markers. Diffed by signalId so a poll that changes nothing does
-  // not tear down and rebuild the marker the operator is hovering.
-  useEffect(() => {
-    const map = mapInstance;
-    if (!map) return;
-
-    const seen = new Set<string>();
-    const busiest = features.reduce((most, f) => Math.max(most, f.properties.itemCount), 1);
-
-    for (const feature of features) {
-      const id = feature.properties.signalId;
-      seen.add(id);
-
-      let record = markersRef.current.get(id);
-      if (!record) {
-        record = createMarkerRecord(
-          () => onSelectRef.current(id),
-          (hovering) => setHoveredSignalId(hovering ? id : null),
-        );
-        record.marker.setLngLat(feature.geometry.coordinates).addTo(map);
-        markersRef.current.set(id, record);
-      } else {
-        // Scrubbing forward can bring a signal back mid-fade — reclaim it.
-        if (record.leaveTimer !== null) {
-          clearTimeout(record.leaveTimer);
-          record.leaveTimer = null;
-          record.element.classList.remove("leaving");
-        }
-        record.marker.setLngLat(feature.geometry.coordinates);
-      }
-
-      paintMarker(record, feature, id === selectedSignalId, busiest);
-    }
-
-    // Exits fade rather than blink: mark, wait out the CSS transition, remove.
-    for (const [id, record] of markersRef.current) {
-      if (seen.has(id) || record.leaveTimer !== null) continue;
-      record.element.classList.add("leaving");
-      record.leaveTimer = setTimeout(() => {
-        record.marker.remove();
-        markersRef.current.delete(id);
-      }, LEAVE_MS);
-    }
-  }, [mapInstance, features, selectedSignalId]);
-
-  // Uncertainty circles are a GeoJSON source, so unlike the markers they DO have
-  // to wait for the style to load — `addSource` before that throws.
-  useEffect(() => {
-    if (!mapInstance || !styleReady) return;
-
-    const source = mapInstance.getSource<GeoJSONSource>("signal-halos");
-    if (!source) return;
-
-    // Rings appear on approach too. A dozen permanent dashed circles competed
-    // with the dots they were supposed to qualify; one ring, on the signal you
-    // are actually looking at, says the same thing and says it louder.
-    const inFocus = new Set([hoveredSignalId, selectedSignalId].filter(Boolean));
-
-    source.setData({
-      type: "FeatureCollection",
-      features: features
-        .filter(
-          (feature) =>
-            feature.properties.radiusM !== null && inFocus.has(feature.properties.signalId),
-        )
-        .map((feature) =>
-          groundCircle(
-            feature.geometry.coordinates,
-            feature.properties.radiusM as number,
-            feature.properties.signalId,
-          ),
-        ),
-    });
-  }, [mapInstance, styleReady, features, hoveredSignalId, selectedSignalId]);
 
   return (
     <div className="absolute inset-0">
@@ -458,143 +468,19 @@ export function MapCanvas({
           given, which beats Tailwind's `absolute` and collapses the element to
           zero height — a blank pane with a healthy map object inside it. */}
       <div ref={containerRef} className="h-full w-full" />
+      {hoverZone && (
+        <div
+          className="bg-card border-border pointer-events-none absolute z-10 rounded-full border px-2.5 py-1 text-[11px] font-medium whitespace-nowrap shadow-sm"
+          style={{ left: hoverZone.x + 14, top: hoverZone.y + 14 }}
+        >
+          {hoverZone.suburb} · {hoverZone.mass} {hoverZone.mass === 1 ? "report" : "reports"}
+        </div>
+      )}
       {basemapDown && (
         <p className="bg-card border-border text-muted-foreground absolute top-3 left-3 z-10 rounded-lg border px-2.5 py-1.5 text-[11px] shadow-sm">
-          Map tiles are being blocked on this network — every signal below is still positioned correctly.
+          Map tiles are being blocked on this network — every suburb below is still shaded correctly.
         </p>
       )}
     </div>
   );
-}
-
-// ─── internals ────────────────────────────────────────────────────────────────
-
-function createMarkerRecord(
-  onClick: () => void,
-  onHover: (hovering: boolean) => void,
-): MarkerRecord {
-  const element = document.createElement("button");
-  element.type = "button";
-  element.className = "signal-marker";
-
-  const dot = document.createElement("span");
-  dot.className = "dot";
-
-  const chip = document.createElement("span");
-  chip.className = "chip";
-
-  // Credibility travels as a coloured dot inside the pill, not as words. The
-  // words ("corroborated") belong to the drill panel; on the map they turned
-  // every marker into a sentence.
-  const chipDot = document.createElement("span");
-  chipDot.className = "chip-dot";
-
-  const chipText = document.createElement("span");
-
-  const flag = document.createElement("span");
-  flag.className = "chip-syn";
-  flag.textContent = "SYN";
-  flag.hidden = true;
-
-  chip.append(chipDot, chipText, flag);
-  element.append(dot, chip);
-  element.addEventListener("click", (event) => {
-    event.stopPropagation();
-    onClick();
-  });
-  element.addEventListener("pointerenter", () => onHover(true));
-  element.addEventListener("pointerleave", () => onHover(false));
-  element.addEventListener("focus", () => onHover(true));
-  element.addEventListener("blur", () => onHover(false));
-
-  // anchor:"left" puts the element's left edge on the coordinate; the offset
-  // pulls it back by half a dot so the DOT sits on the point, not the chip.
-  const marker = new Marker({ element, anchor: "left", offset: [-6, 0] });
-
-  return { marker, element, dot, chip, chipDot, chipText, flag, leaveTimer: null };
-}
-
-function paintMarker(
-  record: MarkerRecord,
-  feature: SignalFeature,
-  selected: boolean,
-  busiest: number,
-) {
-  const properties = feature.properties;
-  const colour = credibilityColour(properties.grade);
-  const name = humanizeLabel(properties.label);
-
-  // Square-rooted: area reads as quantity more honestly than radius does, so a
-  // cluster of 36 does not become nine times the dot of a cluster of 4.
-  const share = Math.sqrt(properties.itemCount / Math.max(busiest, 1));
-  const size = Math.round(DOT_MIN_PX + (DOT_MAX_PX - DOT_MIN_PX) * share);
-
-  record.element.setAttribute("aria-pressed", selected ? "true" : "false");
-  // Busier clusters sit above quieter ones so a singleton never covers a story.
-  record.element.style.zIndex = selected ? "9" : String(3 + Math.min(properties.itemCount, 5));
-  record.element.setAttribute(
-    "aria-label",
-    [
-      name,
-      properties.issueType ? `issue type ${properties.issueType.replace(/_/g, " ")}` : null,
-      `${plainCredibility(properties.grade)} — ${gradeSentence(properties.grade)}`,
-      `${properties.independentSources} independent ${
-        properties.independentSources === 1 ? "source" : "sources"
-      } across ${properties.itemCount} ${properties.itemCount === 1 ? "item" : "items"}`,
-      `location ${properties.locationCertainty}`,
-    ]
-      .filter(Boolean)
-      .join(", "),
-  );
-
-  record.dot.style.background = colour;
-  record.dot.style.width = `${size}px`;
-  record.dot.style.height = `${size}px`;
-  record.dot.classList.toggle("ungraded", properties.grade === null);
-  // A soft glow in the signal's own colour, so a busy cluster reads as a mass
-  // rather than a larger circle, and a white ring so it separates from paper.
-  record.dot.style.boxShadow = `0 0 0 2px var(--card), 0 0 ${Math.round(
-    size * 0.7,
-  )}px color-mix(in oklab, ${colour} 45%, transparent)`;
-
-  // Plain English on the map, with the evidence count beside the place. The
-  // Admiralty letters live in the drill panel, where somebody has chosen the
-  // expert layer.
-  // The pill is written always and SHOWN only on approach (CSS: hover, focus,
-  // or selected). A dozen permanent labels is the noise Jacob rejected; the
-  // same dozen on hover is a map you can read.
-  record.chipText.textContent = `${localityOf(properties.label)} · ${properties.itemCount}`;
-  record.chipDot.style.background = colour;
-  record.flag.hidden = true; // one feed, treated the same — no SYN badging (Jacob)
-}
-
-/**
- * A circle of `radiusM` METRES on the ground, as a GeoJSON polygon.
- *
- * Drawn as real geography rather than a fixed pixel radius so that zooming in
- * on a 900m halo shows a 900m halo. The longitude term shrinks with latitude —
- * at Wellington's -41° a degree of longitude is about three quarters of a
- * degree of latitude, and ignoring that would draw a visibly squashed egg.
- */
-function groundCircle(
-  centre: [number, number],
-  radiusM: number,
-  signalId: string,
-  steps = 64,
-): GeoJSON.Feature<GeoJSON.Polygon> {
-  const [lng, lat] = centre;
-  const latDegrees = radiusM / 111_320;
-  const lngDegrees = radiusM / (111_320 * Math.cos((lat * Math.PI) / 180));
-
-  const ring: [number, number][] = [];
-  for (let step = 0; step <= steps; step += 1) {
-    const angle = (step / steps) * 2 * Math.PI;
-    ring.push([lng + lngDegrees * Math.cos(angle), lat + latDegrees * Math.sin(angle)]);
-  }
-
-  return {
-    type: "Feature",
-    geometry: { type: "Polygon", coordinates: [ring] },
-    properties: { signalId, radiusM },
-  };
 }

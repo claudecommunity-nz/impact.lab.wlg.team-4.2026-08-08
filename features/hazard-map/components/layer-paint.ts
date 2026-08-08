@@ -80,17 +80,37 @@ export const LAYER_PAINT: Record<string, LayerPaint> = {
   },
 };
 
-/** Anything added to the dataset registry without a paint rule still renders. */
+/**
+ * The board's primary display: suburbs shaded by report volume. Bands are
+ * relative to the busiest suburb at the moment shown (computed in
+ * board-map-client), so the legend speaks in comparisons, not counts \u2014 the
+ * exact number is on hover.
+ */
 LAYER_PAINT["impact-zones"] = {
   fill: "#3f7d6e",
   outline: "rgba(42,39,36,0.18)",
-  opacity: 0.24,
+  opacity: 0.42,
   graded: {
     property: "band",
     stops: [
-      { value: "hot", colour: "#c25a41", label: "many reports", title: "8+ reports in this suburb" },
-      { value: "warm", colour: "#d99a2b", label: "several", title: "3\u20137 reports in this suburb" },
-      { value: "mild", colour: "#3f7d6e", label: "a few", title: "1\u20132 reports in this suburb" },
+      {
+        value: "hot",
+        colour: "#c25a41",
+        label: "heavy",
+        title: "Around half or more of the busiest suburb's report volume",
+      },
+      {
+        value: "warm",
+        colour: "#d99a2b",
+        label: "moderate",
+        title: "A meaningful share of the busiest suburb's report volume",
+      },
+      {
+        value: "mild",
+        colour: "#3f7d6e",
+        label: "light",
+        title: "A few reports in this suburb",
+      },
     ],
   },
 };

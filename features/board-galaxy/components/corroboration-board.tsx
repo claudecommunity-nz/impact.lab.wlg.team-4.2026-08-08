@@ -268,7 +268,7 @@ function LeadCard({
       )}
     >
       <div className="flex items-baseline gap-3">
-        <span className="text-destructive flex shrink-0 items-center gap-2 font-mono text-[21px] font-semibold tabular-nums">
+        <span className="text-destructive flex shrink-0 items-center gap-2 font-mono text-[21px] font-semibold tabular-nums whitespace-nowrap">
           <span aria-hidden className="bg-destructive size-2 rounded-full motion-safe:animate-pulse" />
           ▲ +{perHour}/h
         </span>
@@ -326,7 +326,7 @@ function MovingRow({
         selected && "ring-primary ring-2",
       )}
     >
-      <span className="text-destructive w-[58px] shrink-0 text-right font-mono text-[13.5px] font-semibold tabular-nums">
+      <span className="text-destructive w-[68px] shrink-0 text-right font-mono text-[13.5px] font-semibold tabular-nums whitespace-nowrap">
         ▲ +{perHour}/h
       </span>
       <span className="min-w-0 flex-1 truncate text-[13.5px] font-semibold">
