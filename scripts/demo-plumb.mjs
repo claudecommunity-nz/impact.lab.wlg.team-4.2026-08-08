@@ -108,6 +108,35 @@ async function postBatch(payload) {
   for (const failure of result?.results?.filter((entry) => entry?.ok === false) ?? []) {
     console.log(`  ! item ${failure.index}: ${failure.error}`);
   }
+
+  await processPending();
+}
+
+/**
+ * Drain the derive queue so freshly ingested items get embedded, assigned,
+ * NAMED and projected. Without this the board shows unlabelled clusters —
+ * naming lives in vectors.process, not in ingest.
+ */
+async function processPending() {
+  for (let round = 1; round <= 30; round++) {
+    const res = await fetch(`${baseUrl}/api/trpc/vectors.process`, {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ json: { limit: 100 } }),
+    });
+    if (!res.ok) {
+      console.log(`  vectors.process → HTTP ${res.status} (labels may lag; re-run to finish)`);
+      return;
+    }
+    const out = (await res.json())?.result?.data?.json;
+    if (!out) return;
+    if (!out.locked && out.pending === 0) {
+      console.log(`  derive drained in ${round - 1} round(s) — clusters embedded, graded and named`);
+      return;
+    }
+    if (out.locked) await new Promise((r) => setTimeout(r, 500));
+  }
+  console.log("  derive still had pending work after 30 rounds — run vectors.process again");
 }
 
 /**
