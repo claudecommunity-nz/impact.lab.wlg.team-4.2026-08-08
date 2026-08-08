@@ -25,6 +25,11 @@ npm run demo:plumb -- --http
 
 Open **`http://localhost:3000/board?dataset=demo`** and leave it there.
 
+**Open it and WAIT 40 SECONDS before judging it.** A cold `/board` in dev takes
+about 35 seconds to fully paint, and an empty canvas at 20 seconds looks exactly
+like a broken build. This has already caused one false alarm today. Open the tab
+well before you are called up.
+
 Check before you speak:
 
 - the map shows **13 pins**, none of them stacked at 0,0;
@@ -44,7 +49,7 @@ somebody asks to see it against the fixture set.
 
 ## The script
 
-The spoken lines below run to 526 words — about four minutes flat at a
+The spoken lines below run to 525 words — about four minutes flat at a
 comfortable pace, which leaves no room for adjectives and just enough for the
 numbers.
 Timings are cumulative. If you are behind at 3:00, drop the Galaxy beat: it is
@@ -52,13 +57,12 @@ the only one that is not load-bearing.
 
 ### 0:00 — the problem, in the duty officer's words (20s)
 
-> Council is blind for the first zero to three hours of an incident — the window
-> where the biggest decisions get made. A duty officer told us *"we don't use
-> social media at all… we don't trust social media"*, then described checking it
-> anyway and thinking *"I'm seeing five reports versus one."*
+> Council is blind for the first zero to three hours of an incident — when the
+> biggest decisions get made. A duty officer told us *"we don't use social media
+> at all… we don't trust social media"*, then described checking it anyway and
+> thinking *"I'm seeing five reports versus one."*
 >
-> Counting corroboration by hand, with no way to defend it or record it. That is
-> the gap.
+> Counting corroboration by hand, with no way to defend it. That is the gap.
 
 ### 0:20 — the board (30s)
 
@@ -76,17 +80,18 @@ the only one that is not load-bearing.
 >
 > Seven of those twenty-one are one observation. One person posted that Aro
 > Street was under water; others quoted their link or re-posted the wording, and
-> a news site picked it up. All seven collapsed into a single origin — and it
-> tells you why.
+> a news site picked it up. All seven collapsed into one origin — and it tells
+> you why.
 
-*The panel says it under the figures — **"21 items trace back to 14 distinct
-observations"** — and every echoed item in the provenance list below carries a
-**SAME ORIGIN AS ANOTHER ITEM** badge. Point at those, and say the rule in your
-own voice; the rule itself is not printed on screen:*
+*Scroll to **WHY THESE WERE COUNTED ONCE**. It lists only the collapsed
+origins — on this cluster, exactly two rows. Read the first line of the first
+row off the screen, word for word:*
 
-> The rule is: a repost is not a second witness. Two more items collapsed
-> because they came from the same author — one prolific person cannot
-> manufacture corroboration.
+> *"quotes social.example.nz/aro_local/status/1188455 — a repost is not a
+> second witness."*
+
+> And the second row: two more items collapsed because they came from the same
+> author. One prolific person cannot manufacture corroboration.
 >
 > If we printed twenty-one we would be reporting an echo as evidence, and
 > "twenty-one independent reports" is precisely the sentence that makes somebody
@@ -96,13 +101,13 @@ own voice; the rule itself is not printed on screen:*
 
 *Point at the grade: A3.*
 
-> Reliability comes from a registry, not from code. Fire and Emergency's media
-> feed is registered A — the agency speaking about its own callouts. Their
-> **scanner** feed deliberately is not: that is somebody listening to radio
-> traffic and relaying what they think they heard.
+> Reliability comes from a registry. Fire and Emergency's media feed is
+> registered A — the agency speaking about its own callouts. Their **scanner**
+> feed deliberately is not: that is somebody listening to radio traffic and
+> relaying what they think they heard.
 >
-> And because one official source in a crowd would otherwise read as a clean
-> bill of health, the reason says so:
+> And because one official source in a crowd would read as a clean bill of
+> health, the reason says so:
 
 *Read verbatim:*
 
@@ -111,7 +116,8 @@ own voice; the rule itself is not printed on screen:*
 
 ### 2:25 — the weak signal is still on the map (35s)
 
-*Click any single-pin cluster — Vogeltown power outage, or Wadestown Road.*
+*Click a single-pin cluster. **Vogeltown power outage** is the one to use — its
+alert carries the uncorroborated line word for word.*
 
 > Nine of the thirteen are a single source. This grades **F4 — reliability
 > cannot be judged, doubtful**. It is still on the map, and it still alerted.
@@ -124,9 +130,13 @@ own voice; the rule itself is not printed on screen:*
 > and a grade threshold would go silent in exactly the hour Council is most
 > blind. So we ask a different question: is there somewhere to send someone, and
 > is anything authoritative saying it did not happen?
->
-> The alert carries its own weakness in writing. We never hide a weak signal —
-> we label it.
+
+*Then **WHY IT IS WORTH SOMEONE'S ATTENTION**, and read the amber line:*
+
+> *"WEAK EVIDENCE: one independent origin behind 1 item — this is
+> uncorroborated, and grades F4."*
+
+> We never hide a weak signal. We label it.
 
 ### 3:00 — the same signals, arranged by meaning (25s)
 
@@ -152,12 +162,11 @@ own voice; the rule itself is not printed on screen:*
 > The machine's job ends at *this is worth someone looking at, and here is
 > exactly why* — the thing Council said it could not do by hand.
 
-> **If the drill panel gains a collapse-reasons list before 16:30** (asked of
-> present-builder, not committed as of writing), the 0:50 beat gets sharper:
-> read the reason verbatim off the screen instead of narrating it — *"quotes
-> social.example.nz/aro_local/status/1188455 — a repost is not a second
-> witness."* Check the panel before you rely on it. Everything else in the
-> script is on screen today; this is the one line that is not.
+> **Every quoted line above is on screen** — checked in the running board, not
+> read off the API. The two you read verbatim live in the drill panel sections
+> **WHY THESE WERE COUNTED ONCE** and **WHY IT IS WORTH SOMEONE'S ATTENTION**.
+> If either section is missing when you open the panel, the board is running an
+> older build: narrate the line instead of reading it, and carry on.
 
 ---
 
