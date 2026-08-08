@@ -65,6 +65,16 @@ export const ANNOTATION_KEY_SUGGESTIONS = [
 export const ASSUMED_OCCURRED_AT_KEY = "assumed_occurred_at";
 
 /**
+ * Written when the SENDER declared when it captured an item, rather than us
+ * observing it arrive. A replay says "I collected this at 07:14"; that is a
+ * claim about the past, not something we watched happen, and `asAt` answers
+ * "what did we know at T" off exactly this clock — so the difference has to be
+ * on the record. Without it a replayed dataset would be indistinguishable from
+ * a day we actually lived through.
+ */
+export const DECLARED_CAPTURED_AT_KEY = "declared_captured_at";
+
+/**
  * The item's own link. It is BOTH a column (origin fingerprinting joins on it)
  * and an annotation (other teams already read it there). Duplicated on purpose:
  * a published key is a promise, and tidiness is not a reason to break one.
@@ -270,6 +280,13 @@ export const IncomingSignalSchema = z.object({
   synthetic: z.boolean().default(false),
   /** Optional: defaults to now at ingest, with an assumed_occurred_at annotation. */
   occurredAt: z.date().optional(),
+  /**
+   * When the COLLECTOR captured it — the PRD's `capturedAt`, stored as
+   * `ingested_at`. Absent means "as we receive it", which is right for live
+   * traffic. A replay sets it so the picture can be scrubbed back through a
+   * capture history that actually happened over hours (PRD story 36).
+   */
+  capturedAt: z.date().optional(),
   lat: z.number().min(-90).max(90).optional(),
   lng: z.number().min(-180).max(180).optional(),
   geoConfidence: z.number().min(0).max(1).optional(),

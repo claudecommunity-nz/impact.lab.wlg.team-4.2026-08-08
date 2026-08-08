@@ -27,6 +27,8 @@ export async function createSignalRepo(args: {
     text: string;
     raw: unknown;
     occurredAt: Date;
+    /** Absent = the database clock, i.e. "we learned of it now". Set by replay. */
+    ingestedAt?: Date | null;
     lat?: number | null;
     lng?: number | null;
     geoConfidence?: number | null;
@@ -53,6 +55,9 @@ export async function createSignalRepo(args: {
         text: args.signal.text,
         raw: args.signal.raw,
         occurredAt: args.signal.occurredAt,
+        // Omitted rather than nulled when absent, so the column default
+        // (now()) applies — an item nobody dated was captured on arrival.
+        ...(args.signal.ingestedAt ? { ingestedAt: args.signal.ingestedAt } : {}),
         lat: args.signal.lat ?? null,
         lng: args.signal.lng ?? null,
         geoConfidence: args.signal.geoConfidence ?? null,

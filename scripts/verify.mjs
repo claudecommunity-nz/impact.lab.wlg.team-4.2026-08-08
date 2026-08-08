@@ -344,8 +344,58 @@ async function main() {
       `${replay.signalId} vs ${idFirst.signalId}`,
     );
 
-    /** The fixtures, plus the two probes above that were genuinely stored. */
-    const expectedItems = items.length + 2;
+    // ── a declared capture clock (PRD story 36) ──────────────────────────────
+    //
+    // Live traffic is captured as it arrives, so `ingested_at` is the database
+    // clock. A REPLAY is not: it is re-running a history that happened over
+    // hours, and if every replayed item is stamped "captured now" the whole
+    // story lands in one instant and `asAt` has nothing to scrub through. So a
+    // sender may declare when it captured an item, and that clock drives the
+    // stored `ingested_at`, the grade event timestamps and the `now` grading
+    // decays against — one instant, or a replayed hour grades against a clock
+    // it never lived in.
+    const CAPTURED = "2026-08-08T04:30:00.000Z";
+    const replayed = await mutate("signals.ingest", {
+      external_id: "verify-captured-1",
+      source: "verify-collector",
+      source_class: "human_report",
+      text: "Declared-capture probe: surface flooding on Adelaide Road",
+      occurred_at: "2026-08-08T04:20:00.000Z",
+      captured_at: CAPTURED,
+      lat: -41.3016,
+      lng: 174.7772,
+      dataset_id: VERIFY_PROBE_DATASET,
+    });
+    const replayedDetail = await query("signals.detail", { signalId: replayed.signalId });
+    const replayedItem = replayedDetail.provenance.find((p) => p.itemId === replayed.id);
+    check(
+      replayedItem !== undefined &&
+        new Date(replayedItem.ingestedAt).toISOString() === CAPTURED,
+      "a declared capture time is stored as ingested_at, not the wall clock (AC22.1)",
+      replayedItem ? new Date(replayedItem.ingestedAt).toISOString() : "item missing",
+    );
+    check(
+      replayed.annotationKeys.includes("declared_captured_at"),
+      "…and the claim is recorded as a claim — a replayed history is never mistaken for a lived one",
+      replayed.annotationKeys.join(", "),
+    );
+    const beforeCapture = await query("signals.geojson", {
+      datasetId: VERIFY_PROBE_DATASET,
+      asAt: "2026-08-08T04:00:00.000Z",
+    });
+    const afterCapture = await query("signals.geojson", {
+      datasetId: VERIFY_PROBE_DATASET,
+      asAt: "2026-08-08T05:00:00.000Z",
+    });
+    check(
+      beforeCapture.features.every((f) => f.properties.signalId !== replayed.signalId) &&
+        afterCapture.features.some((f) => f.properties.signalId === replayed.signalId),
+      "…so asAt scrubs through a capture history that happened HOURS ago (AC24.1)",
+      `${beforeCapture.features.length} before, ${afterCapture.features.length} after`,
+    );
+
+    /** The fixtures, plus the three probes above that were genuinely stored. */
+    const expectedItems = items.length + 3;
 
     // ── 3. process, through the real procedure ────────────────────────────────
     out("\n── process (vectors.process) ─────────────────────────────");

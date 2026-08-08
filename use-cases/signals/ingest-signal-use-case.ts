@@ -1,6 +1,7 @@
 import { z } from "zod";
 import {
   ASSUMED_OCCURRED_AT_KEY,
+  DECLARED_CAPTURED_AT_KEY,
   EMBEDDING_MODEL_KEY,
   GEO_DROPPED_KEY,
   GradeSchema,
@@ -127,8 +128,6 @@ export const ingestSignalUseCase = createUseCase(
     outputSchema: IngestSignalResultSchema,
   },
   async ({ success, error }, { payload, now, log }) => {
-    const at = now ?? new Date();
-
     const adapted = genericJsonAdapter(payload);
     if (!adapted.ok) {
       log?.warn({ reason: adapted.reason }, "Ingest rejected: payload could not be adapted");
@@ -136,6 +135,20 @@ export const ingestSignalUseCase = createUseCase(
     }
 
     const incoming = adapted.signal;
+
+    // ─── the capture clock ────────────────────────────────────────────────────
+    //
+    // ONE instant drives everything downstream: the `ingested_at` we store (what
+    // `asAt` filters on), the `at` stamped on every grade event, and the `now`
+    // the rule table decays freshness against. They must be the same value or a
+    // replayed hour grades against a clock it never lived in.
+    //
+    // A sender's declared capture time wins, then a threaded `now`, then the
+    // wall. That order is what makes a multi-hour capture history replayable:
+    // without it every replayed item is captured "now", the whole story lands in
+    // one instant, and a time-scrubbed map has nothing to scrub through.
+    const declaredCapturedAt = incoming.capturedAt !== undefined;
+    const at = incoming.capturedAt ?? now ?? new Date();
     const assumedOccurredAt = incoming.occurredAt === undefined;
     const occurredAt = incoming.occurredAt ?? at;
     const geoDropped = incoming.annotations.some((a) => a.key === GEO_DROPPED_KEY);
@@ -182,18 +195,25 @@ export const ingestSignalUseCase = createUseCase(
       };
     } else {
       // Say what we assumed, in the same open vocabulary as everything else.
-      const annotations = assumedOccurredAt
-        ? [
-            ...incoming.annotations,
-            { key: ASSUMED_OCCURRED_AT_KEY, value: "true", annotator: "rule" as const },
-          ]
-        : incoming.annotations;
+      const annotations = [
+        ...incoming.annotations,
+        ...(assumedOccurredAt
+          ? [{ key: ASSUMED_OCCURRED_AT_KEY, value: "true", annotator: "rule" as const }]
+          : []),
+        // A declared capture time is a CLAIM about the past, not something we
+        // watched arrive. `asAt` answers "what did we know at T" off this clock,
+        // so a replayed history has to be distinguishable from a lived one.
+        ...(declaredCapturedAt
+          ? [{ key: DECLARED_CAPTURED_AT_KEY, value: at.toISOString(), annotator: "rule" as const }]
+          : []),
+      ];
 
       const write = await createSignalUseCase({
         source: incoming.source,
         sourceClass: incoming.sourceClass,
         text: incoming.text,
         occurredAt,
+        ingestedAt: incoming.capturedAt ?? now,
         raw: incoming.raw,
         lat: incoming.lat,
         lng: incoming.lng,

@@ -18,6 +18,8 @@ export const createSignalUseCase = createUseCase(
       sourceClass: z.string().min(1),
       text: z.string().min(1),
       occurredAt: z.date(),
+      /** When the collector captured it. Absent = the database clock. */
+      ingestedAt: z.date().optional(),
       raw: z.unknown(),
       lat: z.number().optional(),
       lng: z.number().optional(),
@@ -54,6 +56,7 @@ export const createSignalUseCase = createUseCase(
         text: args.text,
         raw: args.raw,
         occurredAt: args.occurredAt,
+        ingestedAt: args.ingestedAt ?? null,
         lat: args.lat ?? null,
         lng: args.lng ?? null,
         geoConfidence: args.geoConfidence ?? null,

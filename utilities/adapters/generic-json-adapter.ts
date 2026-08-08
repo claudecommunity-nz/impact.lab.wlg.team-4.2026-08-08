@@ -69,6 +69,14 @@ const TIME_KEYS = [
   "created_at",
   "createdAt",
 ];
+/**
+ * When the COLLECTOR captured the item, as distinct from when the thing
+ * happened. Disjoint from TIME_KEYS on purpose: a payload carrying both is
+ * telling us two different facts, and collapsing them would erase our own
+ * latency — the one number that says how far ahead of the official feed we were.
+ */
+const CAPTURED_AT_KEYS = ["captured_at", "capturedAt", "ingested_at", "ingestedAt", "collected_at"];
+
 const LAT_KEYS = ["lat", "latitude"];
 const LNG_KEYS = ["lng", "lon", "long", "longitude"];
 const GEO_CONFIDENCE_KEYS = ["geo_confidence", "geoConfidence"];
@@ -193,6 +201,7 @@ function build(input: {
   // never repeats plumbing ("source: hilltop; timestamp: …") back at the reader.
   const source = takeString(obj, SOURCE_KEYS, consumed) ?? UNKNOWN_SOURCE;
   const sourceClass = takeString(obj, SOURCE_CLASS_KEYS, consumed) ?? UNKNOWN_SOURCE_CLASS;
+  const capturedAt = takeDate(obj, CAPTURED_AT_KEYS, consumed);
   const occurredAt = takeDate(obj, TIME_KEYS, consumed);
   const geo = takeGeo(obj, consumed);
 
@@ -253,6 +262,7 @@ function build(input: {
     quotedUrls,
     synthetic,
     occurredAt,
+    capturedAt,
     lat: geo.lat,
     lng: geo.lng,
     geoConfidence: geo.confidence,
