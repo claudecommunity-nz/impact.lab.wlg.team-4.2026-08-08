@@ -37,7 +37,10 @@ const NEWEST_AGE_MINUTES = 2;
 const args = process.argv.slice(2);
 const useInbox = args.includes("--inbox");
 const keepTimes = args.includes("--keep-times");
-const dataset = readFlag("--dataset") ?? "demo";
+// Default LIVE: the board is one feed now (87e1505) and reads live only. A
+// default of "demo" made the worst failure mode — a working system showing an
+// empty map. Pass --dataset=demo only if you deliberately want a sandbox.
+const dataset = readFlag("--dataset") ?? "live";
 const baseUrl = readFlag("--url") ?? process.env.BASE_URL ?? "http://localhost:3000";
 
 const items = await loadItems();

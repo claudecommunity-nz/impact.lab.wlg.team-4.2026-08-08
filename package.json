@@ -15,7 +15,8 @@
     "demo:plumb": "node scripts/demo-plumb.mjs",
     "proof:grading": "tsx scripts/proof-grading.mjs",
     "proof:vectors": "tsx scripts/vector-proof.ts",
-    "verify": "node scripts/verify.mjs"
+    "verify": "node scripts/verify.mjs",
+    "signals:load": "node scripts/load-collected.mjs"
   },
   "dependencies": {
     "@base-ui/react": "^1.7.0",
