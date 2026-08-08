@@ -41,3 +41,6 @@ yarn-error.log*
 next-env.d.ts
 /.swc
 !.env.example
+
+# Copied from node_modules by scripts/copy-maplibre-worker.mjs
+public/maplibre/
