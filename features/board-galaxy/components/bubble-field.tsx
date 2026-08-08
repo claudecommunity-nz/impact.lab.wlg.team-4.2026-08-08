@@ -1,8 +1,7 @@
 "use client";
 
-import type { GalaxyGroup } from "@/components/board/api-types";
+import type { SignalProperties } from "@/components/board/api-types";
 import { bubbleLabel, humanizeLabel } from "@/components/board/grade";
-import { WELLINGTON_MAX_BOUNDS } from "@/features/hazard-map/components/basemap";
 import { cn } from "@/lib/utils";
 
 /**
@@ -33,32 +32,37 @@ const MAX_BUBBLES = 14;
 /** Labels are the scarcest resource on this chart. */
 const MAX_LABELS = 5;
 
-/** Same ground the map covers, so the two modes tell one story. */
-const [[MIN_LNG, MIN_LAT], [MAX_LNG, MAX_LAT]] = WELLINGTON_MAX_BOUNDS;
-
-function inRegion(group: GalaxyGroup): boolean {
-  const at = group.geoCentroid;
-  // A cluster nobody could place is still a trend — it is only undrawable on a
-  // map, which is a different question from whether it belongs to this city.
-  if (!at) return true;
-  return at.lng >= MIN_LNG && at.lng <= MAX_LNG && at.lat >= MIN_LAT && at.lat <= MAX_LAT;
-}
+/**
+ * Both views now read `signals.geojson`, which frames itself to Wellington City
+ * by default. That replaced a client-side filter against the hazard map's
+ * REGION bounds — a second definition of "here" that could drift from the
+ * server's without anyone noticing.
+ *
+ * The frame deliberately reaches the Petone shoreline, so the Hutt clusters
+ * stay. They are real collected posts rather than our own fixture, which makes
+ * them the strongest evidence on the board that this is not a trick that only
+ * works on writing we authored ourselves.
+ */
 
 export function BubbleField({
-  groups,
+  signals,
+  perHour,
   selectedSignalId,
   onSelect,
 }: {
-  groups: GalaxyGroup[];
+  signals: SignalProperties[];
+  /** Cluster id → reports an hour, from the vector layer's cached fold. */
+  perHour: Map<string, number>;
   selectedSignalId: string | null;
   onSelect: (signalId: string) => void;
 }) {
-  const regional = groups.filter(inRegion);
-  const ranked = [...regional].sort(
-    (a, b) => b.memberCount - a.memberCount || b.velocity - a.velocity,
+  const rateOf = (signal: SignalProperties) => perHour.get(signal.signalId) ?? 0;
+
+  const ranked = [...signals].sort(
+    (a, b) => b.itemCount - a.itemCount || rateOf(b) - rateOf(a),
   );
-  const shown = ranked.filter((g) => g.memberCount >= MIN_REPORTS).slice(0, MAX_BUBBLES);
-  const hidden = regional.length - shown.length;
+  const shown = ranked.filter((s) => s.itemCount >= MIN_REPORTS).slice(0, MAX_BUBBLES);
+  const hidden = signals.length - shown.length;
 
   if (shown.length === 0) {
     return (
@@ -84,8 +88,8 @@ export function BubbleField({
 
   // Axes are scaled to the SURVIVORS, not to the whole feed. Scaling to a tail
   // that is no longer drawn is what left two bubbles in an empty field.
-  const counts = shown.map((g) => g.memberCount);
-  const rates = shown.map((g) => g.velocity);
+  const counts = shown.map((s) => s.itemCount);
+  const rates = shown.map(rateOf);
   const span = (values: number[]) => {
     const low = Math.min(...values);
     const high = Math.max(...values);
@@ -108,15 +112,15 @@ export function BubbleField({
     return row;
   };
 
-  const placed = shown.map((group, index) => {
-    const mass = (group.memberCount - count.low) / count.range;
-    const heat = (group.velocity - rate.low) / rate.range;
+  const placed = shown.map((signal, index) => {
+    const mass = (signal.itemCount - count.low) / count.range;
+    const heat = (rateOf(signal) - rate.low) / rate.range;
     return {
-      group,
+      group: signal,
       featured: index < MAX_LABELS,
       cx: plot.x + plot.w * (0.1 + 0.8 * heat),
       cy: plot.y + plot.h * (0.9 - 0.8 * mass),
-      r: 12 + 40 * Math.sqrt(group.memberCount / busiest),
+      r: 12 + 40 * Math.sqrt(signal.itemCount / busiest),
       fill: heat > 0.66 ? "var(--destructive)" : heat > 0.33 ? "var(--warning)" : "var(--primary)",
     };
   });
@@ -126,7 +130,7 @@ export function BubbleField({
   const labelled = new Map<string, number>();
   for (const spot of placed) {
     if (!spot.featured) continue;
-    labelled.set(spot.group.id, clearRow(spot.cx, spot.cy + spot.r + 17));
+    labelled.set(spot.group.signalId, clearRow(spot.cx, spot.cy + spot.r + 17));
   }
 
   return (
@@ -174,25 +178,25 @@ export function BubbleField({
         </text>
 
         {placed.map(({ group, featured, cx, cy, r, fill }) => {
-          const selected = group.id === selectedSignalId;
+          const selected = group.signalId === selectedSignalId;
           const named = featured || selected;
           return (
             <g
-              key={group.id}
+              key={group.signalId}
               role="button"
               tabIndex={0}
               aria-pressed={selected}
-              aria-label={`${humanizeLabel(group.label)}, ${group.memberCount} reports, ${group.velocity} an hour`}
-              onClick={() => onSelect(group.id)}
+              aria-label={`${humanizeLabel(group.label)}, ${group.itemCount} reports, ${perHour.get(group.signalId) ?? 0} an hour`}
+              onClick={() => onSelect(group.signalId)}
               onKeyDown={(event) => {
                 if (event.key === "Enter" || event.key === " ") {
                   event.preventDefault();
-                  onSelect(group.id);
+                  onSelect(group.signalId);
                 }
               }}
               className="cursor-pointer focus:outline-none"
             >
-              <title>{`${humanizeLabel(group.label)} — ${group.memberCount} reports`}</title>
+              <title>{`${humanizeLabel(group.label)} — ${group.itemCount} reports`}</title>
               <circle
                 cx={cx}
                 cy={cy}
@@ -206,7 +210,7 @@ export function BubbleField({
                 <>
                   <text
                     x={cx}
-                    y={labelled.get(group.id) ?? cy + r + 17}
+                    y={labelled.get(group.signalId) ?? cy + r + 17}
                     textAnchor="middle"
                     className={cn(
                       "fill-foreground text-[13px]",
@@ -217,11 +221,11 @@ export function BubbleField({
                   </text>
                   <text
                     x={cx}
-                    y={(labelled.get(group.id) ?? cy + r + 17) + 15}
+                    y={(labelled.get(group.signalId) ?? cy + r + 17) + 15}
                     textAnchor="middle"
                     className="fill-muted-foreground font-mono text-[12px]"
                   >
-                    {group.memberCount} reports
+                    {group.itemCount} reports
                   </text>
                 </>
               )}

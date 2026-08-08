@@ -28,15 +28,22 @@ export function BoardGalaxyClient({
   onSelect: (signalId: string) => void;
 }) {
   const trpc = useTRPC();
+  const poll = active ? POLL_MS : false;
+
+  // The SAME published surface the map reads — already framed to Wellington
+  // City by the server, already graded, already deduplicated. The trend view
+  // adds only the arrival rate, which lives in the vector layer's fold.
+  const signals = useQuery(
+    trpc.signals.geojson.queryOptions({ datasetId: BOARD_DATASET }, { refetchInterval: poll }),
+  );
   const groups = useQuery(
-    trpc.vectors.groups.queryOptions(
-      { datasetId: BOARD_DATASET },
-      { refetchInterval: active ? POLL_MS : false },
-    ),
+    trpc.vectors.groups.queryOptions({ datasetId: BOARD_DATASET }, { refetchInterval: poll }),
   );
 
-  if (groups.isError) return <FeatureError name="the trends view" />;
-  if (!groups.data) return <BoardGalaxySkeleton />;
+  if (signals.isError || groups.isError) return <FeatureError name="the trends view" />;
+  if (!signals.data || !groups.data) return <BoardGalaxySkeleton />;
+
+  const perHour = new Map(groups.data.map((group) => [group.id, group.velocity]));
 
   return (
     <div className="absolute inset-0 flex flex-col p-4">
@@ -46,7 +53,8 @@ export function BoardGalaxyClient({
       </p>
       <div className="min-h-0 flex-1">
         <BubbleField
-          groups={groups.data}
+          signals={signals.data.features.map((feature) => feature.properties)}
+          perHour={perHour}
           selectedSignalId={selectedSignalId}
           onSelect={onSelect}
         />
