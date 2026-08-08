@@ -66,7 +66,7 @@ rides every provenance entry, and the badge is on the pin.
 
 ## The script
 
-The spoken lines below run to 552 words — about four minutes flat at a
+The spoken lines below run to 523 words — about four minutes flat at a
 comfortable pace, which leaves no room for adjectives and just enough for the
 numbers.
 Timings are cumulative. If you are behind at 3:00, drop the Galaxy beat: it is
@@ -95,10 +95,9 @@ the only one that is not load-bearing.
 
 > This one has **sixteen items** behind it. It has **nine witnesses**.
 >
-> Seven of those items are a single observation. One person posted that Aro
-> Street was under water; others quoted their link or re-posted the wording, and
-> a news site picked it up. All seven collapsed into one origin — and it tells
-> you why.
+> Seven of those items are one observation. Somebody posted that Aro Street was
+> under water; others quoted their link or re-posted the wording, and a news site
+> picked it up. All seven collapsed into one origin — and it tells you why.
 
 *Scroll to **WHY THESE WERE COUNTED ONCE**. It lists only the collapsed
 origins — on this cluster, exactly two rows. Read the first line of the first
@@ -107,12 +106,10 @@ row off the screen, word for word:*
 > *"quotes social.example.nz/aro_local/status/1188455 — a repost is not a
 > second witness."*
 
-> If we printed sixteen we would be reporting an echo as evidence — and "sixteen
-> independent reports" is exactly the sentence that makes somebody send a truck.
->
-> And this is not a trick that only works on our own writing: the biggest
-> cluster on this board is thirty-five real collected posts, and five of those
-> are one observation too.
+> "Sixteen independent reports" is exactly the sentence that makes somebody send
+> a truck. And this is not a trick that only works on our own writing — the
+> biggest cluster here is thirty-five real collected posts, five of which are
+> also one observation.
 
 ### 1:50 — who is speaking (35s)
 
@@ -120,8 +117,8 @@ row off the screen, word for word:*
 
 > Reliability comes from a registry. Fire and Emergency's media feed is
 > registered A — the agency speaking about its own callouts. A **radio log**
-> deliberately is not: that is somebody listening to emergency traffic and
-> relaying what they think they heard. Same event, different standing.
+> deliberately is not: somebody listening to emergency traffic, relaying what
+> they think they heard. Same event, different standing.
 >
 > And because one official source in a crowd would read as a clean bill of
 > health, the reason says so:
@@ -143,10 +140,9 @@ alert carries the uncorroborated line word for word.*
 **Alert-worthy: yes**.*
 
 > Those two are computed separately, and that is the design. In hour zero there
-> are no independent origins yet, so the first report of anything grades badly,
-> and a grade threshold would go silent in exactly the hour Council is most
-> blind. So we ask a different question: is there somewhere to send someone, and
-> is anything saying it did not happen?
+> are no independent origins yet, so the first report of anything grades badly —
+> and a grade threshold would go silent in the exact hour Council is most blind.
+> So we ask a different question: is there somewhere to send someone?
 
 *Then **WHY IT IS WORTH SOMEONE'S ATTENTION**, and read the amber line:*
 
@@ -176,8 +172,8 @@ alert carries the uncorroborated line word for word.*
 > **Credibility 1**, "confirmed", is unreachable by design: the grading module
 > throws rather than write it. Confirmation is a human's word.
 >
-> The machine's job ends at *this is worth someone looking at, and here is
-> exactly why* — the thing Council said it could not do by hand.
+> The machine's job ends at *this is worth someone looking at, and here is why*
+> — the thing Council said it could not do by hand.
 
 > **Every quoted line above is on screen** — checked in the running board, not
 > read off the API. The two you read verbatim live in the drill panel sections
