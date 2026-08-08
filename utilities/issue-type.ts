@@ -99,7 +99,8 @@ const KEYWORDS: Record<IssueType, readonly string[]> = {
     "under water",
     "underwater",
     "submerged",
-    "swell",
+    // Not "swell": a sea state is not water on land, and letting it count
+    // outvoted a 128 km/h gust in the storm cluster it was reported from.
     "storm surge",
     "awash",
     "inundat",
@@ -107,10 +108,10 @@ const KEYWORDS: Record<IssueType, readonly string[]> = {
     "stormwater",
     "river level",
     "stream at",
-    "gauge",
-    "heavy rain",
-    "rain warning",
-    "rainfall",
+    // Deliberately NOT here: "rainfall", "heavy rain", "rain warning", "gauge".
+    // Rain is a PRECURSOR, not an impact — a weather station reporting 34mm has
+    // not told us anything is under water, and letting a rainfall total outvote
+    // a 128 km/h gust mislabels the storm that is actually happening.
     "waves",
     "driftwood",
     "breach",

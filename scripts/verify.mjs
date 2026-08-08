@@ -160,14 +160,16 @@ async function main() {
     const seeded = await mutate("sources.seed", {});
     out(seeded.entries.map((e) => `${e.sourceId}=${e.reliability}`).join(" · "));
     check(
-      seeded.seeded === 4 && seeded.entries.every((e) => e.reliability === "A"),
-      "the four official sources seed at reliability A",
+      seeded.seeded > 0 && seeded.entries.every((e) => e.reliability === "A"),
+      "every seeded source is an A — the registry only ever seeds authority",
       `${seeded.seeded} entries`,
     );
     const reseeded = await mutate("sources.seed", {});
     check(
-      reseeded.seeded === 4 && (await query("sources.list", {})).length === 4,
-      "seeding is idempotent — four rows, not eight",
+      reseeded.seeded === seeded.seeded &&
+        (await query("sources.list", {})).length === seeded.seeded,
+      "seeding is idempotent — one row per source, not two",
+      `${seeded.seeded} sources`,
     );
     check(
       (await query("sources.list", { sourceIds: ["some-random-account"] })).length === 0,
@@ -211,10 +213,14 @@ async function main() {
       folded.every((s) => s.reasons.length > 0),
       "every grade arrives with its reasons — never a bare verdict",
     );
+    // Reliability is drawn from the registry and nowhere else. The fixture set
+    // mixes registered sensors and official media in with anonymous accounts
+    // precisely so both halves of that rule get exercised on real data.
+    const letters = [...new Set(folded.map((s) => s.grade?.sourceReliability))].sort();
     check(
-      folded.every((s) => s.grade?.sourceReliability === "F"),
-      "every fixture source is absent from the registry, so every cluster grades F (AC15.1)",
-      [...new Set(folded.map((s) => s.grade?.sourceReliability))].join(","),
+      folded.every((s) => s.grade !== null) && letters.includes("F") && letters.includes("A"),
+      "reliability comes from the registry: unknown sources grade F, registered ones A (AC15.1/AC15.2)",
+      letters.join(","),
     );
     check(
       folded.every((s) => s.independentSources <= s.itemCount && s.independentSources > 0),

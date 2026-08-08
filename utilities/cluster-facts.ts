@@ -85,6 +85,8 @@ export function clusterFactsFromItems(input: {
       itemCount: items.length,
       bestSourceReliability: reliability.reliability,
       bestSourceId: reliability.sourceId,
+      registeredSourceCount: reliability.registered.length,
+      unregisteredSourceCount: reliability.unregistered.length,
       hazardCrossCheck: input.hazardCrossCheck ?? NO_APPLICABLE_LAYER,
       locationCertainty: locationCertaintyOf(items),
       timeCertainty: timeCertaintyOf(items, input.annotations ?? []),

@@ -84,6 +84,15 @@ export type ClusterFacts = {
   bestSourceReliability: SourceReliability;
   /** Which source earned it, so the reason line can name the evidence. */
   bestSourceId?: string | null;
+  /**
+   * How many distinct contributing sources are in the registry, and how many
+   * are not. The A–F axis is "the BEST source here" (AC15.3), so one official
+   * note among twenty anonymous posts makes the whole cluster read A — which is
+   * the rule the PRD asks for, and is badly misleading unless the proportion is
+   * printed beside it. These two numbers are how the reason stays honest.
+   */
+  registeredSourceCount?: number;
+  unregisteredSourceCount?: number;
   hazardCrossCheck: HazardCrossCheck;
   locationCertainty: LocationCertainty;
   timeCertainty?: TimeCertainty;
@@ -321,7 +330,19 @@ function describeReliability(facts: ClusterFacts): string {
   if (letter === DEFAULT_SOURCE_RELIABILITY) {
     return `source reliability F: ${facts.bestSourceId ? `"${facts.bestSourceId}" is registered F` : "no contributing source is in the registry"} — unknown, not mediocre`;
   }
-  return `source reliability ${letter} (${label}), earned by ${nameSource(facts)} — the best among the contributing sources`;
+
+  // The proportion, always, when there is one. "A" on a cluster of twenty
+  // anonymous posts because one official note landed in it is the rule working
+  // as specified (AC15.3) and reads as a lie unless it says so in the same
+  // breath — this axis describes the BEST source, never the crowd.
+  const unknown = facts.unregisteredSourceCount ?? 0;
+  const known = facts.registeredSourceCount ?? 0;
+  const proportion =
+    unknown > 0
+      ? `; this axis reports the best source, not the crowd — ${unknown} of the ${known + unknown} contributing source${known + unknown === 1 ? "" : "s"} ${unknown === 1 ? "is" : "are"} unregistered and grade F on their own`
+      : "";
+
+  return `source reliability ${letter} (${label}), earned by ${nameSource(facts)} — the best among the contributing sources${proportion}`;
 }
 
 function describeLocation(facts: ClusterFacts): string {

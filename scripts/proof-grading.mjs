@@ -240,6 +240,31 @@ check(
   "with no layer to check against, the reasons say so rather than implying agreement",
 );
 
+// The A–F axis is "the best source here" (AC15.3), so one official note among
+// twenty anonymous posts makes a whole cluster read A. That is the specified
+// rule and it is misleading unless the proportion is printed in the same breath.
+const oneOfficialInACrowd = gradeCluster(
+  facts({
+    independentOrigins: 20,
+    itemCount: 21,
+    bestSourceReliability: "A",
+    bestSourceId: "wremo",
+    registeredSourceCount: 1,
+    unregisteredSourceCount: 19,
+  }),
+);
+check(
+  oneOfficialInACrowd.grade.sourceReliability === "A" &&
+    oneOfficialInACrowd.reasons.some((r) => r.includes("19 of the 20") && r.includes("unregistered")),
+  "an A earned by one source among nineteen unknowns SAYS so in the same sentence (AC15.3)",
+  oneOfficialInACrowd.reasons.find((r) => r.includes("unregistered")) ?? "",
+);
+check(
+  !gradeCluster(facts({ bestSourceReliability: "A", bestSourceId: "geonet", registeredSourceCount: 1, unregisteredSourceCount: 0 }))
+    .reasons.some((r) => r.includes("unregistered")),
+  "…and stays quiet about a proportion when every contributing source is registered",
+);
+
 // ─── alert-worthiness is INDEPENDENT of grade (AC27) ──────────────────────────
 
 out("\n── alert-worthiness, decoupled (AC27) ──────────────────");
