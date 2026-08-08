@@ -7,6 +7,7 @@ import {
   MapLibreMap,
   Marker,
   NavigationControl,
+  setWorkerUrl,
 } from "maplibre-gl";
 import { useEffect, useRef, useState } from "react";
 import type { SignalFeature } from "@/components/board/api-types";
@@ -19,6 +20,22 @@ const WELLINGTON: [number, number] = [174.7787, -41.2924];
 const HALO_COLOUR = "#8da0b5";
 
 const EMPTY_COLLECTION = { type: "FeatureCollection" as const, features: [] };
+
+/**
+ * Turbopack cannot rewrite the `import.meta.url` worker path inside MapLibre's
+ * pre-bundled dist, so the worker is served from /public instead (copied there
+ * by scripts/copy-maplibre-worker.mjs, which runs on `prebuild`). Without this
+ * the worker fails to load and the uncertainty circles — a GeoJSON source —
+ * never render, while raster tiles still do, so it looks like missing data
+ * rather than a bundling problem.
+ *
+ * `prebuild` does NOT run for `next dev`: run `node scripts/copy-maplibre-worker.mjs`
+ * once after a fresh install if the halos are missing in development.
+ *
+ * Must be called before the first Map is constructed. The hazard map calls this
+ * too; MapLibre keeps one global worker URL, and both want the same value.
+ */
+setWorkerUrl("/maplibre/maplibre-gl-worker.mjs");
 
 type MarkerRecord = {
   marker: Marker;
@@ -57,9 +74,11 @@ export function MapCanvas({
   onSelect: (signalId: string) => void;
 }) {
   const containerRef = useRef<HTMLDivElement | null>(null);
-  const mapRef = useRef<MapLibreMap | null>(null);
   const markersRef = useRef(new Map<string, MarkerRecord>());
-  const [ready, setReady] = useState(false);
+  // The map lives in STATE, not a ref: the marker and halo effects have to run
+  // the moment it exists, and a ref assignment does not re-render.
+  const [mapInstance, setMapInstance] = useState<MapLibreMap | null>(null);
+  const [styleReady, setStyleReady] = useState(false);
   const [basemapDown, setBasemapDown] = useState(false);
 
   // The click handler is bound once per marker, so it reads the latest callback
@@ -129,25 +148,25 @@ export function MapCanvas({
           "line-dasharray": [2, 2],
         },
       });
-      setReady(true);
+      setStyleReady(true);
     });
 
-    mapRef.current = map;
+    setMapInstance(map);
 
     return () => {
       for (const record of markers.values()) record.marker.remove();
       markers.clear();
       map.remove();
-      mapRef.current = null;
-      setReady(false);
+      setMapInstance(null);
+      setStyleReady(false);
     };
   }, []);
 
   // Signals → markers. Diffed by signalId so a poll that changes nothing does
   // not tear down and rebuild the marker the operator is hovering.
   useEffect(() => {
-    const map = mapRef.current;
-    if (!map || !ready) return;
+    const map = mapInstance;
+    if (!map) return;
 
     const seen = new Set<string>();
 
@@ -173,26 +192,37 @@ export function MapCanvas({
       markersRef.current.delete(id);
     }
 
-    const source = map.getSource<GeoJSONSource>("signal-halos");
-    if (source) {
-      source.setData({
-        type: "FeatureCollection",
-        features: features
-          .filter((feature) => feature.properties.radiusM !== null)
-          .map((feature) =>
-            groundCircle(
-              feature.geometry.coordinates,
-              feature.properties.radiusM as number,
-              feature.properties.signalId,
-            ),
+  }, [mapInstance, features, selectedSignalId]);
+
+  // Uncertainty circles are a GeoJSON source, so unlike the markers they DO have
+  // to wait for the style to load — `addSource` before that throws.
+  useEffect(() => {
+    if (!mapInstance || !styleReady) return;
+
+    const source = mapInstance.getSource<GeoJSONSource>("signal-halos");
+    if (!source) return;
+
+    source.setData({
+      type: "FeatureCollection",
+      features: features
+        .filter((feature) => feature.properties.radiusM !== null)
+        .map((feature) =>
+          groundCircle(
+            feature.geometry.coordinates,
+            feature.properties.radiusM as number,
+            feature.properties.signalId,
           ),
-      });
-    }
-  }, [features, ready, selectedSignalId]);
+        ),
+    });
+  }, [mapInstance, styleReady, features]);
 
   return (
     <div className="absolute inset-0">
-      <div ref={containerRef} className="absolute inset-0" />
+      {/* Sized with h-full/w-full, NOT `absolute inset-0`: maplibre-gl.css sets
+          `.maplibregl-map { position: relative }` on whatever container it is
+          given, which beats Tailwind's `absolute` and collapses the element to
+          zero height — a blank pane with a healthy map object inside it. */}
+      <div ref={containerRef} className="h-full w-full" />
       {basemapDown && (
         <p className="board-panel board-muted absolute top-3 left-3 z-10 rounded-md border px-2.5 py-1.5 font-mono text-[10px]">
           Basemap tiles unreachable — signals and geography are still positioned correctly.

@@ -44,9 +44,12 @@ export function GalaxyScene({
   return (
     <Canvas camera={{ position: [12, 9, 14], fov: 50 }} dpr={[1, 2]}>
       <color attach="background" args={["#0b1017"]} />
-      <ambientLight intensity={0.9} />
-      <pointLight position={[14, 16, 12]} intensity={140} distance={80} decay={2} />
-      <pointLight position={[-16, -10, -12]} intensity={70} distance={80} decay={2} color="#5eead4" />
+      {/* Lit brightly and flatly on purpose: this is a data display, not a
+          scene. Dramatic falloff makes the far half of the cloud unreadable,
+          and a point an operator cannot see is a signal they do not have. */}
+      <ambientLight intensity={2.4} />
+      <directionalLight position={[10, 14, 12]} intensity={2.2} />
+      <directionalLight position={[-12, -8, -10]} intensity={1.1} color="#5eead4" />
 
       <PointCloud points={scene.points} />
 
@@ -95,8 +98,10 @@ function PointCloud({ points }: { points: PlacedPoint[] }) {
 
   return (
     <instancedMesh ref={meshRef} args={[undefined, undefined, points.length]}>
-      <sphereGeometry args={[0.1, 12, 12]} />
-      <meshStandardMaterial roughness={0.45} metalness={0.05} />
+      <sphereGeometry args={[0.2, 14, 14]} />
+      {/* toneMapped={false} keeps the palette's hues exactly as the cluster
+          list shows them — the two must agree at a glance. */}
+      <meshBasicMaterial toneMapped={false} />
     </instancedMesh>
   );
 }
@@ -123,8 +128,9 @@ function GroupBubble({
       <meshBasicMaterial
         color={colour}
         transparent
-        opacity={selected ? 0.3 : 0.13}
+        opacity={selected ? 0.42 : 0.2}
         depthWrite={false}
+        toneMapped={false}
       />
     </mesh>
   );

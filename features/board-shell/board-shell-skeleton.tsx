@@ -10,7 +10,7 @@ import { BoardBanner, BoardBrand } from "./components/board-chrome";
  */
 export function BoardShellSkeleton() {
   return (
-    <div className="board-shell dark flex h-[100dvh] min-h-0 flex-col overflow-hidden">
+    <div className="board-shell dark flex h-dvh max-h-dvh min-h-0 flex-1 flex-col overflow-hidden">
       <header className="board-panel flex flex-wrap items-center gap-x-4 gap-y-2 border-b px-4 py-2.5">
         <BoardBrand />
         <BoardBanner />

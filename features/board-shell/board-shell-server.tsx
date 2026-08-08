@@ -1,7 +1,8 @@
 import { Suspense } from "react";
 import { ErrorBoundary } from "@/components/errors/error-boundary";
 import { FeatureError } from "@/components/errors/feature-error";
-import { trpc, prefetch, HydrateClient } from "@/trpc/server";
+import { trpc, HydrateClient } from "@/trpc/server";
+import { getQueryClientServer } from "@/utilities/get-query-client-server";
 import { BoardShellClient } from "./board-shell-client";
 import { BoardShellSkeleton } from "./board-shell-skeleton";
 
@@ -30,9 +31,22 @@ export function Board({ datasetId }: { datasetId: string }) {
 }
 
 async function BoardContent({ datasetId }: { datasetId: string }) {
-  // The SAME input object the client query builds, or the prefetched entry
-  // would hydrate under a different key and the first paint would be empty.
-  prefetch(trpc.signals.geojson.queryOptions({ datasetId }));
+  // AWAITED, unlike the notes reference's fire-and-forget `prefetch()`.
+  //
+  // An unawaited prefetch dehydrates a query that is still PENDING, so the
+  // server renders the map's skeleton while the client — which resolves the
+  // streamed data before it hydrates — renders the map. React sees the two
+  // trees disagree, throws the server HTML away and regenerates on the client:
+  // a hydration error, a flash of grey, and a map that mounts twice.
+  //
+  // Awaiting costs one round trip inside the Suspense boundary (the shell
+  // skeleton covers it) and buys a first paint with real signals on it.
+  //
+  // The input object must match the client query's exactly, or the entry
+  // hydrates under a different key and the map opens empty.
+  await getQueryClientServer().prefetchQuery(
+    trpc.signals.geojson.queryOptions({ datasetId }),
+  );
 
   return (
     <HydrateClient>
