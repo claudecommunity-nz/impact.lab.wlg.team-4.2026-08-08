@@ -1,0 +1,93 @@
+[
+  {
+    "text": "Aro St is flooding by the shops, water's coming over the kerb outside the bakery. Avoid the valley!",
+    "source": "reddit-r-wellington", "sourceClass": "social", "occurredAt": "2026-08-08T13:02:00+12:00",
+    "externalId": "t3_flood01", "author": "u/aroresident", "url": "https://reddit.com/r/wellington/t3_flood01",
+    "lat": -41.2955, "lng": 174.7647, "datasetId": "demo", "synthetic": true
+  },
+  {
+    "text": "Aro St is flooding by the shops, water's coming over the kerb outside the bakery. Avoid the valley!",
+    "source": "reddit-r-wellington", "sourceClass": "social", "occurredAt": "2026-08-08T13:11:00+12:00",
+    "externalId": "t3_flood02", "author": "u/wellyweather", "url": "https://reddit.com/r/wellington/t3_flood02",
+    "quotedUrls": ["https://reddit.com/r/wellington/t3_flood01"], "datasetId": "demo", "synthetic": true
+  },
+  {
+    "text": "Sharing from r/wellington: Aro St flooding by the shops, water over the kerb at the bakery.",
+    "source": "twitter-wlg", "sourceClass": "social", "occurredAt": "2026-08-08T13:14:00+12:00",
+    "externalId": "tw_flood03", "author": "@stormwatchnz", "url": "https://x.com/stormwatchnz/tw_flood03",
+    "quotedUrls": ["https://reddit.com/r/wellington/t3_flood01"], "datasetId": "demo", "synthetic": true
+  },
+  {
+    "text": "Water over the kerb on Aro Street near the shops, coming up fast. Avoid the valley folks.",
+    "source": "reddit-r-wellington", "sourceClass": "social", "occurredAt": "2026-08-08T13:18:00+12:00",
+    "externalId": "t3_flood04", "author": "u/aroresident", "url": "https://reddit.com/r/wellington/t3_flood04",
+    "datasetId": "demo", "synthetic": true
+  },
+  {
+    "text": "Just drove past Aro Valley — deep water across the road at the Epuni St corner, a car has stalled in it. Police not here yet.",
+    "source": "community-phone", "sourceClass": "community_report", "occurredAt": "2026-08-08T13:24:00+12:00",
+    "externalId": "ph_flood05", "author": "caller-anon-1", "lat": -41.2962, "lng": 174.7621,
+    "datasetId": "demo", "synthetic": true
+  },
+  {
+    "text": "Flooding reported in Aro Valley as heavy rain continues; residents report water entering shops on Aro Street.",
+    "source": "local-news-rss", "sourceClass": "media", "occurredAt": "2026-08-08T13:41:00+12:00",
+    "externalId": "news_flood06", "author": "newsroom", "url": "https://news.example/aro-flooding",
+    "quotedUrls": ["https://reddit.com/r/wellington/t3_flood01"], "datasetId": "demo", "synthetic": true
+  },
+  {
+    "text": "Karori Reservoir rain gauge: 31mm in the last 2 hours, rising.",
+    "source": "gwrc-hilltop", "sourceClass": "sensor", "occurredAt": "2026-08-08T13:30:00+12:00",
+    "externalId": "gauge_kar_1330", "lat": -41.2891, "lng": 174.7404, "datasetId": "demo", "synthetic": true,
+    "annotations": [{ "key": "measurement", "value": "Rainfall" }, { "key": "units", "value": "mm" }, { "key": "value", "value": "31" }]
+  },
+  {
+    "text": "Roof iron lifting off the units on Miramar Ave, sheets landing on the road!",
+    "source": "reddit-r-wellington", "sourceClass": "social", "occurredAt": "2026-08-08T13:55:00+12:00",
+    "externalId": "t3_wind01", "author": "u/miramarlocal", "url": "https://reddit.com/r/wellington/t3_wind01",
+    "lat": -41.3151, "lng": 174.8154, "datasetId": "demo", "synthetic": true
+  },
+  {
+    "text": "Debris across both lanes on Miramar Ave near the shops, looks like roofing metal. Traffic backing up.",
+    "source": "community-phone", "sourceClass": "community_report", "occurredAt": "2026-08-08T14:02:00+12:00",
+    "externalId": "ph_wind02", "author": "caller-anon-2", "lat": -41.3148, "lng": 174.8160,
+    "datasetId": "demo", "synthetic": true
+  },
+  {
+    "text": "FENZ responding to reports of structural damage on Miramar Ave, road closure requested at the eastern end.",
+    "source": "fenz-radio-log", "sourceClass": "official_feed", "occurredAt": "2026-08-08T14:09:00+12:00",
+    "externalId": "radio_wind03", "lat": -41.3150, "lng": 174.8157, "datasetId": "demo", "synthetic": true
+  },
+  {
+    "text": "Hearing the stream behind Petone has burst its banks and houses are being evacuated?? Anyone confirm?",
+    "source": "twitter-wlg", "sourceClass": "social", "occurredAt": "2026-08-08T14:15:00+12:00",
+    "externalId": "tw_petone01", "author": "@rumourmill", "url": "https://x.com/rumourmill/tw_petone01",
+    "datasetId": "demo", "synthetic": true
+  },
+  {
+    "text": "Big slip on the road up to Brooklyn wind turbine, one lane blocked near the top gate.",
+    "source": "reddit-r-wellington", "sourceClass": "social", "occurredAt": "2026-08-08T14:22:00+12:00",
+    "externalId": "t3_slip01", "author": "u/brooklynwalker",
+    "annotations": [{ "key": "location_text", "value": "Brooklyn wind turbine road, near top gate" }],
+    "datasetId": "demo", "synthetic": true
+  },
+  {
+    "text": "Surface water pooling badly on the cycleway along the Hutt Rd, by the container yard.",
+    "source": "community-phone", "sourceClass": "community_report", "occurredAt": "2026-08-08T14:31:00+12:00",
+    "externalId": "ph_hutt01", "author": "caller-anon-3",
+    "annotations": [{ "key": "location_text", "value": "Hutt Rd cycleway near container yard" }],
+    "datasetId": "demo", "synthetic": true
+  },
+  {
+    "text": "Lost cat in Newtown, orange tabby, answers to Biscuit. Please check your sheds!",
+    "source": "reddit-r-wellington", "sourceClass": "social", "occurredAt": "2026-08-08T14:36:00+12:00",
+    "externalId": "t3_noise01", "author": "u/catperson", "lat": -41.3110, "lng": 174.7790,
+    "datasetId": "demo", "synthetic": true
+  },
+  {
+    "text": "Anyone know why the buses are running late today? Been waiting 20 min at the station.",
+    "source": "twitter-wlg", "sourceClass": "social", "occurredAt": "2026-08-08T14:44:00+12:00",
+    "externalId": "tw_noise02", "author": "@commuter99",
+    "datasetId": "demo", "synthetic": true
+  }
+]
