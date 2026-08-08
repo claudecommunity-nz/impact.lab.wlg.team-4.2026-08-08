@@ -84,7 +84,12 @@ type MarkerRecord = {
  */
 export function MapCanvas({
   features,
-  layers,
+  // Defaulted rather than merely typed as required: during a hot reload the
+  // browser can briefly hold a module whose props do not match the one that
+  // rendered it, and `for (const layer of undefined)` there would throw inside
+  // an effect and take the scene down. Types cannot protect a running page from
+  // its own stale chunk.
+  layers = [],
   hiddenDatasetIds,
   basemap,
   selectedSignalId,

@@ -2,6 +2,8 @@
 
 import dynamic from "next/dynamic";
 import { useCallback, useState } from "react";
+import { ErrorBoundary } from "@/components/errors/error-boundary";
+import { FeatureError } from "@/components/errors/feature-error";
 import { BoardDrillClient } from "@/features/board-drill/board-drill-client";
 import { BoardGalaxySkeleton } from "@/features/board-galaxy/board-galaxy-skeleton";
 import { BoardMapClient } from "@/features/board-map/board-map-client";
@@ -72,11 +74,15 @@ export function BoardShellClient({ datasetId }: { datasetId: string }) {
             )}
             aria-hidden={view === "galaxy"}
           >
-            <BoardMapClient
-              datasetId={datasetId}
-              selectedSignalId={selectedSignalId}
-              onSelect={select}
-            />
+            {/* Per-mode boundaries: a map that fails must cost the operator the
+                map, not the header, the galaxy and the open evidence panel. */}
+            <ErrorBoundary fallback={<FeatureError name="the map" />}>
+              <BoardMapClient
+                datasetId={datasetId}
+                selectedSignalId={selectedSignalId}
+                onSelect={select}
+              />
+            </ErrorBoundary>
           </div>
 
           {galaxyMounted && (
@@ -87,11 +93,13 @@ export function BoardShellClient({ datasetId }: { datasetId: string }) {
               )}
               aria-hidden={view === "map"}
             >
-              <BoardGalaxyClient
-                active={view === "galaxy"}
-                selectedSignalId={selectedSignalId}
-                onSelect={select}
-              />
+              <ErrorBoundary fallback={<FeatureError name="the galaxy" />}>
+                <BoardGalaxyClient
+                  active={view === "galaxy"}
+                  selectedSignalId={selectedSignalId}
+                  onSelect={select}
+                />
+              </ErrorBoundary>
             </div>
           )}
         </div>
