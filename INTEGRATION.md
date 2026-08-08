@@ -2,11 +2,17 @@
 
 **For other teams. You do not need to know anything about this codebase.**
 
+> **Status — Saturday 8 August, 12:30.** Every endpoint in this guide is live and
+> every example below was run against a real server: intake (push and pull),
+> `vectors.process`, and the three read procedures. Nothing here is a plan.
+> `npm run verify` re-proves the whole chain end to end in one command.
+
 ## What this module is
 
 This is Team 4's **universal intake and vector layer** for Problem 03. You send us
 anything you have collected from public information — a post, a news item, a gauge
-reading, a scraped row, a note someone typed — and we store it **losslessly** as a
+reading, a scraped row, a note someone typed — and we store it **losslessly** (bar
+NUL bytes, which Postgres cannot hold at all — see *Rules worth knowing*) as a
 *signal*: your original payload kept verbatim forever, plus a plain-text sentence,
 a time, an optional location, and whatever structured fields you sent turned into
 open key/value *annotations*. We then embed those sentences and group them into
@@ -108,9 +114,12 @@ curl -s -X POST 'http://localhost:3000/api/workflows/inbox-poller' \
 
 ## What happens to your fields
 
-**Nothing is ever discarded.** Your entire payload is stored verbatim in the
-signal's `raw` column, forever, whatever shape it had. Everything below is on top
-of that.
+**Your whole payload is kept.** It is stored in the signal's `raw` column,
+forever, whatever shape it had, and everything below is derived on top of it.
+Two honest exceptions, both spelled out in *Rules worth knowing*: the derived
+`text` is capped at 4000 characters (and each annotation value at 2000) — the
+full original stays in `raw` — and NUL bytes are removed, because Postgres
+cannot store them at all.
 
 ### Fields we recognise (all optional, aliases accepted)
 
@@ -163,8 +172,42 @@ You can also send annotations explicitly, with a confidence:
   timestamp. If you know the real time, send it — the whole UI is time-scrubbed.
 - **We dedupe on `source` + `text` + `occurred_at`.** Re-sending the same item is
   safe: you get the original id back with `created: false`, and nothing is stored
-  twice. (Items with no `occurred_at` cannot dedupe against each other — their
-  assumed time differs by milliseconds — so send `occurred_at` if you replay.)
+  twice. This holds under CONCURRENCY too, not just re-sends: the key is a unique
+  index in the database, so ten simultaneous deliveries of one report (batched
+  clients, parallel pollers, a retrying queue) still leave exactly one row — nine
+  of them come back `created: false`. (Items with no `occurred_at` cannot dedupe
+  against each other — their assumed time differs by milliseconds — so send
+  `occurred_at` if you replay.)
+- **Long text is truncated, and we say so.** The stored sentence is capped at
+  **4000 characters** and each annotation value at **2000**; anything longer is
+  cut, an ellipsis appended, and a `text_truncated = true` annotation written.
+  Your full original is untouched in `raw`, so nothing is actually lost — but if
+  you send whole news articles, expect the `text` we echo back to be shorter than
+  what you sent.
+- **NUL bytes (`U+0000`) are removed.** Postgres rejects them in both `text` and
+  `jsonb`, so a single one anywhere in a payload would otherwise fail the item.
+  We delete them (substituted with nothing — no replacement character) from the
+  sentence, from annotation keys and values, and from `raw`, then write a
+  `nul_bytes_stripped = true` annotation. Nothing else in your payload changes.
+  This is common in scraped social and news text.
+- **Blank text is a rejection, not a signal.** A payload whose text is empty or
+  whitespace-only fails with *"Could not derive any text from the payload…"* — an
+  empty sentence would be embedded and grouped into a bubble that says nothing.
+- **Coordinates we cannot use are reported, not silently dropped.** Values
+  outside WGS84 range (`lat` beyond ±90, `lng` beyond ±180) or half a pair are
+  NOT stored as `lat`/`lng`: the response comes back with `geoDropped: true` and
+  the signal gets a `geo_dropped` annotation saying which values were refused.
+  They still live in `raw`. The signal ingests normally and groups on meaning and
+  time — missing geography never blocks you.
+- **Top level beats a property bag.** If the same key appears both at the top
+  level and inside `properties` / `meta` / `metadata` / `attributes` / `fields`,
+  the top-level value is the one promoted to an annotation. The nested one is
+  still in `raw`, but it will not appear twice.
+- **A bare string is a valid payload — in the batch and file paths.**
+  `"Tree down on Adelaide Road"` as an item in `signals.ingestBatch`, or as an
+  entry in a dropped file, is adapted like any object. `signals.ingest` (the
+  single-item endpoint) takes a JSON **object** only, so send
+  `{"text":"Tree down on Adelaide Road"}` there.
 - **Nothing you send is treated as verified.** Reliability is shown, not hidden.
 
 ---
@@ -183,6 +226,7 @@ oddly:
   "sourceClass": "official_feed",
   "occurredAt": "2026-08-07T21:20:00.000Z",
   "assumedOccurredAt": false,
+  "geoDropped": false,
   "annotationKeys": ["hazard", "verified", "type"]
 }
 ```
@@ -193,7 +237,12 @@ oddly:
 - `created` — `false` means it matched an item already stored (dedupe).
 - `text` / `source` / `sourceClass` / `occurredAt` — what we parsed out of you.
 - `assumedOccurredAt` — `true` means you did not send a time and we used now.
-- `annotationKeys` — the keys we kept.
+- `geoDropped` — `true` means you sent coordinates we could not use (out of
+  range, or only half a pair) and this signal is stored without a location. Check
+  this if your pins are missing from the map; the values are still in `raw`.
+- `annotationKeys` — the keys we kept. Ours (rather than yours) show up here too
+  when a rule fired: `assumed_occurred_at`, `text_truncated`, `geo_dropped`,
+  `nul_bytes_stripped`.
 
 Batch ingest returns counts plus a per-item verdict:
 
@@ -210,8 +259,11 @@ Batch ingest returns counts plus a per-item verdict:
 }
 ```
 
-An item only fails when we cannot derive any text from it. The error string says
-what to fix; re-send just that item.
+An item only fails when we cannot derive any text from it — including when the
+text you sent is empty or whitespace-only. Everything else degrades instead of
+failing: unusable coordinates are reported, long text is truncated, NUL bytes are
+removed, unknown keys are kept. The error string says what to fix; re-send just
+that item.
 
 ---
 
@@ -267,8 +319,19 @@ Every number below is a fold over the bubble's members — drop the groups, re-r
 | `mass` | member count |
 | `velocity` | members inside the last hour of the bubble's own `occurred_at` clock |
 | `sourceDiversity` | `COUNT(DISTINCT source_class)` — how independent the corroboration is |
-| `verification` | `{ verifiedCount, meanConfidence, sourceClasses[], distinctSources }` folded from members' `verified` / `confidence` annotations |
+| `verification` | `{ verifiedCount, meanConfidence, sourceClasses[], distinctSources, scoreBreakdown }` folded from members' `verified` / `confidence` annotations |
+| `score` | **internal ordering key only** — `mass × 0.5 ^ (age / 6h)`, where age is how long ago the bubble last heard anything |
 | `centroidLat` / `centroidLng` | mean position of the members that have coordinates |
+
+`score` decides what order bubbles come back in and nothing else. It is
+deliberately two inputs an operator can check by eye — how many reports, and how
+recently — rather than a black-box ranking model, and it is deliberately NOT
+published as a number: a single blended figure reads like a confidence, and this
+system does not tell anyone what to believe. What you do get is the arithmetic,
+in words, on every bubble as `verification.scoreBreakdown` (e.g. `"mass 13 ×
+recency 0.717 (2.9h ago, 6.0h half-life) = 9.32"`), so the ordering can always be
+argued with. It is recomputed each time the bubble is re-folded, so it is fresh
+as of that bubble's last member.
 
 `verification` counts corroboration; it never asserts that anything is true. Send
 `verified` and `confidence` on your payloads and they show up here.
@@ -292,6 +355,19 @@ time ranges cannot be compared. Consequences for you:
 grouping used our deterministic **lexical** stand-in rather than a semantic
 embedding model. It groups on shared words, not on meaning — "inundation" will not
 match "flooding". Everything works and the numbers are real, but say so in your UI.
+
+Be precise about what the stub is doing, because it is easy to overclaim: with
+the stub, **cosine ranks correctly, while geography and time do the separating**.
+Measured over our 25 fixtures, same-hazard pairs average 0.85 and different-hazard
+pairs 0.79 — the distributions overlap, so with the geo gate disabled every
+fixture collapses into one bubble at the 0.80 stub threshold. The semantic signal
+is genuinely there and picks the right bubble by *argmax* (the two ungeolocated
+fixtures score 0.93 against their true bubble versus 0.85 and 0.84 against the
+runner-up), but the partition you see is produced mostly by the 1.5km gate and the
+6h window. With a Gateway key the similarities spread out and the threshold starts
+carrying its own weight. The correct-partition plateau for the *gated* pipeline
+runs from about 0.60 to 0.80, which is why 0.80 is a safe stub default rather than
+a tuned one.
 Each signal also carries an `embedding_model` annotation recording which embedder
 placed it. Set the key and the same pipeline upgrades with no code change.
 
@@ -352,7 +428,8 @@ curl -s -G 'http://localhost:3000/api/trpc/vectors.groups' \
   "verification": {
     "distinctSources": 7, "distinctSourceClasses": 6,
     "verifiedCount": 5, "meanConfidence": 0.7437499999999999,
-    "sourceClasses": ["human_report","media","official_feed","operator_note","sensor","social"]
+    "sourceClasses": ["human_report","media","official_feed","operator_note","sensor","social"],
+    "scoreBreakdown": "mass 13 × recency 0.717 (2.9h ago, 6.0h half-life) = 9.32"
   },
   "label": "flooding — Aro Street",
   "memberCount": 13,
@@ -378,7 +455,7 @@ Field by field:
 | `size` | member count — the bubble's radius |
 | `velocity` | members inside the last hour of the bubble's own `occurred_at` clock |
 | `sourceDiversity` | `COUNT(DISTINCT source_class)` — how independent the corroboration is |
-| `verification` | counts folded from members' `verified` / `confidence` annotations — **never a verdict** |
+| `verification` | counts folded from members' `verified` / `confidence` annotations — **never a verdict**. `verification.scoreBreakdown` is the sentence behind the ORDER bubbles arrive in |
 | `label` | a short name; null until the pipeline names it (see the caveat below) |
 | `memberCount` | counted from the edges on every read; equals `size` unless the pipeline is mid-run |
 | `firstSeen` / `lastSeen` | the bubble's lifespan, on the `occurred_at` clock |
@@ -431,9 +508,14 @@ This is the part worth reading twice:
   `feed` — we do not filter them down to a vocabulary we recognise.
 - **`membership` is the grouping decision, as a number and as a sentence.** An
   operator who cannot read *why* two reports were merged cannot act on the merge.
-- **`raw` is your payload, byte for byte**, whatever shape it had. It is never
-  rewritten and it outlives every derived number above it. This is the end of the
-  traceability chain: any bubble → any member → the words somebody published.
+- **`raw` is your payload, verbatim value for value**, whatever shape it had. It
+  is never rewritten and it outlives every derived number above it. This is the
+  end of the traceability chain: any bubble → any member → the words somebody
+  published. One caveat if you plan to *hash-compare* it against your own
+  serialisation to prove custody: the column is `jsonb`, which normalises key
+  order (and would collapse duplicate keys), so compare by deep value equality,
+  not by byte string. Every value you sent comes back exactly as you sent it —
+  the only edit we ever make is removing NUL bytes, and we annotate when we do.
 
 An unknown id is a `BAD_REQUEST` with `Group <id> not found`, not an empty shell.
 

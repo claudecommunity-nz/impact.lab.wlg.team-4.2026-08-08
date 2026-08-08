@@ -1,6 +1,13 @@
 import {
+  DATASET_LIVE,
+  GEO_DROPPED_KEY,
   IncomingSignalSchema,
+  SOURCE_URL_KEY,
+  SYNTHETIC_KEY,
   MAX_ANNOTATION_VALUE_LENGTH,
+  MAX_TEXT_LENGTH,
+  NUL_BYTES_STRIPPED_KEY,
+  TEXT_TRUNCATED_KEY,
   UNKNOWN_SOURCE,
   UNKNOWN_SOURCE_CLASS,
   type IncomingAnnotation,
@@ -13,11 +20,19 @@ import type { AdapterResult } from "./adapter-types";
  * Other teams should not have to learn our schema to send us something. So:
  * recognised keys map onto the signal's core fields, every other top-level
  * scalar is promoted to a `feed` annotation, and the whole payload is kept
- * verbatim in `raw`. Nothing is discarded and nothing is required except a
- * sentence we can derive — `{"text": "..."}` is a complete payload.
+ * verbatim in `raw`. Nothing is required except a sentence we can derive —
+ * `{"text": "..."}` is a complete payload.
  *
- * Only when no text can be derived at all does it decline, with a reason the
- * sender can act on.
+ * Two edits are made to what is stored, and BOTH are annotated rather than
+ * silent, because a doc that says "nothing is discarded" must be literally true:
+ * the derived sentence is capped at MAX_TEXT_LENGTH (`text_truncated`), and NUL
+ * bytes are removed (`nul_bytes_stripped`) since Postgres can hold them in
+ * neither `text` nor `jsonb`. The full original survives in `raw` either way.
+ *
+ * Two things make it decline: no derivable text (including a blank or
+ * whitespace-only sentence), and a payload that is not an object or a string.
+ * Everything else degrades — unusable coordinates are annotated (`geo_dropped`)
+ * and the signal still lands.
  */
 
 // Recognised key aliases. First match wins; a key consumed here is NOT repeated
@@ -58,20 +73,79 @@ const LAT_KEYS = ["lat", "latitude"];
 const LNG_KEYS = ["lng", "lon", "long", "longitude"];
 const GEO_CONFIDENCE_KEYS = ["geo_confidence", "geoConfidence"];
 const GEO_CONTAINER_KEYS = ["location", "geo", "position", "point", "geometry", "coordinates"];
+
+// ─── the identity fields (convergence Decision 2) ─────────────────────────────
+//
+// All optional, like everything else. Sending them buys better dedupe and, once
+// origin fingerprinting lands, an honest independent-source count; omitting
+// them costs nothing but precision.
+const DATASET_KEYS = ["dataset_id", "datasetId", "dataset"];
+/** A collector's own id. `id`/`guid` last: many payloads use them for other things. */
+const EXTERNAL_ID_KEYS = ["external_id", "externalId", "item_id", "itemId", "guid", "id"];
+/**
+ * Deliberately NOT overlapping SOURCE_KEYS' `author`: whichever of the two runs
+ * first consumes it. `source` runs first, so a payload with only `author` names
+ * its source after the author — which is right for a social post, where the
+ * account IS the source.
+ */
+const AUTHOR_KEYS = ["author", "username", "screen_name", "screenName", "byline", "user"];
+const URL_KEYS = ["url", "link", "permalink", "source_url", "sourceUrl"];
+const QUOTED_URL_KEYS = ["quoted_urls", "quotedUrls", "quoted_url", "quotedUrl", "in_reply_to_url"];
+const SYNTHETIC_KEYS = ["synthetic", "is_synthetic", "isSynthetic", "fixture"];
 /** Nested objects whose scalars are promoted as annotations (GeoJSON `properties`, …). */
 const ANNOTATION_CONTAINER_KEYS = ["meta", "metadata", "properties", "attributes", "fields"];
-
-const MAX_TEXT_LENGTH = 4000;
 
 type Dict = Record<string, unknown>;
 
 export function genericJsonAdapter(payload: unknown): AdapterResult {
   try {
-    return adapt(payload);
+    // Postgres `text` AND `jsonb` both reject U+0000 outright, so a single NUL
+    // anywhere in a payload would otherwise fail the whole item at write time —
+    // and scraped social/news text really does carry control characters. We
+    // remove them (substituted with nothing) BEFORE anything reads the payload,
+    // so `raw`, the sentence and every annotation are all consistently clean,
+    // and we SAY SO with an annotation rather than quietly editing your data.
+    const cleaned = stripNulBytes(payload);
+    const result = adapt(cleaned.value);
+    if (result.ok && cleaned.stripped) {
+      result.signal.annotations.push({
+        key: NUL_BYTES_STRIPPED_KEY,
+        value: "true",
+        annotator: "rule",
+      });
+    }
+    return result;
   } catch (err) {
     // Belt and braces: an adapter that throws would sink a whole batch.
     return { ok: false, reason: `Adapter failed to read payload: ${String(err)}` };
   }
+}
+
+/** The one character Postgres cannot store in `text` or `jsonb`. */
+const NUL = "\u0000";
+
+/** Deep copy with every U+0000 removed — from object keys and string values alike. */
+function stripNulBytes(value: unknown): { value: unknown; stripped: boolean } {
+  let stripped = false;
+
+  const walk = (node: unknown): unknown => {
+    if (typeof node === "string") {
+      if (!node.includes(NUL)) return node;
+      stripped = true;
+      return node.split(NUL).join("");
+    }
+    if (Array.isArray(node)) return node.map(walk);
+    if (isDict(node)) {
+      const out: Dict = {};
+      for (const [key, child] of Object.entries(node)) {
+        out[walk(key) as string] = walk(child);
+      }
+      return out;
+    }
+    return node;
+  };
+
+  return { value: walk(value), stripped };
 }
 
 function adapt(payload: unknown): AdapterResult {
@@ -122,8 +196,19 @@ function build(input: {
   const occurredAt = takeDate(obj, TIME_KEYS, consumed);
   const geo = takeGeo(obj, consumed);
 
+  // The identity fields. All optional; each one bought, not required.
+  const datasetId = takeString(obj, DATASET_KEYS, consumed) ?? DATASET_LIVE;
+  const externalId = takeString(obj, EXTERNAL_ID_KEYS, consumed);
+  const author = takeString(obj, AUTHOR_KEYS, consumed);
+  const url = takeString(obj, URL_KEYS, consumed);
+  const quotedUrls = takeStringArray(obj, QUOTED_URL_KEYS, consumed);
+  const synthetic = takeBoolean(obj, SYNTHETIC_KEYS, consumed) ?? false;
+
+  // A blank sentence is worse than no sentence: it embeds, groups and shows up
+  // on the board saying nothing. `{"text":"   "}` is a rejected item, not a
+  // signal — and the reason tells the sender exactly what to send instead.
   const derived = input.text ?? deriveText(obj, consumed);
-  if (derived === null) {
+  if (derived === null || derived.trim().length === 0) {
     return {
       ok: false,
       reason:
@@ -135,13 +220,38 @@ function build(input: {
 
   const text = derived.length > MAX_TEXT_LENGTH ? `${derived.slice(0, MAX_TEXT_LENGTH)}…` : derived;
   if (text !== derived) {
-    annotations.push({ key: "text_truncated", value: "true", annotator: "feed" });
+    annotations.push({ key: TEXT_TRUNCATED_KEY, value: "true", annotator: "feed" });
+  }
+
+  // Coordinates we refused are worth MORE than silence: the sender needs to know
+  // their geo did not land, and the board needs to know this signal is
+  // ungeolocated for a reason. The values themselves still live in `raw`.
+  if (geo.dropped) {
+    annotations.push({ key: GEO_DROPPED_KEY, value: geo.dropped, annotator: "rule" });
+  }
+
+  // The item's own link became a COLUMN above, which would have quietly removed
+  // `source_url` from the annotations other teams already read. It is worth
+  // having in both places — a column origin fingerprinting can join on, and the
+  // annotation that was published first — so we put it back rather than break
+  // a contract for the sake of tidiness.
+  if (url !== undefined && !annotations.some((a) => a.key === SOURCE_URL_KEY)) {
+    annotations.push({ key: SOURCE_URL_KEY, value: truncate(url), annotator: "feed" });
+  }
+  if (synthetic) {
+    annotations.push({ key: SYNTHETIC_KEY, value: "true", annotator: "feed" });
   }
 
   const parsed = IncomingSignalSchema.safeParse({
     source,
     sourceClass,
     text,
+    datasetId,
+    externalId,
+    author,
+    url,
+    quotedUrls,
+    synthetic,
     occurredAt,
     lat: geo.lat,
     lng: geo.lng,
@@ -171,6 +281,8 @@ function deriveText(obj: Dict, consumed: Set<string>): string | null {
   // sensor row like {station, stage_m, trend} still becomes readable text.
   const rendered = Object.entries(obj)
     .filter(([k, v]) => !consumed.has(k) && isScalar(v))
+    // An empty value renders as "text: " — a junk sentence about to be embedded.
+    .filter(([, v]) => scalarToString(v).length > 0)
     .map(([k, v]) => `${humanise(k)}: ${scalarToString(v)}`)
     .join("; ");
 
@@ -193,6 +305,44 @@ function takeString(obj: Dict, keys: string[], consumed: Set<string>): string | 
     }
   }
   return undefined;
+}
+
+/** `true`/`false`, and the strings and 1/0 that mean them in half the feeds alive. */
+function takeBoolean(obj: Dict, keys: string[], consumed: Set<string>): boolean | undefined {
+  for (const key of keys) {
+    if (consumed.has(key)) continue;
+    const value = obj[key];
+    if (typeof value === "boolean") {
+      consumed.add(key);
+      return value;
+    }
+    if (typeof value === "string" && ["true", "false", "1", "0"].includes(value.trim().toLowerCase())) {
+      consumed.add(key);
+      return ["true", "1"].includes(value.trim().toLowerCase());
+    }
+    if (value === 1 || value === 0) {
+      consumed.add(key);
+      return value === 1;
+    }
+  }
+  return undefined;
+}
+
+/** An array of links, or a single link — senders write both and mean the same thing. */
+function takeStringArray(obj: Dict, keys: string[], consumed: Set<string>): string[] {
+  for (const key of keys) {
+    if (consumed.has(key)) continue;
+    const value = obj[key];
+    if (Array.isArray(value)) {
+      consumed.add(key);
+      return value.filter((v): v is string => typeof v === "string" && v.trim().length > 0).map((v) => v.trim());
+    }
+    if (typeof value === "string" && value.trim().length > 0) {
+      consumed.add(key);
+      return [value.trim()];
+    }
+  }
+  return [];
 }
 
 function takeDate(obj: Dict, keys: string[], consumed: Set<string>): Date | undefined {
@@ -221,10 +371,15 @@ function toDate(value: unknown): Date | undefined {
   return undefined;
 }
 
+/**
+ * `dropped` is set when coordinates WERE present but were not usable — the one
+ * geo outcome the sender must hear about, since an absent lat/lng and a refused
+ * lat/lng look identical from the outside.
+ */
 function takeGeo(
   obj: Dict,
   consumed: Set<string>,
-): { lat?: number; lng?: number; confidence?: number } {
+): { lat?: number; lng?: number; confidence?: number; dropped?: string } {
   let lat = takeNumber(obj, LAT_KEYS, consumed);
   let lng = takeNumber(obj, LNG_KEYS, consumed);
 
@@ -242,8 +397,15 @@ function takeGeo(
   }
 
   const confidence = takeNumber(obj, GEO_CONFIDENCE_KEYS, consumed);
-  if (lat === undefined || lng === undefined) return {};
-  if (!inRange(lat, -90, 90) || !inRange(lng, -180, 180)) return {};
+  if (lat === undefined || lng === undefined) {
+    // Half a coordinate is not a location, and guessing the other half would be
+    // inventing geography. Say we dropped it rather than pretending it never came.
+    if (lat === undefined && lng === undefined) return {};
+    return { dropped: `incomplete coordinates (lat=${lat ?? "absent"}, lng=${lng ?? "absent"})` };
+  }
+  if (!inRange(lat, -90, 90) || !inRange(lng, -180, 180)) {
+    return { dropped: `coordinates out of range (lat=${lat}, lng=${lng})` };
+  }
 
   // An explicit coordinate from the source is as certain as geo gets; anything
   // inferred later (by a geocoder) writes its own, lower, confidence.

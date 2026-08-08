@@ -19,6 +19,15 @@ export const SignalSchema = z.object({
   lng: z.number().nullable(),
   geoConfidence: z.number().nullable(),
   embedding: EmbeddingSchema.nullable(),
+  /** The namespace — live vs replay vs fixtures. Clustering never crosses one. */
+  datasetId: z.string(),
+  /** The collector's stable id, when it had one. Drives the strong dedupe key. */
+  externalId: z.string().nullable(),
+  author: z.string().nullable(),
+  url: z.string().nullable(),
+  quotedUrls: z.array(z.string()).nullable(),
+  /** Authored for a demo or drill — surfaced on every provenance entry. */
+  synthetic: z.boolean(),
 });
 
 export type Signal = z.infer<typeof SignalSchema>;

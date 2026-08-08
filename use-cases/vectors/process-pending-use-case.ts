@@ -5,8 +5,9 @@ import { acquireAdvisoryLockUseCase } from "@/use-cases/locks/acquire-advisory-l
 import { releaseAdvisoryLockUseCase } from "@/use-cases/locks/release-advisory-lock-use-case";
 import { getPendingSignalsUseCase } from "@/use-cases/signals/get-pending-signals-use-case";
 import { updateSignalEmbeddingUseCase } from "@/use-cases/signals/update-signal-embedding-use-case";
+import { getUnlabelledGroupsUseCase } from "@/use-cases/groups/get-unlabelled-groups-use-case";
 import { createUseCase } from "@/utilities/create-use-case";
-import { assignSignalUseCase } from "./assign-signal-use-case";
+import { INCIDENT_LEVEL, assignSignalUseCase } from "./assign-signal-use-case";
 import { labelGroupUseCase } from "./label-group-use-case";
 import { projectSignalsUseCase } from "./project-signals-use-case";
 
@@ -94,19 +95,6 @@ export const processPendingUseCase = createUseCase(
       });
       if (pending.error) return error(pending.error);
 
-      if (pending.data.length === 0) {
-        // Still project: a basis may have become fittable, or coordinates may
-        // be missing for signals grouped by an earlier, pre-basis run.
-        const projection = await projectSignalsUseCase({ log });
-        if (projection.error) return error(projection.error);
-        return success({
-          ...EMPTY_RUN,
-          locked: true,
-          projected: projection.data.projected,
-          fittedProjection: projection.data.fitted,
-        });
-      }
-
       // ─── embed ──────────────────────────────────────────────────────────────
       const unembedded = pending.data.filter((s) => !s.embedding || s.embedding.length === 0);
       let stubEmbeddings = false;
@@ -168,13 +156,25 @@ export const processPendingUseCase = createUseCase(
 
       // ─── name ───────────────────────────────────────────────────────────────
       // Every bubble this batch touched, because a bubble that just gained five
-      // reports may no longer be about what its old name says.
+      // reports may no longer be about what its old name says — PLUS every
+      // bubble that still has no name at all. That second set exists because
+      // `signals.ingest` now folds synchronously (convergence Decision 2): a
+      // bubble can be born between two runs of this pipeline, and would
+      // otherwise stay anonymous forever because no batch ever "touched" it.
       //
       // The ONE place this pipeline does not propagate a composed error: a name
       // is a convenience on top of a grouping that has already been written and
       // is already correct. Failing the batch — and telling the caller nothing
       // was done — because a model call timed out would be a worse answer than
       // an unnamed bubble, which the read surface already renders as `null`.
+      const unlabelled = await getUnlabelledGroupsUseCase({
+        level: INCIDENT_LEVEL,
+        limit: limit ?? PROCESS_BATCH_LIMIT,
+        log,
+      });
+      if (unlabelled.error) return error(unlabelled.error);
+      for (const group of unlabelled.data) touched.add(group.id);
+
       let labelled = 0;
       for (const groupId of touched) {
         const named = await labelGroupUseCase({ groupId, log });

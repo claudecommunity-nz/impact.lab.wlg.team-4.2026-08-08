@@ -49,6 +49,19 @@ export const GEO_GATE_METRES = 1500;
 /** Velocity is "members in the last hour of the bubble's own clock". */
 export const VELOCITY_WINDOW_MS = 60 * 60 * 1000;
 
+/**
+ * The queue's rank: `score = mass × 0.5 ^ (age / half-life)`.
+ *
+ * Deliberately the simplest defensible thing rather than a ranking system —
+ * two inputs an operator can check by eye ("13 reports, most recent 40 minutes
+ * ago"), and every group stores the arithmetic as `verification.scoreBreakdown`
+ * so nobody has to trust an opaque number. Corroboration raises a bubble;
+ * silence lowers it. It is recomputed whenever the bubble is re-folded, so a
+ * bubble nothing has been added to keeps the score from its last member —
+ * ranking is fresh at write time, not a live clock.
+ */
+export const SCORE_HALF_LIFE_MS = 6 * 60 * 60 * 1000;
+
 /** Most recently active bubbles considered per signal. */
 export const CANDIDATE_LIMIT = 50;
 
@@ -80,10 +93,20 @@ export type AssignSignalResult = z.infer<typeof AssignSignalResultSchema>;
 export const assignSignalUseCase = createUseCase(
   {
     id: "assign-signal",
-    inputSchema: z.object({ signalId: z.uuid() }),
+    inputSchema: z.object({
+      signalId: z.uuid(),
+      /**
+       * Threaded like `log`. Decay is time-dependent, so replaying a historical
+       * fixture must produce the same ranking whatever today's date is. Absent
+       * means live, and the ONE wall-clock read sits here at the boundary
+       * rather than buried in the fold.
+       */
+      now: z.date().optional(),
+    }),
     outputSchema: AssignSignalResultSchema,
   },
-  async ({ success, error }, { signalId, log }) => {
+  async ({ success, error }, { signalId, now, log }) => {
+    const at = now ?? new Date();
     const signals = await getSignalsByIdsUseCase({ ids: [signalId], log });
     if (signals.error) return error(signals.error);
 
@@ -95,9 +118,15 @@ export const assignSignalUseCase = createUseCase(
 
     const threshold = process.env.AI_GATEWAY_API_KEY ? JOIN_THRESHOLD.real : JOIN_THRESHOLD.stub;
 
-    // ─── gate 1: time ─────────────────────────────────────────────────────────
+    // ─── gate 0: dataset · gate 1: time ───────────────────────────────────────
+    // The dataset gate is enforced in the QUERY, not by filtering afterwards:
+    // a candidate from another namespace must never be considered at all. A
+    // replayed drill and the live picture can hold byte-identical reports, and
+    // if they could cluster together a demonstration would silently corroborate
+    // a real event — the exact failure this system exists to prevent.
     const candidates = await getActiveGroupsUseCase({
       level: INCIDENT_LEVEL,
+      datasetId: signal.datasetId,
       since: new Date(signal.occurredAt.getTime() - SIMILARITY_WINDOW_MS),
       limit: CANDIDATE_LIMIT,
       log,
@@ -165,6 +194,7 @@ export const assignSignalUseCase = createUseCase(
     } else {
       const created = await createGroupUseCase({
         level: INCIDENT_LEVEL,
+        datasetId: signal.datasetId,
         centroidEmbedding: signal.embedding,
         centroidLat: signal.lat,
         centroidLng: signal.lng,
@@ -203,6 +233,7 @@ export const assignSignalUseCase = createUseCase(
       // O(1) centroid update on the hot path: the members' 1536-float vectors
       // are equivalent input, they are just far more of them to add up.
       centroid: runningCentroid(previousCentroid, previousMass, signal.embedding),
+      now: at,
     });
 
     const updated = await updateGroupUseCase({ id: groupId, ...folded, log });
@@ -278,6 +309,8 @@ function foldGroup(input: {
   members: Signal[];
   annotations: Annotation[];
   centroid: number[];
+  /** Never `Date.now()` in here — replay reproduces a ranking only if this is a parameter. */
+  now: Date;
 }): {
   centroidEmbedding: number[];
   centroidLat: number | null;
@@ -286,6 +319,7 @@ function foldGroup(input: {
   velocity: number;
   sourceDiversity: number;
   verification: Verification;
+  score: number;
   firstSeen: Date;
   lastSeen: Date;
 } {
@@ -314,11 +348,23 @@ function foldGroup(input: {
       .map((a) => a.nodeId),
   );
 
+  // Mass, decayed by how long ago the bubble last heard anything. Two numbers,
+  // both readable off the board — and the sentence that produced them is stored
+  // alongside, because a queue nobody can audit is a queue nobody will act on.
+  const mass = members.length;
+  const ageMs = Math.max(0, input.now.getTime() - lastSeen);
+  const recency = 0.5 ** (ageMs / SCORE_HALF_LIFE_MS);
+  const score = mass * recency;
+  const scoreBreakdown =
+    `mass ${mass} × recency ${recency.toFixed(3)} ` +
+    `(last report ${formatDuration(ageMs)} ago, ${formatDuration(SCORE_HALF_LIFE_MS)} half-life) ` +
+    `= ${score.toFixed(2)}`;
+
   return {
     centroidEmbedding: input.centroid,
     centroidLat: centre.length === 2 ? centre[0] : null,
     centroidLng: centre.length === 2 ? centre[1] : null,
-    mass: members.length,
+    mass,
     // Members inside the last hour of the bubble's OWN clock — occurred_at, not
     // wall clock, so replay and live produce identical numbers.
     velocity: times.filter((t) => t >= lastSeen - VELOCITY_WINDOW_MS).length,
@@ -334,7 +380,9 @@ function foldGroup(input: {
       sourceClasses,
       distinctSources: new Set(members.map((m) => m.source)).size,
       distinctSourceClasses: sourceClasses.length,
+      scoreBreakdown,
     },
+    score,
     firstSeen: new Date(firstSeen),
     lastSeen: new Date(lastSeen),
   };

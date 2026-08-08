@@ -18,14 +18,24 @@ export const getGroupsUseCase = createUseCase(
       level: z.number().int().positive(),
       from: z.date(),
       to: z.date(),
+      /** Optional here: a read may look at a replay. A FOLD never mixes two. */
+      datasetId: z.string().min(1).optional(),
       limit: z.number().int().positive(),
     }),
     outputSchema: z.array(GroupSchema),
   },
-  async ({ success, queryClient }, { level, from, to, limit }) => {
+  async ({ success, queryClient }, { level, from, to, datasetId, limit }) => {
     const rows = await queryClient.fetchQuery({
-      queryKey: ["groups", "inWindow", level, from.toISOString(), to.toISOString(), limit],
-      queryFn: () => getGroupsRepo({ db, level, from, to, limit }),
+      queryKey: [
+        "groups",
+        "inWindow",
+        level,
+        from.toISOString(),
+        to.toISOString(),
+        datasetId ?? null,
+        limit,
+      ],
+      queryFn: () => getGroupsRepo({ db, level, from, to, datasetId, limit }),
     });
     return success(rows);
   },

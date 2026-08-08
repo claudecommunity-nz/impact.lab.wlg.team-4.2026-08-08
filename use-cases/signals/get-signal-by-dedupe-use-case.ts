@@ -16,14 +16,24 @@ export const getSignalByDedupeUseCase = createUseCase(
   {
     id: "get-signal-by-dedupe",
     inputSchema: z.object({
+      datasetId: z.string().min(1),
       source: z.string().min(1),
       text: z.string().min(1),
       occurredAt: z.date(),
+      /** Present = the strong key wins and text/occurredAt are not consulted. */
+      externalId: z.string().optional(),
     }),
     outputSchema: SignalSchema.nullable(),
   },
-  async ({ success }, { source, text, occurredAt }) => {
-    const signal = await getSignalByDedupeRepo({ db, source, text, occurredAt });
+  async ({ success }, { datasetId, source, text, occurredAt, externalId }) => {
+    const signal = await getSignalByDedupeRepo({
+      db,
+      datasetId,
+      source,
+      text,
+      occurredAt,
+      externalId,
+    });
     return success(signal);
   },
 );

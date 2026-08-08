@@ -22,6 +22,13 @@ export const createSignalUseCase = createUseCase(
       lat: z.number().optional(),
       lng: z.number().optional(),
       geoConfidence: z.number().optional(),
+      /** The namespace. Required — a row without one could cluster across datasets. */
+      datasetId: z.string().min(1),
+      externalId: z.string().optional(),
+      author: z.string().optional(),
+      url: z.string().optional(),
+      quotedUrls: z.array(z.string()).optional(),
+      synthetic: z.boolean().optional(),
       annotations: z.array(
         z.object({
           key: z.string().min(1),
@@ -34,6 +41,8 @@ export const createSignalUseCase = createUseCase(
     outputSchema: z.object({
       signal: SignalSchema,
       annotations: z.array(AnnotationSchema),
+      /** false = the unique dedupe index refused this write and we re-read the winner. */
+      created: z.boolean(),
     }),
   },
   async ({ success }, args) => {
@@ -48,6 +57,12 @@ export const createSignalUseCase = createUseCase(
         lat: args.lat ?? null,
         lng: args.lng ?? null,
         geoConfidence: args.geoConfidence ?? null,
+        datasetId: args.datasetId,
+        externalId: args.externalId ?? null,
+        author: args.author ?? null,
+        url: args.url ?? null,
+        quotedUrls: args.quotedUrls ?? null,
+        synthetic: args.synthetic ?? false,
       },
       annotations: args.annotations,
     });

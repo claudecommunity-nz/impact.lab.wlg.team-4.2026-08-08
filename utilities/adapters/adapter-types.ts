@@ -13,8 +13,10 @@ import type { IncomingAnnotation, IncomingSignal } from "@/db/vocabulary";
  * degrades into `{ ok: false, reason }` and the batch keeps going.
  *
  * These are pure functions — no IO, no db, no logging — with zod and
- * `db/vocabulary` as their only imports. They live next to the pollers that
- * feed them, and any layer may import them.
+ * `db/vocabulary` as their only imports. They live in `utilities/` because BOTH
+ * halves of the intake need them and the dependency table only lets them meet
+ * here: `use-cases/` (the push path) and `workflows/` (the pull path) may each
+ * import `utilities/`, and neither may import the other's layer.
  */
 export type AdapterResult =
   | { ok: true; signal: IncomingSignal }

@@ -19,6 +19,8 @@ export const createGroupUseCase = createUseCase(
       velocity: z.number().optional(),
       sourceDiversity: z.number().int().optional(),
       verification: VerificationSchema.nullable().optional(),
+      /** Required: a bubble that did not know its namespace could cluster across one. */
+      datasetId: z.string().min(1),
       firstSeen: z.date().optional(),
       lastSeen: z.date().optional(),
     }),
@@ -30,6 +32,7 @@ export const createGroupUseCase = createUseCase(
         db,
         group: {
           level: args.level,
+          datasetId: args.datasetId,
           centroidEmbedding: args.centroidEmbedding ?? null,
           centroidLat: args.centroidLat ?? null,
           centroidLng: args.centroidLng ?? null,

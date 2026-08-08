@@ -64,8 +64,40 @@ export const ANNOTATION_KEY_SUGGESTIONS = [
 /** Written by the ingest rule when occurred_at was absent and defaulted to now. */
 export const ASSUMED_OCCURRED_AT_KEY = "assumed_occurred_at";
 
+/**
+ * The item's own link. It is BOTH a column (origin fingerprinting joins on it)
+ * and an annotation (other teams already read it there). Duplicated on purpose:
+ * a published key is a promise, and tidiness is not a reason to break one.
+ */
+export const SOURCE_URL_KEY = "source_url";
+
+/** Marks an item authored for a demo or a drill, so provenance can always say so. */
+export const SYNTHETIC_KEY = "synthetic";
+
+/** Which embedder placed this item — a lexical stub and a real model are not one claim. */
+export const EMBEDDING_MODEL_KEY = "embedding_model";
+
+/** Written when the derived sentence hit MAX_TEXT_LENGTH — `raw` still has it all. */
+export const TEXT_TRUNCATED_KEY = "text_truncated";
+
+/**
+ * Written when coordinates were present but outside WGS84 range, so they were
+ * NOT stored as lat/lng. The values survive in `raw`; this says we refused them.
+ */
+export const GEO_DROPPED_KEY = "geo_dropped";
+
+/**
+ * Written when NUL bytes (U+0000) were removed from the payload. Postgres
+ * `text` and `jsonb` both reject U+0000 outright, so keeping it would mean
+ * failing the whole item; we remove it (replacing with nothing) and say so.
+ */
+export const NUL_BYTES_STRIPPED_KEY = "nul_bytes_stripped";
+
 /** Annotation values are text; absurd payload values are truncated, not dropped. */
 export const MAX_ANNOTATION_VALUE_LENGTH = 2000;
+
+/** The stored sentence is capped; the overflow lives on in `raw`, never lost. */
+export const MAX_TEXT_LENGTH = 4000;
 
 // ─── jsonb contracts ──────────────────────────────────────────────────────────
 
@@ -95,6 +127,8 @@ export const VerificationSchema = z.looseObject({
   meanConfidence: z.number().nullable().optional(),
   /** The distinct source_class values behind the bubble, for the diversity axis. */
   sourceClasses: z.array(z.string()).optional(),
+  /** How `groups.score` was arrived at, in words — a rank nobody can read is a rank nobody trusts. */
+  scoreBreakdown: z.string().optional(),
 });
 export type Verification = z.infer<typeof VerificationSchema>;
 
@@ -103,6 +137,80 @@ export const VERIFIED_KEY = "verified";
 export const CONFIDENCE_KEY = "confidence";
 /** Values counted as an assertion of verification (case-insensitive). */
 export const VERIFIED_TRUE_VALUES = ["true", "yes", "1", "confirmed", "verified"] as const;
+
+// ─── datasets ─────────────────────────────────────────────────────────────────
+//
+// A dataset NAMESPACES everything: items, clusters and grade events all carry
+// one, and clustering never crosses datasets. `live` is the real world; a
+// replay, a drill or a fixture set gets its own name, so a demo can never leak
+// fabricated corroboration into the operational picture.
+
+/** The default namespace — what an item with no `datasetId` belongs to. */
+export const DATASET_LIVE = "live";
+
+// ─── the Admiralty grade ──────────────────────────────────────────────────────
+//
+// Two independent axes, never blended into one number. A single percentage is
+// false precision and is explicitly rejected: an operator must be able to see
+// "a reliable source said something we cannot corroborate" as a DIFFERENT state
+// from "an unknown source said something three others confirm".
+
+/** Source reliability A (completely reliable) → F (cannot be judged). */
+export const SOURCE_RELIABILITY = ["A", "B", "C", "D", "E", "F"] as const;
+export type SourceReliability = (typeof SOURCE_RELIABILITY)[number];
+
+/**
+ * A source we have never met is F — "reliability cannot be judged" — never a
+ * middle grade. Absence of evidence about a source is not evidence of mediocrity.
+ */
+export const DEFAULT_SOURCE_RELIABILITY: SourceReliability = "F";
+
+/**
+ * Information credibility 1–6. **1 is unreachable by code**: "confirmed by other
+ * sources" is a human's word, not a machine's, so the grading module throws
+ * rather than ever writing it, and `groups.confirmed_by` is only ever set by a
+ * person.
+ */
+export const INFO_CREDIBILITY_LABELS: Record<number, string> = {
+  1: "confirmed by other sources",
+  2: "probably true",
+  3: "possibly true",
+  4: "doubtful",
+  5: "improbable",
+  6: "truth cannot be judged",
+};
+
+export const SOURCE_RELIABILITY_LABELS: Record<SourceReliability, string> = {
+  A: "completely reliable",
+  B: "usually reliable",
+  C: "fairly reliable",
+  D: "not usually reliable",
+  E: "unreliable",
+  F: "reliability cannot be judged",
+};
+
+/** The one place a grade becomes a sentence — "C3 — fairly reliable / possibly true". */
+export function renderGradeLabel(reliability: SourceReliability, credibility: number): string {
+  return `${reliability}${credibility} — ${SOURCE_RELIABILITY_LABELS[reliability]} / ${
+    INFO_CREDIBILITY_LABELS[credibility] ?? "unknown credibility"
+  }`;
+}
+
+/** groups.grade / grade_events.to_grade — the published verdict, never a score. */
+export const GradeSchema = z.object({
+  sourceReliability: z.enum(SOURCE_RELIABILITY),
+  /** 1–6. 1 is never machine-written. */
+  infoCredibility: z.number().int().min(1).max(6),
+  /** Both axes rendered together for a human. */
+  label: z.string(),
+});
+export type Grade = z.infer<typeof GradeSchema>;
+
+/** groups.reasons / grade_events.reasons — ordered, most decisive first. */
+export const ReasonsSchema = z.array(z.string());
+
+/** The reason the phase-A placeholder grader writes, so nobody mistakes it for the rule table. */
+export const GRADING_STUB_REASON = "stub: grading module pending";
 
 /** projection_models.model — kind-specific fitted parameters (e.g. PCA basis). */
 export const ProjectionModelPayloadSchema = z.record(z.string(), z.unknown());
@@ -151,6 +259,18 @@ export const IncomingSignalSchema = z.object({
   sourceClass: z.string().min(1),
   /** The honest sentence. Text is the universal interface. */
   text: z.string().min(1),
+  /** Namespace: live vs replay vs fixtures. Clustering never crosses datasets. */
+  datasetId: z.string().min(1).default(DATASET_LIVE),
+  /** The collector's own stable id for this item — the strong dedupe key. */
+  externalId: z.string().min(1).optional(),
+  /** Who wrote it, if the source distinguishes accounts (origin fingerprinting). */
+  author: z.string().min(1).optional(),
+  /** Canonical link to the item itself — what another item's `quotedUrls` points at. */
+  url: z.string().min(1).optional(),
+  /** Links this item quotes/retweets — how a repost inherits an origin. */
+  quotedUrls: z.array(z.string().min(1)).default([]),
+  /** Authored for a demo or a drill. Carried to every provenance entry, always. */
+  synthetic: z.boolean().default(false),
   /** Optional: defaults to now at ingest, with an assumed_occurred_at annotation. */
   occurredAt: z.date().optional(),
   lat: z.number().min(-90).max(90).optional(),

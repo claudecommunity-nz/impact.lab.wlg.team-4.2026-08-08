@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { EmbeddingSchema, VerificationSchema } from "@/db/vocabulary";
+import { EmbeddingSchema, GradeSchema, VerificationSchema } from "@/db/vocabulary";
 
 /**
  * A bubble, at any depth — level 1 = incidents (signals inside), level 2 =
@@ -20,7 +20,18 @@ export const GroupSchema = z.object({
   /** COUNT(DISTINCT source_class) across members — the diversity axis. */
   sourceDiversity: z.number().int(),
   verification: VerificationSchema.nullable(),
+  /** INTERNAL ordering key. Stripped from every published response (Decision 3). */
   score: z.number(),
+  /** The namespace this cluster lives in. */
+  datasetId: z.string(),
+  /** Admiralty grade — null until the cluster has been graded once. */
+  grade: GradeSchema.nullable(),
+  /** Ordered reasons behind that grade, most decisive first. */
+  reasons: z.array(z.string()).nullable(),
+  /** Computed independently of the grade — a weak early signal still alerts. */
+  alertWorthy: z.boolean(),
+  /** A person's name, or null. Never machine-set. */
+  confirmedBy: z.string().nullable(),
   firstSeen: z.coerce.date(),
   lastSeen: z.coerce.date(),
   updatedAt: z.coerce.date(),

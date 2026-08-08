@@ -16,11 +16,13 @@ export const getActiveGroupsUseCase = createUseCase(
     id: "get-active-groups",
     inputSchema: z.object({
       level: z.number().int().positive(),
+      /** Required: clustering never crosses datasets (convergence Decision 4). */
+      datasetId: z.string().min(1),
       since: z.date(),
       limit: z.number().int().positive(),
     }),
     outputSchema: z.array(GroupSchema),
   },
-  async ({ success }, { level, since, limit }) =>
-    success(await getActiveGroupsRepo({ db, level, since, limit })),
+  async ({ success }, { level, datasetId, since, limit }) =>
+    success(await getActiveGroupsRepo({ db, level, datasetId, since, limit })),
 );

@@ -46,8 +46,14 @@ Both come from `utilities/query-client.ts`. No hand-written query keys anywhere.
 | `use-cases/` (business logic) | other use cases, `utilities/` | repos, raw SDKs, `trpc/` |
 | `repositories/` | `db`, own entity schema | anything upward |
 | `workflows/` | `use-cases/`, `utilities/` | React, `app/`, `trpc/` |
+| `utilities/` | `db/vocabulary`, zod — pure functions only | repos, use cases, `trpc/`, React |
 
 Lower layers never import upward. If you feel the need, the logic is in the wrong layer.
+
+`utilities/` is where two layers that may not import each other meet. The intake
+adapters (`utilities/adapters/`) are the worked example: the push path lives in
+`use-cases/signals/` and the pull path in `workflows/`, and both need the same
+pure adapter — so it sits in the one folder both are allowed to import.
 
 ## File naming
 

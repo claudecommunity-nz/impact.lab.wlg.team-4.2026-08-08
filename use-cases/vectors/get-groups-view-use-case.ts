@@ -45,7 +45,14 @@ export const GroupViewSchema = z.object({
   velocity: z.number(),
   /** COUNT(DISTINCT source_class) — how independent the corroboration is. */
   sourceDiversity: z.number().int(),
-  /** Counts of corroboration, never a verdict. Null before the first fold. */
+  /**
+   * Counts of corroboration, never a verdict. Null before the first fold.
+   *
+   * `scoreBreakdown` inside it is the ONE thing said about ranking: bubbles come
+   * back highest-`score` first, and that sentence is the arithmetic behind the
+   * order. The score itself stays internal — a single blended number invites
+   * exactly the false precision this problem statement is wary of.
+   */
   verification: VerificationSchema.nullable(),
   /** Null until the pipeline names it — never invent a name at read time. */
   label: z.string().nullable(),

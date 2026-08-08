@@ -1,5 +1,6 @@
 import { sql } from "drizzle-orm";
 import {
+  boolean,
   doublePrecision,
   index,
   integer,
@@ -12,7 +13,14 @@ import {
   uniqueIndex,
   uuid,
 } from "drizzle-orm/pg-core";
-import type { Embedding, ProjectionModelPayload, Verification } from "./vocabulary";
+import {
+  DATASET_LIVE,
+  DEFAULT_SOURCE_RELIABILITY,
+  type Embedding,
+  type Grade,
+  type ProjectionModelPayload,
+  type Verification,
+} from "./vocabulary";
 
 /**
  * Example entity — the reference implementation the docs walk through.
@@ -58,12 +66,120 @@ export const signals = pgTable(
     geoConfidence: real("geo_confidence"),
     /** No pgvector: plain number[] in jsonb, similarity computed in-process. */
     embedding: jsonb("embedding").$type<Embedding>(),
+
+    // ─── the namespace and the identity fields ────────────────────────────────
+    /**
+     * live | replay-… | fixtures-… — the namespace this observation belongs to.
+     * Clustering never crosses datasets, so a drill can never corroborate a real
+     * event and a demo can never leak fabricated evidence into the live picture.
+     */
+    datasetId: text("dataset_id").notNull().default(DATASET_LIVE),
+    /** The collector's own stable id. Present = the strong dedupe key (D4). */
+    externalId: text("external_id"),
+    /** Account/byline, where the source distinguishes them — origin fingerprinting. */
+    author: text("author"),
+    /** Canonical link to this item, so another item quoting it can inherit its origin. */
+    url: text("url"),
+    /** Links this item quotes or reposts. A repost is not an independent observation. */
+    quotedUrls: jsonb("quoted_urls").$type<string[]>(),
+    /** Authored for a demo or drill. Carried to every provenance entry, always. */
+    synthetic: boolean("synthetic").notNull().default(false),
   },
   (t) => [
     index("signals_occurred_at_idx").on(t.occurredAt),
     index("signals_ingested_at_idx").on(t.ingestedAt),
-    // Dedupe lookup: source + text + occurred_at.
-    index("signals_dedupe_idx").on(t.source, t.occurredAt),
+    index("signals_dataset_id_idx").on(t.datasetId),
+    // Dedupe lookup: dataset + source + occurred_at.
+    index("signals_dedupe_idx").on(t.datasetId, t.source, t.occurredAt),
+
+    // ─── dedupe, enforced (convergence Decision 4) ────────────────────────────
+    //
+    // TWO partial unique indexes, because there are two honest answers to "is
+    // this the same item?" and neither covers the other:
+    //
+    //   1. the collector gave it a stable id — then that id IS identity, and
+    //      the same story re-titled or re-timed is still one item;
+    //   2. it did not — then the only identity we have is what was said, by
+    //      whom, when.
+    //
+    // They are `where`-partitioned on `external_id` so exactly one applies to
+    // any row: an item with an id is never also deduped by its text, which
+    // would wrongly collapse two genuine updates that happen to read alike.
+    //
+    // Enforced rather than merely looked up, because SELECT-then-INSERT is a
+    // race: ten simultaneous deliveries of one report all miss the select and
+    // all insert, inflating a cluster's mass AND its independent-source count —
+    // exactly the harm dedupe exists to prevent.
+    //
+    // md5(text) because `text` runs to 4000 chars and a btree tuple stops at 2704.
+    uniqueIndex("signals_external_id_uniq")
+      .on(t.datasetId, t.source, t.externalId)
+      .where(sql`${t.externalId} is not null`),
+    uniqueIndex("signals_text_dedupe_uniq")
+      .on(t.datasetId, t.source, sql`md5(${t.text})`, t.occurredAt)
+      .where(sql`${t.externalId} is null`),
+  ],
+);
+
+/**
+ * The source registry — who we have met, and how reliable they have proved.
+ *
+ * Deliberately a TABLE, not a constant: an operator adding "this account has
+ * been right all week" is the cheapest real improvement to grading there is,
+ * and it must not need a deploy. A source ABSENT from the registry grades F
+ * ("reliability cannot be judged") — never a middle grade, because knowing
+ * nothing about a source is not the same as knowing it is mediocre.
+ */
+export const sourceRegistry = pgTable(
+  "source_registry",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    /** Matches `signals.source` exactly — the join key, lowercased by convention. */
+    sourceId: text("source_id").notNull(),
+    name: text("name").notNull(),
+    /** A–F. Default F: unknown until shown otherwise. */
+    reliability: text("reliability").notNull().default(DEFAULT_SOURCE_RELIABILITY),
+    /** official | media | social | sensor | community — open text, like source_class. */
+    kind: text("kind").notNull().default("unknown"),
+    /** Why this source has this grade, in words. A grade nobody can audit is a guess. */
+    notes: text("notes"),
+    updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => [uniqueIndex("source_registry_source_id_uniq").on(t.sourceId)],
+);
+
+/**
+ * Every grade transition a cluster has ever made — APPEND ONLY.
+ *
+ * Never updated, never deleted. Two reasons, both operational: the `asAt` grade
+ * is "the last event at or before that instant", so a time-scrubbed map needs
+ * the history rather than the current row; and an alert is emitted on a
+ * TRANSITION, not on a state, so the thing that fired has to be a record.
+ */
+export const gradeEvents = pgTable(
+  "grade_events",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    /** The cluster (groups.id) — published as `signalId`. No FK, like every edge here. */
+    groupId: uuid("group_id").notNull(),
+    datasetId: text("dataset_id").notNull().default(DATASET_LIVE),
+    /** null on the first grade a cluster is ever given. */
+    fromGrade: jsonb("from_grade").$type<Grade>(),
+    toGrade: jsonb("to_grade").$type<Grade>().notNull(),
+    at: timestamp("at", { withTimezone: true }).notNull().defaultNow(),
+    /** Distinct origins behind the cluster at this transition — never the item count. */
+    independentSources: integer("independent_sources").notNull().default(0),
+    itemCount: integer("item_count").notNull().default(0),
+    /** The ordered reasons, reproduced verbatim from the grading module. */
+    reasons: jsonb("reasons").$type<string[]>().notNull(),
+    /** True when this transition raised an alert — alerts are transitions, not states. */
+    alertFired: boolean("alert_fired").notNull().default(false),
+    alertReasons: jsonb("alert_reasons").$type<string[]>(),
+  },
+  (t) => [
+    index("grade_events_group_id_idx").on(t.groupId),
+    index("grade_events_at_idx").on(t.at),
+    index("grade_events_dataset_at_idx").on(t.datasetId, t.at),
   ],
 );
 
@@ -138,8 +254,31 @@ export const groups = pgTable(
     /** COUNT(DISTINCT source_class) across members. */
     sourceDiversity: integer("source_diversity").notNull().default(0),
     verification: jsonb("verification").$type<Verification>(),
-    /** Ranking score for the queue. */
+    /**
+     * INTERNAL ordering key only (convergence Decision 3). Never published: a
+     * blended confidence number is exactly the false precision this system
+     * exists to refuse. It ranks a queue; it never tells anyone what to believe.
+     */
     score: real("score").notNull().default(0),
+
+    // ─── the published verdict ────────────────────────────────────────────────
+    /** The namespace this cluster lives in. Clustering never crosses datasets. */
+    datasetId: text("dataset_id").notNull().default(DATASET_LIVE),
+    /** Admiralty {sourceReliability, infoCredibility, label}. Null before first grading. */
+    grade: jsonb("grade").$type<Grade>(),
+    /** Ordered, most decisive first — the sentences behind the grade. */
+    reasons: jsonb("reasons").$type<string[]>(),
+    /**
+     * Computed INDEPENDENTLY of the grade. The whole point: in hour zero there
+     * are no independent origins yet, so the first report of anything grades
+     * badly — and must still wake somebody, WITH its weakness stated.
+     */
+    alertWorthy: boolean("alert_worthy").notNull().default(false),
+    /**
+     * A person's name, or null. Never machine-set: "confirmed" (credibility 1)
+     * is a human's word. The grading module throws rather than write it.
+     */
+    confirmedBy: text("confirmed_by"),
     firstSeen: timestamp("first_seen", { withTimezone: true }).notNull().defaultNow(),
     lastSeen: timestamp("last_seen", { withTimezone: true }).notNull().defaultNow(),
     updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
@@ -148,6 +287,7 @@ export const groups = pgTable(
     index("groups_level_idx").on(t.level),
     index("groups_last_seen_idx").on(t.lastSeen),
     index("groups_score_idx").on(t.score),
+    index("groups_dataset_id_idx").on(t.datasetId),
   ],
 );
 
