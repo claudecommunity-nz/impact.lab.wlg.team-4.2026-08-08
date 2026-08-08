@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { ChevronDown, Layers } from "lucide-react";
+import { ChevronDown, Layers, Loader2 } from "lucide-react";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { Button } from "@/components/ui/button";
 import type { MapLayer } from "@/use-cases/gis/map-layer-schema";
@@ -22,16 +22,28 @@ import { paintFor } from "./layer-paint";
  * Collapsible because it sits over the top-left of the map and hides the city
  * underneath it.
  */
+/**
+ * Swatch shapes, mirroring the markers drawn on the map. "block" is the
+ * fallback for polygon and line layers, which have no marker of their own.
+ */
+const SWATCH_SHAPE: Record<string, string> = {
+  block: "rounded-sm",
+  square: "rounded-[3px]",
+  circle: "rounded-full",
+};
+
 export function MapLegend({
   layers,
   hiddenDatasetIds,
   onToggleDataset,
   failedDatasetIds,
+  pendingCount,
 }: {
   layers: MapLayer[];
   hiddenDatasetIds: ReadonlySet<string>;
   onToggleDataset: (datasetId: string) => void;
   failedDatasetIds: readonly string[];
+  pendingCount: number;
 }) {
   const [open, setOpen] = useState(true);
 
@@ -74,7 +86,9 @@ export function MapLegend({
                 className="h-auto w-full justify-start gap-2 px-1.5 py-1 font-normal"
               >
                 <span
-                  className="size-3 shrink-0 rounded-sm border"
+                  // The swatch takes the layer's marker shape, so the key
+                  // describes what is actually drawn rather than a generic box.
+                  className={`size-3 shrink-0 border ${SWATCH_SHAPE[paint.marker ?? "block"]}`}
                   style={{
                     // Hollow when off, so the swatch shows the state at a glance
                     // and still identifies the colour it will come back as.
@@ -121,6 +135,15 @@ export function MapLegend({
             </div>
           );
         })}
+
+        {/* Layers stream in, so say what's still coming rather than leaving a
+            gap the reader might take for "there is nothing here". */}
+        {pendingCount > 0 && (
+          <p className="text-muted-foreground flex items-center gap-1.5 px-1.5 pt-1 text-[11px]">
+            <Loader2 className="size-3 animate-spin" aria-hidden />
+            Loading {pendingCount} more {pendingCount === 1 ? "layer" : "layers"}…
+          </p>
+        )}
 
         {/* A layer that failed to load is a hole in the picture, so it gets
             named rather than just going missing. */}
