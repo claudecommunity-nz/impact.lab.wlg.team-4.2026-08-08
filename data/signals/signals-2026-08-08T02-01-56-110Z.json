@@ -1,0 +1,5453 @@
+{
+  "generatedAt": "2026-08-08T02:01:56.110Z",
+  "itemCount": 130,
+  "provenance": {
+    "description": "Public signals collected from official feeds and social media for the Wellington Impact Lab prototype.",
+    "caveat": "Signals are unverified indicators for an intelligence team to investigate. Social media content is never confirmed fact. Not an operational emergency source — in an emergency, call 111.",
+    "sourceCounts": {
+      "bluesky-search": 2,
+      "reddit-r-wellington": 25,
+      "wellington-water-faults": 98,
+      "geonet-quakes": 4,
+      "geonet-felt-reports": 1
+    },
+    "sourceClassCounts": {
+      "social": 27,
+      "community_report": 99,
+      "official_feed": 4
+    }
+  },
+  "items": [
+    {
+      "text": "📢 Wellington residents forced out of their homes due to storm damage have been landed with bills from Tiaki Wai - despite not using any water.",
+      "source": "bluesky-search",
+      "sourceClass": "social",
+      "occurredAt": "2026-08-05T18:35:21.125Z",
+      "externalId": "at://did:plc:rtp3l74ewza3fj3xawe7vwc5/app.bsky.feed.post/3mse66emmob22",
+      "author": "anon-9ba2418ae0dd",
+      "url": "https://bsky.app/profile/radionz.nzcow.com/post/3mse66emmob22",
+      "quotedUrls": [
+        "https://www.rnz.co.nz/news/regions_wellington/901241/tiaki-wai-apologises-after-wellington-residents-fight-bills-for-water-they-can-t-use"
+      ],
+      "annotations": [
+        {
+          "key": "location_method",
+          "value": "none"
+        },
+        {
+          "key": "text_generated",
+          "value": "false"
+        },
+        {
+          "key": "limitation",
+          "value": "Unverified public social media post — a signal to investigate, not confirmed fact."
+        },
+        {
+          "key": "limitation",
+          "value": "No location could be determined from this post."
+        }
+      ],
+      "datasetId": "live",
+      "synthetic": false,
+      "hazardType": "other",
+      "mediaType": "link",
+      "collectedAt": "2026-08-08T02:01:56.067Z",
+      "authorIsPseudonymised": true,
+      "textGenerated": false
+    },
+    {
+      "text": "Tiaki Wai apologises after Wellington residents fight bills for water they can't use",
+      "source": "bluesky-search",
+      "sourceClass": "social",
+      "occurredAt": "2026-08-05T18:35:13.000Z",
+      "externalId": "at://did:plc:yz3mevhw47d6mkipfl2fhelz/app.bsky.feed.post/3mse667hw742c",
+      "author": "anon-0670cb7699e4",
+      "url": "https://bsky.app/profile/rnzrss.bsky.social/post/3mse667hw742c",
+      "quotedUrls": [
+        "https://www.rnz.co.nz/news/regions_wellington/901241/tiaki-wai-apologises-after-wellington-residents-fight-bills-for-water-they-can-t-use"
+      ],
+      "annotations": [
+        {
+          "key": "location_method",
+          "value": "none"
+        },
+        {
+          "key": "text_generated",
+          "value": "false"
+        },
+        {
+          "key": "limitation",
+          "value": "Unverified public social media post — a signal to investigate, not confirmed fact."
+        },
+        {
+          "key": "limitation",
+          "value": "No location could be determined from this post."
+        }
+      ],
+      "datasetId": "live",
+      "synthetic": false,
+      "hazardType": "other",
+      "mediaType": "link",
+      "collectedAt": "2026-08-08T02:01:56.067Z",
+      "authorIsPseudonymised": true,
+      "textGenerated": false
+    },
+    {
+      "text": "Wellington specific gift — I&#39;ve been living in Wellington the last five years and am heading overseas in a few weeks time. My friends have gotten me some sweet gifts, but I want to buy myself a trinket, art piece, or something else specific to Wellington to remind me of my time here. Any suggestions? &#32; submitted by &#32; /u/RetroSuns [link] &#32; [comments]",
+      "source": "reddit-r-wellington",
+      "sourceClass": "social",
+      "occurredAt": "2026-08-08T01:12:45.000Z",
+      "externalId": "t3_1viif1g",
+      "author": "anon-454414abc824",
+      "url": "https://www.reddit.com/r/Wellington/comments/1viif1g/wellington_specific_gift/",
+      "annotations": [
+        {
+          "key": "location_method",
+          "value": "none"
+        },
+        {
+          "key": "text_generated",
+          "value": "false"
+        },
+        {
+          "key": "limitation",
+          "value": "Unverified public social media post — a signal to investigate, not confirmed fact."
+        },
+        {
+          "key": "limitation",
+          "value": "No location could be determined from this post."
+        }
+      ],
+      "datasetId": "live",
+      "synthetic": false,
+      "hazardType": "other",
+      "mediaType": "link",
+      "collectedAt": "2026-08-08T02:01:56.084Z",
+      "authorIsPseudonymised": true,
+      "textGenerated": false
+    },
+    {
+      "text": "Mattress disposal in Lower Hutt — I have a single mattress that I want to get rid of. Do you know if Seaview Landfill accepts mattresses? Or is there anywhere else I could take it? Thanks &#32; submitted by &#32; /u/Strong-Brilliant-391 [link] &#32; [comments]",
+      "source": "reddit-r-wellington",
+      "sourceClass": "social",
+      "occurredAt": "2026-08-08T00:54:16.000Z",
+      "externalId": "t3_1vii1aa",
+      "author": "anon-c9303f7a579b",
+      "url": "https://www.reddit.com/r/Wellington/comments/1vii1aa/mattress_disposal_in_lower_hutt/",
+      "lat": -41.2088,
+      "lng": 174.9165,
+      "geoConfidence": 0.4,
+      "annotations": [
+        {
+          "key": "location_text",
+          "value": "lower hutt"
+        },
+        {
+          "key": "location_method",
+          "value": "place-name"
+        },
+        {
+          "key": "text_generated",
+          "value": "false"
+        },
+        {
+          "key": "limitation",
+          "value": "Unverified public social media post — a signal to investigate, not confirmed fact."
+        },
+        {
+          "key": "limitation",
+          "value": "Location inferred from the words \"lower hutt\" in the post text, not from GPS. Approximate suburb centroid."
+        }
+      ],
+      "datasetId": "live",
+      "synthetic": false,
+      "hazardType": "other",
+      "mediaType": "link",
+      "collectedAt": "2026-08-08T02:01:56.084Z",
+      "authorIsPseudonymised": true,
+      "textGenerated": false
+    },
+    {
+      "text": "Family bike trip from Naenae to Eastbourne! — To go to the second hand book fair which is on right now! https://events.huttcity.govt.nz/event?id=244000 &#32; submitted by &#32; /u/MassiveGarlic0312 [link] &#32; [comments]",
+      "source": "reddit-r-wellington",
+      "sourceClass": "social",
+      "occurredAt": "2026-08-08T00:43:19.000Z",
+      "externalId": "t3_1viht5w",
+      "author": "anon-bdd35d4605b7",
+      "url": "https://www.reddit.com/r/Wellington/comments/1viht5w/family_bike_trip_from_naenae_to_eastbourne/",
+      "quotedUrls": [
+        "https://preview.redd.it/wl0h18wqr1ih1.jpeg?width=640&amp;crop=smart&amp;auto=webp&amp;s=b7952248c1fdae28966a83b212a2503edb86f227",
+        "https://events.huttcity.govt.nz/event?id=244000",
+        "https://i.redd.it/wl0h18wqr1ih1.jpeg"
+      ],
+      "lat": -41.2916,
+      "lng": 174.9033,
+      "geoConfidence": 0.4,
+      "annotations": [
+        {
+          "key": "location_text",
+          "value": "eastbourne"
+        },
+        {
+          "key": "location_method",
+          "value": "place-name"
+        },
+        {
+          "key": "text_generated",
+          "value": "false"
+        },
+        {
+          "key": "limitation",
+          "value": "Unverified public social media post — a signal to investigate, not confirmed fact."
+        },
+        {
+          "key": "limitation",
+          "value": "Location inferred from the words \"eastbourne\" in the post text, not from GPS. Approximate suburb centroid."
+        }
+      ],
+      "datasetId": "live",
+      "synthetic": false,
+      "hazardType": "other",
+      "mediaType": "photo",
+      "collectedAt": "2026-08-08T02:01:56.084Z",
+      "authorIsPseudonymised": true,
+      "textGenerated": false
+    },
+    {
+      "text": "Swim shorts? — Anyone know where I can find men&#39;s swim shorts in Welly at this time of year? Pool doesn&#39;t care that it&#39;s cold outside but all the usual stores around Cuba and Lambton aren&#39;t carrying any right now. &#32; submitted by &#32; /u/KDBA [link] &#32; [comments]",
+      "source": "reddit-r-wellington",
+      "sourceClass": "social",
+      "occurredAt": "2026-08-08T00:20:14.000Z",
+      "externalId": "t3_1vihbo4",
+      "author": "anon-4e2b0051141c",
+      "url": "https://www.reddit.com/r/Wellington/comments/1vihbo4/swim_shorts/",
+      "annotations": [
+        {
+          "key": "location_method",
+          "value": "none"
+        },
+        {
+          "key": "text_generated",
+          "value": "false"
+        },
+        {
+          "key": "limitation",
+          "value": "Unverified public social media post — a signal to investigate, not confirmed fact."
+        },
+        {
+          "key": "limitation",
+          "value": "No location could be determined from this post."
+        }
+      ],
+      "datasetId": "live",
+      "synthetic": false,
+      "hazardType": "other",
+      "mediaType": "link",
+      "collectedAt": "2026-08-08T02:01:56.084Z",
+      "authorIsPseudonymised": true,
+      "textGenerated": false
+    },
+    {
+      "text": "Weekly Photo Walk Challenge: Sat 8 August 2026 — Kia ora all! I’m running a weekly photo walk challenge as motivation to get outside and explore, even in the depths of Wellington winter. Every Saturday we set a theme, you go on a walk, take photos of things that fit the theme, and post your photos in the comments. The theme could be simple and straightforward, or something more abstract. And you are welcome to interpret it however you like. ⁉️This week’s theme is: unexpected⁉️ Thanks to u/IncoherentTuatara for the theme suggestion! Post your photos below by next Saturday. And please let me know any ideas you have for future themes! &#32; submitted by &#32; /u/Foreign_Echo_5430 [link] &#32; [comments]",
+      "source": "reddit-r-wellington",
+      "sourceClass": "social",
+      "occurredAt": "2026-08-07T22:39:04.000Z",
+      "externalId": "t3_1vif23q",
+      "author": "anon-e0c1eeb63319",
+      "url": "https://www.reddit.com/r/Wellington/comments/1vif23q/weekly_photo_walk_challenge_sat_8_august_2026/",
+      "annotations": [
+        {
+          "key": "location_method",
+          "value": "none"
+        },
+        {
+          "key": "text_generated",
+          "value": "false"
+        },
+        {
+          "key": "limitation",
+          "value": "Unverified public social media post — a signal to investigate, not confirmed fact."
+        },
+        {
+          "key": "limitation",
+          "value": "No location could be determined from this post."
+        }
+      ],
+      "datasetId": "live",
+      "synthetic": false,
+      "hazardType": "other",
+      "mediaType": "link",
+      "collectedAt": "2026-08-08T02:01:56.084Z",
+      "authorIsPseudonymised": true,
+      "textGenerated": false
+    },
+    {
+      "text": "I need a career change. — I feel like I need to pivot and switch up careers. What field do you work in and are you happy? Ever since the Government announced further cuts across the public service morale has dipped. &quot;Look at the silver lining, you still have a job&quot; It is this kind of mentality gives employers more power to mistreat staff. Is this asking for the bare minimum now? &#32; submitted by &#32; /u/Initial_Middle_6256 [link] &#32; [comments]",
+      "source": "reddit-r-wellington",
+      "sourceClass": "social",
+      "occurredAt": "2026-08-07T22:19:06.000Z",
+      "externalId": "t3_1vielbe",
+      "author": "anon-4eb5273df7dd",
+      "url": "https://www.reddit.com/r/Wellington/comments/1vielbe/i_need_a_career_change/",
+      "annotations": [
+        {
+          "key": "location_method",
+          "value": "none"
+        },
+        {
+          "key": "text_generated",
+          "value": "false"
+        },
+        {
+          "key": "limitation",
+          "value": "Unverified public social media post — a signal to investigate, not confirmed fact."
+        },
+        {
+          "key": "limitation",
+          "value": "No location could be determined from this post."
+        }
+      ],
+      "datasetId": "live",
+      "synthetic": false,
+      "hazardType": "other",
+      "mediaType": "link",
+      "collectedAt": "2026-08-08T02:01:56.084Z",
+      "authorIsPseudonymised": true,
+      "textGenerated": false
+    },
+    {
+      "text": "Last day today for free music & Art exhibition at Blue Door Studios — If you want an hour of calm today, head to Blue Door studios, level 1 (41/47 Dixon Street). There&#39;s a free exhibition that has a piece of art with each song on alayna&#39;s Set Her Free album, handmade by the artist herself. Bring your headphones or there are some available to borrow. Live Q&amp;A tonight 6-8pm for the closing evening http://alaynamusic.com ig: @alaynamusic__ &#32; submitted by &#32; /u/righteousbud [link] &#32; [comments]",
+      "source": "reddit-r-wellington",
+      "sourceClass": "social",
+      "occurredAt": "2026-08-07T20:45:17.000Z",
+      "externalId": "t3_1vica57",
+      "author": "anon-d42e48379922",
+      "url": "https://www.reddit.com/r/Wellington/comments/1vica57/last_day_today_for_free_music_art_exhibition_at/",
+      "quotedUrls": [
+        "https://preview.redd.it/r4osjvxwl0ih1.jpg?width=140&amp;height=140&amp;crop=1:1,smart&amp;auto=webp&amp;s=742b7bacb0abfa771192a6b3446cb1faf9932668",
+        "http://alaynamusic.com"
+      ],
+      "annotations": [
+        {
+          "key": "location_method",
+          "value": "none"
+        },
+        {
+          "key": "text_generated",
+          "value": "false"
+        },
+        {
+          "key": "limitation",
+          "value": "Unverified public social media post — a signal to investigate, not confirmed fact."
+        },
+        {
+          "key": "limitation",
+          "value": "No location could be determined from this post."
+        }
+      ],
+      "datasetId": "live",
+      "synthetic": false,
+      "hazardType": "other",
+      "mediaType": "photo",
+      "collectedAt": "2026-08-08T02:01:56.084Z",
+      "authorIsPseudonymised": true,
+      "textGenerated": false
+    },
+    {
+      "text": "The Daily Rant/Moan topic - Saturday, August 08 2026 — Hey r/wellington folks. Please use this daily topic to vent, moan, whinge, rant, and sulk about whatever you like. Wellington related, life related, job related whatever. If you are someone who doesn&#39;t want to read moans and rants, don&#39;t come in here! Vent away! Please note that rant/vent posts that are created elsewhere (not as comments in this topic) will be removed and the users asked to post in here. Do the community a favour and post in here in the first place. Zephyr, the r/Wellington automod. &#32; submitted by &#32; /u/AutoModerator [link] &#32; [comments]",
+      "source": "reddit-r-wellington",
+      "sourceClass": "social",
+      "occurredAt": "2026-08-07T17:31:12.000Z",
+      "externalId": "t3_1vi734y",
+      "author": "anon-a1522947cb8f",
+      "url": "https://www.reddit.com/r/Wellington/comments/1vi734y/the_daily_rantmoan_topic_saturday_august_08_2026/",
+      "annotations": [
+        {
+          "key": "location_method",
+          "value": "none"
+        },
+        {
+          "key": "text_generated",
+          "value": "false"
+        },
+        {
+          "key": "limitation",
+          "value": "Unverified public social media post — a signal to investigate, not confirmed fact."
+        },
+        {
+          "key": "limitation",
+          "value": "No location could be determined from this post."
+        }
+      ],
+      "datasetId": "live",
+      "synthetic": false,
+      "hazardType": "other",
+      "mediaType": "link",
+      "collectedAt": "2026-08-08T02:01:56.084Z",
+      "authorIsPseudonymised": true,
+      "textGenerated": false
+    },
+    {
+      "text": "Join the /r/Wellington daily chat topic - Saturday, August 08 2026 — This is a chance to have a chat about Wellington, life, whatever you like. Feel free to speak your mind! Share your thoughts and get opinions. Good, bad, mundane, exciting, it&#39;s all welcome. The community is here for you. Please throw some upvote love towards the topic and leave a few kind comments for your fellow Wellingtonians. Every bit helps and you will get it back when you need it most. Fancy a good old rant instead? Do it in our daily rant thread. New to this subreddit? Our wiki has lots of good info on getting around Wellington, what to do when you visit, where to eat and more. Please remember to use the search function if you are asking something we probably get asked daily. ❤️ Have a cracking day ❤️ Zephyr, the r/Wellington automod. &#32; submitted by &#32; /u/AutoModerator [link] &#32; [comments]",
+      "source": "reddit-r-wellington",
+      "sourceClass": "social",
+      "occurredAt": "2026-08-07T17:30:30.000Z",
+      "externalId": "t3_1vi72f7",
+      "author": "anon-a1522947cb8f",
+      "url": "https://www.reddit.com/r/Wellington/comments/1vi72f7/join_the_rwellington_daily_chat_topic_saturday/",
+      "annotations": [
+        {
+          "key": "location_method",
+          "value": "none"
+        },
+        {
+          "key": "text_generated",
+          "value": "false"
+        },
+        {
+          "key": "limitation",
+          "value": "Unverified public social media post — a signal to investigate, not confirmed fact."
+        },
+        {
+          "key": "limitation",
+          "value": "No location could be determined from this post."
+        }
+      ],
+      "datasetId": "live",
+      "synthetic": false,
+      "hazardType": "other",
+      "mediaType": "link",
+      "collectedAt": "2026-08-08T02:01:56.084Z",
+      "authorIsPseudonymised": true,
+      "textGenerated": false
+    },
+    {
+      "text": "Jolt! — Had to check deleted because I thought I was going crazy... https://www.geonet.org.nz/earthquake/2026p590668 &#32; submitted by &#32; /u/pamelahoward [link] &#32; [comments]",
+      "source": "reddit-r-wellington",
+      "sourceClass": "social",
+      "occurredAt": "2026-08-07T13:12:04.000Z",
+      "externalId": "t3_1vi0a0c",
+      "author": "anon-e932e088a5ea",
+      "url": "https://www.reddit.com/r/Wellington/comments/1vi0a0c/jolt/",
+      "quotedUrls": [
+        "https://www.geonet.org.nz/earthquake/2026p590668"
+      ],
+      "annotations": [
+        {
+          "key": "location_method",
+          "value": "none"
+        },
+        {
+          "key": "text_generated",
+          "value": "false"
+        },
+        {
+          "key": "limitation",
+          "value": "Unverified public social media post — a signal to investigate, not confirmed fact."
+        },
+        {
+          "key": "limitation",
+          "value": "No location could be determined from this post."
+        }
+      ],
+      "datasetId": "live",
+      "synthetic": false,
+      "hazardType": "earthquake",
+      "mediaType": "link",
+      "collectedAt": "2026-08-08T02:01:56.084Z",
+      "authorIsPseudonymised": true,
+      "textGenerated": false
+    },
+    {
+      "text": "What is this? — Along the waterfront I&#39;ve always wondered why those wooden beams are set into the concrete, does anybody know why? &#32; submitted by &#32; /u/elchadhall [link] &#32; [comments]",
+      "source": "reddit-r-wellington",
+      "sourceClass": "social",
+      "occurredAt": "2026-08-07T12:57:00.000Z",
+      "externalId": "t3_1vhzwv6",
+      "author": "anon-cce799bbf758",
+      "url": "https://www.reddit.com/r/Wellington/comments/1vhzwv6/what_is_this/",
+      "quotedUrls": [
+        "https://preview.redd.it/p7pyd00dayhh1.jpg?width=140&amp;height=140&amp;crop=1:1,smart&amp;auto=webp&amp;s=5e433b9236caf912e4a55f471ec1750486501c36"
+      ],
+      "annotations": [
+        {
+          "key": "location_method",
+          "value": "none"
+        },
+        {
+          "key": "text_generated",
+          "value": "false"
+        },
+        {
+          "key": "limitation",
+          "value": "Unverified public social media post — a signal to investigate, not confirmed fact."
+        },
+        {
+          "key": "limitation",
+          "value": "No location could be determined from this post."
+        }
+      ],
+      "datasetId": "live",
+      "synthetic": false,
+      "hazardType": "other",
+      "mediaType": "photo",
+      "collectedAt": "2026-08-08T02:01:56.084Z",
+      "authorIsPseudonymised": true,
+      "textGenerated": false
+    },
+    {
+      "text": "Korean Lash Lift Recommendations in Welly Central? — Hi yall, my usual lash tech is not available this month and i was wondering if anyone had recommendations ☺️ &#32; submitted by &#32; /u/plsgivemeadvic3 [link] &#32; [comments]",
+      "source": "reddit-r-wellington",
+      "sourceClass": "social",
+      "occurredAt": "2026-08-07T09:23:11.000Z",
+      "externalId": "t3_1vhvq1f",
+      "author": "anon-28a844f6dbe3",
+      "url": "https://www.reddit.com/r/Wellington/comments/1vhvq1f/korean_lash_lift_recommendations_in_welly_central/",
+      "annotations": [
+        {
+          "key": "location_method",
+          "value": "none"
+        },
+        {
+          "key": "text_generated",
+          "value": "false"
+        },
+        {
+          "key": "limitation",
+          "value": "Unverified public social media post — a signal to investigate, not confirmed fact."
+        },
+        {
+          "key": "limitation",
+          "value": "No location could be determined from this post."
+        }
+      ],
+      "datasetId": "live",
+      "synthetic": false,
+      "hazardType": "other",
+      "mediaType": "link",
+      "collectedAt": "2026-08-08T02:01:56.084Z",
+      "authorIsPseudonymised": true,
+      "textGenerated": false
+    },
+    {
+      "text": "LGBT bars — Anyone know any LGBT bars in wellies I heard of IVY&#39;S but that place has mixed reviews and their from a few years back so any LGBT bars also curious about IVY&#39;S as it&#39;s the closest bar to me &#32; submitted by &#32; /u/frostytheram25 [link] &#32; [comments]",
+      "source": "reddit-r-wellington",
+      "sourceClass": "social",
+      "occurredAt": "2026-08-07T07:28:54.000Z",
+      "externalId": "t3_1vhtu9r",
+      "author": "anon-c8206317683c",
+      "url": "https://www.reddit.com/r/Wellington/comments/1vhtu9r/lgbt_bars/",
+      "annotations": [
+        {
+          "key": "location_method",
+          "value": "none"
+        },
+        {
+          "key": "text_generated",
+          "value": "false"
+        },
+        {
+          "key": "limitation",
+          "value": "Unverified public social media post — a signal to investigate, not confirmed fact."
+        },
+        {
+          "key": "limitation",
+          "value": "No location could be determined from this post."
+        }
+      ],
+      "datasetId": "live",
+      "synthetic": false,
+      "hazardType": "other",
+      "mediaType": "link",
+      "collectedAt": "2026-08-08T02:01:56.084Z",
+      "authorIsPseudonymised": true,
+      "textGenerated": false
+    },
+    {
+      "text": "Oyster Mushrooms — Howdy! I need oyster mushrooms (almost a kg!) for a meal I’m making tomorrow night. Where have people found they can get Oyster Mushrooms at anything but an insane price. Appreciate any help! &#32; submitted by &#32; /u/its_ohio_hands [link] &#32; [comments]",
+      "source": "reddit-r-wellington",
+      "sourceClass": "social",
+      "occurredAt": "2026-08-07T07:12:05.000Z",
+      "externalId": "t3_1vhtk4e",
+      "author": "anon-3bf64ad148f8",
+      "url": "https://www.reddit.com/r/Wellington/comments/1vhtk4e/oyster_mushrooms/",
+      "annotations": [
+        {
+          "key": "location_method",
+          "value": "none"
+        },
+        {
+          "key": "text_generated",
+          "value": "false"
+        },
+        {
+          "key": "limitation",
+          "value": "Unverified public social media post — a signal to investigate, not confirmed fact."
+        },
+        {
+          "key": "limitation",
+          "value": "No location could be determined from this post."
+        }
+      ],
+      "datasetId": "live",
+      "synthetic": false,
+      "hazardType": "other",
+      "mediaType": "link",
+      "collectedAt": "2026-08-08T02:01:56.084Z",
+      "authorIsPseudonymised": true,
+      "textGenerated": false
+    },
+    {
+      "text": "Dear boomers, please stop using AI for your advertising! (Especially for property content) — &#32; submitted by &#32; /u/vulnerablelady [link] &#32; [comments]",
+      "source": "reddit-r-wellington",
+      "sourceClass": "social",
+      "occurredAt": "2026-08-07T07:09:06.000Z",
+      "externalId": "t3_1vhtibt",
+      "author": "anon-9ee5f1195022",
+      "url": "https://www.reddit.com/r/Wellington/comments/1vhtibt/dear_boomers_please_stop_using_ai_for_your/",
+      "quotedUrls": [
+        "https://preview.redd.it/p4nsctvakwhh1.jpeg?width=320&amp;crop=smart&amp;auto=webp&amp;s=e211f420431f27374e3eaefb537823c8c637e6cf",
+        "https://i.redd.it/p4nsctvakwhh1.jpeg"
+      ],
+      "annotations": [
+        {
+          "key": "location_method",
+          "value": "none"
+        },
+        {
+          "key": "text_generated",
+          "value": "false"
+        },
+        {
+          "key": "limitation",
+          "value": "Unverified public social media post — a signal to investigate, not confirmed fact."
+        },
+        {
+          "key": "limitation",
+          "value": "No location could be determined from this post."
+        }
+      ],
+      "datasetId": "live",
+      "synthetic": false,
+      "hazardType": "other",
+      "mediaType": "photo",
+      "collectedAt": "2026-08-08T02:01:56.084Z",
+      "authorIsPseudonymised": true,
+      "textGenerated": false
+    },
+    {
+      "text": "Environmental Volunteering? — Looking for environmental volunteering in Wellington, such as tree planting, native plant restoration, wildlife conservation, or animal rescue. Any recommendations? &#32; submitted by &#32; /u/AbjectPiece7633 [link] &#32; [comments]",
+      "source": "reddit-r-wellington",
+      "sourceClass": "social",
+      "occurredAt": "2026-08-07T05:42:15.000Z",
+      "externalId": "t3_1vhrz63",
+      "author": "anon-acc2f52cbd7a",
+      "url": "https://www.reddit.com/r/Wellington/comments/1vhrz63/environmental_volunteering/",
+      "annotations": [
+        {
+          "key": "location_method",
+          "value": "none"
+        },
+        {
+          "key": "text_generated",
+          "value": "false"
+        },
+        {
+          "key": "limitation",
+          "value": "Unverified public social media post — a signal to investigate, not confirmed fact."
+        },
+        {
+          "key": "limitation",
+          "value": "No location could be determined from this post."
+        }
+      ],
+      "datasetId": "live",
+      "synthetic": false,
+      "hazardType": "other",
+      "mediaType": "link",
+      "collectedAt": "2026-08-08T02:01:56.084Z",
+      "authorIsPseudonymised": true,
+      "textGenerated": false
+    },
+    {
+      "text": "Bulk tailor — I&#39;ve lost about 20kg this year (party on) and all my clothes are super baggy now. I&#39;m keen to get them tailored to fit my updated shape instead of buying new stuff, but have quite a few (10+) items. These are dresses, skirts, trousers and jeans - potentially 1-2 jackets as well. Does anyone know of a tailor who does decent rates for bulk items? I usually go to Sue&#39;s in Willis St, but they&#39;re pretty pricey for one item, let alone a shitload! Willing to travel across the city and out to the Hutt. Thaaaaaanks! &#32; submitted by &#32; /u/spagbol [link] &#32; [comments]",
+      "source": "reddit-r-wellington",
+      "sourceClass": "social",
+      "occurredAt": "2026-08-07T05:37:56.000Z",
+      "externalId": "t3_1vhrwcb",
+      "author": "anon-32281035aa66",
+      "url": "https://www.reddit.com/r/Wellington/comments/1vhrwcb/bulk_tailor/",
+      "annotations": [
+        {
+          "key": "location_method",
+          "value": "none"
+        },
+        {
+          "key": "text_generated",
+          "value": "false"
+        },
+        {
+          "key": "limitation",
+          "value": "Unverified public social media post — a signal to investigate, not confirmed fact."
+        },
+        {
+          "key": "limitation",
+          "value": "No location could be determined from this post."
+        }
+      ],
+      "datasetId": "live",
+      "synthetic": false,
+      "hazardType": "other",
+      "mediaType": "link",
+      "collectedAt": "2026-08-08T02:01:56.084Z",
+      "authorIsPseudonymised": true,
+      "textGenerated": false
+    },
+    {
+      "text": "Can you still burn a CD in Wellington?? — I&#39;ve been trying to find a specific CD for a birthday present and can only find stupidly expensive versions on Amazon that cost an extra $50 to ship. I&#39;ve been asking around and calling places like the public library, tech stores, and noone seems to have a CD burner! Thought I&#39;d reach out to you friendly folk and maybe someone has a desktop with a built in burner that could help?? Or otherwise could point me in the right direction :)) &#32; submitted by &#32; /u/Moist-shrek [link] &#32; [comments]",
+      "source": "reddit-r-wellington",
+      "sourceClass": "social",
+      "occurredAt": "2026-08-07T05:16:25.000Z",
+      "externalId": "t3_1vhri7s",
+      "author": "anon-35820e1bf7e9",
+      "url": "https://www.reddit.com/r/Wellington/comments/1vhri7s/can_you_still_burn_a_cd_in_wellington/",
+      "annotations": [
+        {
+          "key": "location_method",
+          "value": "none"
+        },
+        {
+          "key": "text_generated",
+          "value": "false"
+        },
+        {
+          "key": "limitation",
+          "value": "Unverified public social media post — a signal to investigate, not confirmed fact."
+        },
+        {
+          "key": "limitation",
+          "value": "No location could be determined from this post."
+        }
+      ],
+      "datasetId": "live",
+      "synthetic": false,
+      "hazardType": "other",
+      "mediaType": "link",
+      "collectedAt": "2026-08-08T02:01:56.084Z",
+      "authorIsPseudonymised": true,
+      "textGenerated": false
+    },
+    {
+      "text": "Amalgamation Aftermath Pt.2 — Wellington and Wairarapa&#39;s Mayors have just finished meeting today to discuss council amalgamation. It&#39;s not a huge update (tl;dr government will recieve two proposals and make the decision on what happens next) but given it&#39;s importance thought it warranted a thread. This is the Joint Position of the Mayoral Forum: The Wellington region was already working together and remains committed to doing so regardless of the Head Start process. The discussions are constructive. Mana whenua partnership at all layers and Māori representation is fundamental and we remain committed to their continued involvement now and into the future. Not every Council agrees and their views are respected and will be conveyed faithfully. Two proposals will come from Councils of the region, one a region-wide proposal (supported by WCC, HCC, PCC, SWDC), another for a Wairarapa proposal (supported by CDC and MDC). The proposals will convey the positions of individual councils and we will request of Government that the door remains open for alternative arrangements for KCDC and UHCC. Cover letters will include the region’s principles as bottom lines, individual position statements and any joint requests of Government. It will now be up to government upon receipt of these headstart proposals to figure out what happens next. &#32; submitted by &#32; /u/ben4takapu [link] &#32; [comments]",
+      "source": "reddit-r-wellington",
+      "sourceClass": "social",
+      "occurredAt": "2026-08-07T03:47:10.000Z",
+      "externalId": "t3_1vhps9w",
+      "author": "anon-d7a3543537ee",
+      "url": "https://www.reddit.com/r/Wellington/comments/1vhps9w/amalgamation_aftermath_pt2/",
+      "annotations": [
+        {
+          "key": "location_method",
+          "value": "none"
+        },
+        {
+          "key": "text_generated",
+          "value": "false"
+        },
+        {
+          "key": "limitation",
+          "value": "Unverified public social media post — a signal to investigate, not confirmed fact."
+        },
+        {
+          "key": "limitation",
+          "value": "No location could be determined from this post."
+        }
+      ],
+      "datasetId": "live",
+      "synthetic": false,
+      "hazardType": "other",
+      "mediaType": "link",
+      "collectedAt": "2026-08-08T02:01:56.084Z",
+      "authorIsPseudonymised": true,
+      "textGenerated": false
+    },
+    {
+      "text": "Wellington Dentists who treat TMJ — Hi can anyone recommend a dentist who treats chronic TMJ pain. I&#39;m having muscle spasms along with the normal pain now. Thought I&#39;d cracked e teeth, thankfully not. Interested in botox, any suggestions? &#32; submitted by &#32; /u/Beneficial_Music9570 [link] &#32; [comments]",
+      "source": "reddit-r-wellington",
+      "sourceClass": "social",
+      "occurredAt": "2026-08-07T02:55:09.000Z",
+      "externalId": "t3_1vhoqq6",
+      "author": "anon-c8576d730496",
+      "url": "https://www.reddit.com/r/Wellington/comments/1vhoqq6/wellington_dentists_who_treat_tmj/",
+      "annotations": [
+        {
+          "key": "location_method",
+          "value": "none"
+        },
+        {
+          "key": "text_generated",
+          "value": "false"
+        },
+        {
+          "key": "limitation",
+          "value": "Unverified public social media post — a signal to investigate, not confirmed fact."
+        },
+        {
+          "key": "limitation",
+          "value": "No location could be determined from this post."
+        }
+      ],
+      "datasetId": "live",
+      "synthetic": false,
+      "hazardType": "other",
+      "mediaType": "link",
+      "collectedAt": "2026-08-08T02:01:56.084Z",
+      "authorIsPseudonymised": true,
+      "textGenerated": false
+    },
+    {
+      "text": "Record store in Upper Hutt? — Anyone know what happened to the record store in Upper Hutt on Main Street? I went there last year and they had a great selection of kiwi music &#32; submitted by &#32; /u/No-Life5446 [link] &#32; [comments]",
+      "source": "reddit-r-wellington",
+      "sourceClass": "social",
+      "occurredAt": "2026-08-07T00:50:55.000Z",
+      "externalId": "t3_1vhm2qe",
+      "author": "anon-0956a5dbed29",
+      "url": "https://www.reddit.com/r/Wellington/comments/1vhm2qe/record_store_in_upper_hutt/",
+      "lat": -41.1244,
+      "lng": 175.0709,
+      "geoConfidence": 0.4,
+      "annotations": [
+        {
+          "key": "location_text",
+          "value": "upper hutt"
+        },
+        {
+          "key": "location_method",
+          "value": "place-name"
+        },
+        {
+          "key": "text_generated",
+          "value": "false"
+        },
+        {
+          "key": "limitation",
+          "value": "Unverified public social media post — a signal to investigate, not confirmed fact."
+        },
+        {
+          "key": "limitation",
+          "value": "Location inferred from the words \"upper hutt\" in the post text, not from GPS. Approximate suburb centroid."
+        }
+      ],
+      "datasetId": "live",
+      "synthetic": false,
+      "hazardType": "other",
+      "mediaType": "link",
+      "collectedAt": "2026-08-08T02:01:56.084Z",
+      "authorIsPseudonymised": true,
+      "textGenerated": false
+    },
+    {
+      "text": "Penguin prints — &#32; submitted by &#32; /u/glyptodon_enthusiast [link] &#32; [comments]",
+      "source": "reddit-r-wellington",
+      "sourceClass": "social",
+      "occurredAt": "2026-08-07T00:49:05.000Z",
+      "externalId": "t3_1vhm1bx",
+      "author": "anon-141503d7f1a0",
+      "url": "https://www.reddit.com/r/Wellington/comments/1vhm1bx/penguin_prints/",
+      "quotedUrls": [
+        "https://preview.redd.it/p62cr416ouhh1.jpeg?width=640&amp;crop=smart&amp;auto=webp&amp;s=0c7071b75ab01ba88476958aa55ee11931e40772",
+        "https://i.redd.it/p62cr416ouhh1.jpeg"
+      ],
+      "annotations": [
+        {
+          "key": "location_method",
+          "value": "none"
+        },
+        {
+          "key": "text_generated",
+          "value": "false"
+        },
+        {
+          "key": "limitation",
+          "value": "Unverified public social media post — a signal to investigate, not confirmed fact."
+        },
+        {
+          "key": "limitation",
+          "value": "No location could be determined from this post."
+        }
+      ],
+      "datasetId": "live",
+      "synthetic": false,
+      "hazardType": "other",
+      "mediaType": "photo",
+      "collectedAt": "2026-08-08T02:01:56.084Z",
+      "authorIsPseudonymised": true,
+      "textGenerated": false
+    },
+    {
+      "text": "Upper Hutt Mayor calls police on critics — &#32; submitted by &#32; /u/Narrow-Can901 [link] &#32; [comments]",
+      "source": "reddit-r-wellington",
+      "sourceClass": "social",
+      "occurredAt": "2026-08-07T00:06:24.000Z",
+      "externalId": "t3_1vhl3m8",
+      "author": "anon-f48b20d0d409",
+      "url": "https://www.reddit.com/r/Wellington/comments/1vhl3m8/upper_hutt_mayor_calls_police_on_critics/",
+      "quotedUrls": [
+        "https://www.kiwiblog.co.nz/2026/08/upper_hutt_mayor_calls_police_on_critics.html"
+      ],
+      "lat": -41.1244,
+      "lng": 175.0709,
+      "geoConfidence": 0.4,
+      "annotations": [
+        {
+          "key": "location_text",
+          "value": "upper hutt"
+        },
+        {
+          "key": "location_method",
+          "value": "place-name"
+        },
+        {
+          "key": "text_generated",
+          "value": "false"
+        },
+        {
+          "key": "limitation",
+          "value": "Unverified public social media post — a signal to investigate, not confirmed fact."
+        },
+        {
+          "key": "limitation",
+          "value": "Location inferred from the words \"upper hutt\" in the post text, not from GPS. Approximate suburb centroid."
+        }
+      ],
+      "datasetId": "live",
+      "synthetic": false,
+      "hazardType": "other",
+      "mediaType": "link",
+      "collectedAt": "2026-08-08T02:01:56.084Z",
+      "authorIsPseudonymised": true,
+      "textGenerated": false
+    },
+    {
+      "text": "Why do cafes not have heaters? — It&#39;s freezing 🥶 &#32; submitted by &#32; /u/raumatiboy [link] &#32; [comments]",
+      "source": "reddit-r-wellington",
+      "sourceClass": "social",
+      "occurredAt": "2026-08-06T22:20:47.000Z",
+      "externalId": "t3_1vhilpx",
+      "author": "anon-b55aac7be50c",
+      "url": "https://www.reddit.com/r/Wellington/comments/1vhilpx/why_do_cafes_not_have_heaters/",
+      "annotations": [
+        {
+          "key": "location_method",
+          "value": "none"
+        },
+        {
+          "key": "text_generated",
+          "value": "false"
+        },
+        {
+          "key": "limitation",
+          "value": "Unverified public social media post — a signal to investigate, not confirmed fact."
+        },
+        {
+          "key": "limitation",
+          "value": "No location could be determined from this post."
+        }
+      ],
+      "datasetId": "live",
+      "synthetic": false,
+      "hazardType": "other",
+      "mediaType": "link",
+      "collectedAt": "2026-08-08T02:01:56.084Z",
+      "authorIsPseudonymised": true,
+      "textGenerated": false
+    },
+    {
+      "text": "Power companies — Hi, I&#39;ve seen on here many comments regarding our local Toast power company, eg Good Currently with Pulse but their Supply charges are outrageous July invoice $55 supply $98 As a pensioner,( home along) I&#39;m very careful with my power use, and do have a wood burner. Any suggestions or feedback on Toast would be appreciated &#32; submitted by &#32; /u/HomemakerNZ [link] &#32; [comments]",
+      "source": "reddit-r-wellington",
+      "sourceClass": "social",
+      "occurredAt": "2026-08-06T22:13:19.000Z",
+      "externalId": "t3_1vhif0f",
+      "author": "anon-2f8068aa5e3a",
+      "url": "https://www.reddit.com/r/Wellington/comments/1vhif0f/power_companies/",
+      "annotations": [
+        {
+          "key": "location_method",
+          "value": "none"
+        },
+        {
+          "key": "text_generated",
+          "value": "false"
+        },
+        {
+          "key": "limitation",
+          "value": "Unverified public social media post — a signal to investigate, not confirmed fact."
+        },
+        {
+          "key": "limitation",
+          "value": "No location could be determined from this post."
+        }
+      ],
+      "datasetId": "live",
+      "synthetic": false,
+      "hazardType": "other",
+      "mediaType": "link",
+      "collectedAt": "2026-08-08T02:01:56.084Z",
+      "authorIsPseudonymised": true,
+      "textGenerated": false
+    },
+    {
+      "text": "Fault THE TERRACE, Wellington Central · Potable Water · General Fault",
+      "source": "wellington-water-faults",
+      "sourceClass": "community_report",
+      "occurredAt": "2026-08-05T02:05:09.000Z",
+      "externalId": "949166",
+      "lat": -41.2803043430946,
+      "lng": 174.775108469085,
+      "geoConfidence": 0.95,
+      "annotations": [
+        {
+          "key": "location_text",
+          "value": "The Terrace, Wellington Central, Wellington, 6011"
+        },
+        {
+          "key": "location_method",
+          "value": "reprojected"
+        },
+        {
+          "key": "text_generated",
+          "value": "false"
+        },
+        {
+          "key": "limitation",
+          "value": "Public report logged through Wellington Water's customer channel — recorded by an official system, but the underlying report is unverified."
+        },
+        {
+          "key": "limitation",
+          "value": "Street numbers removed to avoid publishing personal information."
+        },
+        {
+          "key": "limitation",
+          "value": "Status: New. An open job is not necessarily an active emergency."
+        }
+      ],
+      "datasetId": "live",
+      "synthetic": false,
+      "hazardType": "water",
+      "mediaType": "none",
+      "collectedAt": "2026-08-08T02:01:55.795Z",
+      "authorIsPseudonymised": false,
+      "textGenerated": false
+    },
+    {
+      "text": "Locate MCCOLL STREET, Mornington-Vogeltown · Potable Water · Locate Asset",
+      "source": "wellington-water-faults",
+      "sourceClass": "community_report",
+      "occurredAt": "2026-08-05T02:43:17.000Z",
+      "externalId": "949180",
+      "lat": -41.313986518091,
+      "lng": 174.76925689484,
+      "geoConfidence": 0.95,
+      "annotations": [
+        {
+          "key": "location_text",
+          "value": "McColl Street, Vogeltown, Wellington, 6021"
+        },
+        {
+          "key": "location_method",
+          "value": "reprojected"
+        },
+        {
+          "key": "text_generated",
+          "value": "false"
+        },
+        {
+          "key": "limitation",
+          "value": "Public report logged through Wellington Water's customer channel — recorded by an official system, but the underlying report is unverified."
+        },
+        {
+          "key": "limitation",
+          "value": "Street numbers removed to avoid publishing personal information."
+        },
+        {
+          "key": "limitation",
+          "value": "Status: New. An open job is not necessarily an active emergency."
+        }
+      ],
+      "datasetId": "live",
+      "synthetic": false,
+      "hazardType": "water",
+      "mediaType": "none",
+      "collectedAt": "2026-08-08T02:01:55.795Z",
+      "authorIsPseudonymised": false,
+      "textGenerated": false
+    },
+    {
+      "text": "Fault APU CRESCENT, Lyall Bay · Potable Water · General Fault",
+      "source": "wellington-water-faults",
+      "sourceClass": "community_report",
+      "occurredAt": "2026-08-05T03:21:11.000Z",
+      "externalId": "949187",
+      "lat": -41.3271156378581,
+      "lng": 174.79860001002,
+      "geoConfidence": 0.95,
+      "annotations": [
+        {
+          "key": "location_text",
+          "value": "Apu Crescent, Lyall Bay, Wellington, 6022"
+        },
+        {
+          "key": "location_method",
+          "value": "reprojected"
+        },
+        {
+          "key": "text_generated",
+          "value": "false"
+        },
+        {
+          "key": "limitation",
+          "value": "Public report logged through Wellington Water's customer channel — recorded by an official system, but the underlying report is unverified."
+        },
+        {
+          "key": "limitation",
+          "value": "Street numbers removed to avoid publishing personal information."
+        },
+        {
+          "key": "limitation",
+          "value": "Status: New. An open job is not necessarily an active emergency."
+        }
+      ],
+      "datasetId": "live",
+      "synthetic": false,
+      "hazardType": "water",
+      "mediaType": "none",
+      "collectedAt": "2026-08-08T02:01:55.795Z",
+      "authorIsPseudonymised": false,
+      "textGenerated": false
+    },
+    {
+      "text": "Leaking Pipes Magnolia Grove, MAUNGARAKI · Potable Water · Leaking Pipes",
+      "source": "wellington-water-faults",
+      "sourceClass": "community_report",
+      "occurredAt": "2026-08-05T03:08:58.397Z",
+      "externalId": "949184",
+      "lat": -41.215073899921,
+      "lng": 174.879826519124,
+      "geoConfidence": 0.95,
+      "annotations": [
+        {
+          "key": "location_text",
+          "value": "Magnolia Grove, Maungaraki, Lower Hutt, Wellington, 5010"
+        },
+        {
+          "key": "location_method",
+          "value": "reprojected"
+        },
+        {
+          "key": "text_generated",
+          "value": "false"
+        },
+        {
+          "key": "limitation",
+          "value": "Public report logged through Wellington Water's customer channel — recorded by an official system, but the underlying report is unverified."
+        },
+        {
+          "key": "limitation",
+          "value": "Street numbers removed to avoid publishing personal information."
+        },
+        {
+          "key": "limitation",
+          "value": "Status: New. An open job is not necessarily an active emergency."
+        }
+      ],
+      "datasetId": "live",
+      "synthetic": false,
+      "hazardType": "water",
+      "mediaType": "none",
+      "collectedAt": "2026-08-08T02:01:55.795Z",
+      "authorIsPseudonymised": false,
+      "textGenerated": false
+    },
+    {
+      "text": "Fault OMEGA STREET, Newlands · Potable Water · General Fault",
+      "source": "wellington-water-faults",
+      "sourceClass": "community_report",
+      "occurredAt": "2026-08-05T04:06:11.000Z",
+      "externalId": "949195",
+      "lat": -41.2304642476181,
+      "lng": 174.822110326418,
+      "geoConfidence": 0.95,
+      "annotations": [
+        {
+          "key": "location_text",
+          "value": "Omega Street, Newlands, Wellington, 6037"
+        },
+        {
+          "key": "location_method",
+          "value": "reprojected"
+        },
+        {
+          "key": "text_generated",
+          "value": "false"
+        },
+        {
+          "key": "limitation",
+          "value": "Public report logged through Wellington Water's customer channel — recorded by an official system, but the underlying report is unverified."
+        },
+        {
+          "key": "limitation",
+          "value": "Street numbers removed to avoid publishing personal information."
+        },
+        {
+          "key": "limitation",
+          "value": "Status: In Queue. An open job is not necessarily an active emergency."
+        }
+      ],
+      "datasetId": "live",
+      "synthetic": false,
+      "hazardType": "water",
+      "mediaType": "none",
+      "collectedAt": "2026-08-08T02:01:55.795Z",
+      "authorIsPseudonymised": false,
+      "textGenerated": false
+    },
+    {
+      "text": "Blockage Woodvale Grove, FAIRFIELD · Storm Water · Blockage - Significant",
+      "source": "wellington-water-faults",
+      "sourceClass": "community_report",
+      "occurredAt": "2026-08-05T03:20:43.623Z",
+      "externalId": "949188",
+      "lat": -41.2115630140468,
+      "lng": 174.938744425288,
+      "geoConfidence": 0.95,
+      "annotations": [
+        {
+          "key": "location_text",
+          "value": "Woodvale Grove, Fairfield, Lower Hutt, Wellington, 5011"
+        },
+        {
+          "key": "location_method",
+          "value": "reprojected"
+        },
+        {
+          "key": "text_generated",
+          "value": "false"
+        },
+        {
+          "key": "limitation",
+          "value": "Public report logged through Wellington Water's customer channel — recorded by an official system, but the underlying report is unverified."
+        },
+        {
+          "key": "limitation",
+          "value": "Street numbers removed to avoid publishing personal information."
+        },
+        {
+          "key": "limitation",
+          "value": "Status: New. An open job is not necessarily an active emergency."
+        }
+      ],
+      "datasetId": "live",
+      "synthetic": false,
+      "hazardType": "flooding",
+      "mediaType": "none",
+      "collectedAt": "2026-08-08T02:01:55.795Z",
+      "authorIsPseudonymised": false,
+      "textGenerated": false
+    },
+    {
+      "text": "Fault WOODMAN DRIVE, Tawa · Storm Water · General Fault",
+      "source": "wellington-water-faults",
+      "sourceClass": "community_report",
+      "occurredAt": "2026-08-05T03:14:13.000Z",
+      "externalId": "949185",
+      "lat": -41.1675833357245,
+      "lng": 174.83640163897,
+      "geoConfidence": 0.95,
+      "annotations": [
+        {
+          "key": "location_text",
+          "value": "Woodman Drive, Tawa, Wellington, 5028"
+        },
+        {
+          "key": "location_method",
+          "value": "reprojected"
+        },
+        {
+          "key": "text_generated",
+          "value": "false"
+        },
+        {
+          "key": "limitation",
+          "value": "Public report logged through Wellington Water's customer channel — recorded by an official system, but the underlying report is unverified."
+        },
+        {
+          "key": "limitation",
+          "value": "Street numbers removed to avoid publishing personal information."
+        },
+        {
+          "key": "limitation",
+          "value": "Status: New. An open job is not necessarily an active emergency."
+        }
+      ],
+      "datasetId": "live",
+      "synthetic": false,
+      "hazardType": "flooding",
+      "mediaType": "none",
+      "collectedAt": "2026-08-08T02:01:55.795Z",
+      "authorIsPseudonymised": false,
+      "textGenerated": false
+    },
+    {
+      "text": "Fault Hurman Street, Karori, Wellington, 6012 · Potable Water · General Fault",
+      "source": "wellington-water-faults",
+      "sourceClass": "community_report",
+      "occurredAt": "2026-08-05T04:56:08.000Z",
+      "externalId": "949210",
+      "lat": -41.2894311879149,
+      "lng": 174.746819378229,
+      "geoConfidence": 0.95,
+      "annotations": [
+        {
+          "key": "location_text",
+          "value": "Hurman Street, Karori, Wellington, 6012"
+        },
+        {
+          "key": "location_method",
+          "value": "reprojected"
+        },
+        {
+          "key": "text_generated",
+          "value": "false"
+        },
+        {
+          "key": "limitation",
+          "value": "Public report logged through Wellington Water's customer channel — recorded by an official system, but the underlying report is unverified."
+        },
+        {
+          "key": "limitation",
+          "value": "Street numbers removed to avoid publishing personal information."
+        },
+        {
+          "key": "limitation",
+          "value": "Status: New. An open job is not necessarily an active emergency."
+        }
+      ],
+      "datasetId": "live",
+      "synthetic": false,
+      "hazardType": "water",
+      "mediaType": "none",
+      "collectedAt": "2026-08-08T02:01:55.795Z",
+      "authorIsPseudonymised": false,
+      "textGenerated": false
+    },
+    {
+      "text": "Fault PAISLEY TERRACE, Karori · Storm Water · General Fault",
+      "source": "wellington-water-faults",
+      "sourceClass": "community_report",
+      "occurredAt": "2026-08-05T04:13:18.000Z",
+      "externalId": "949196",
+      "lat": -41.2796622054924,
+      "lng": 174.752353110706,
+      "geoConfidence": 0.95,
+      "annotations": [
+        {
+          "key": "location_text",
+          "value": "Paisley Terrace, Karori, Wellington, 6012"
+        },
+        {
+          "key": "location_method",
+          "value": "reprojected"
+        },
+        {
+          "key": "text_generated",
+          "value": "false"
+        },
+        {
+          "key": "limitation",
+          "value": "Public report logged through Wellington Water's customer channel — recorded by an official system, but the underlying report is unverified."
+        },
+        {
+          "key": "limitation",
+          "value": "Street numbers removed to avoid publishing personal information."
+        },
+        {
+          "key": "limitation",
+          "value": "Status: New. An open job is not necessarily an active emergency."
+        }
+      ],
+      "datasetId": "live",
+      "synthetic": false,
+      "hazardType": "flooding",
+      "mediaType": "none",
+      "collectedAt": "2026-08-08T02:01:55.795Z",
+      "authorIsPseudonymised": false,
+      "textGenerated": false
+    },
+    {
+      "text": "Leak BRACKEN ROAD, Paparangi · Potable Water · Leaking Pipes",
+      "source": "wellington-water-faults",
+      "sourceClass": "community_report",
+      "occurredAt": "2026-08-05T05:01:08.000Z",
+      "externalId": "949212",
+      "lat": -41.2199826357877,
+      "lng": 174.822768138179,
+      "geoConfidence": 0.95,
+      "annotations": [
+        {
+          "key": "location_text",
+          "value": "Bracken Road, Wellington, 6037, Wellington"
+        },
+        {
+          "key": "location_method",
+          "value": "reprojected"
+        },
+        {
+          "key": "text_generated",
+          "value": "false"
+        },
+        {
+          "key": "limitation",
+          "value": "Public report logged through Wellington Water's customer channel — recorded by an official system, but the underlying report is unverified."
+        },
+        {
+          "key": "limitation",
+          "value": "Street numbers removed to avoid publishing personal information."
+        },
+        {
+          "key": "limitation",
+          "value": "Status: Under Investigation. An open job is not necessarily an active emergency."
+        }
+      ],
+      "datasetId": "live",
+      "synthetic": false,
+      "hazardType": "water",
+      "mediaType": "none",
+      "collectedAt": "2026-08-08T02:01:55.795Z",
+      "authorIsPseudonymised": false,
+      "textGenerated": false
+    },
+    {
+      "text": "Fault STANDEN STREET, Karori · Storm Water · General Fault",
+      "source": "wellington-water-faults",
+      "sourceClass": "community_report",
+      "occurredAt": "2026-08-05T04:50:09.000Z",
+      "externalId": "949208",
+      "lat": -41.2801688915395,
+      "lng": 174.750296191666,
+      "geoConfidence": 0.95,
+      "annotations": [
+        {
+          "key": "location_text",
+          "value": "Standen Street, Karori, Wellington, 6012"
+        },
+        {
+          "key": "location_method",
+          "value": "reprojected"
+        },
+        {
+          "key": "text_generated",
+          "value": "false"
+        },
+        {
+          "key": "limitation",
+          "value": "Public report logged through Wellington Water's customer channel — recorded by an official system, but the underlying report is unverified."
+        },
+        {
+          "key": "limitation",
+          "value": "Street numbers removed to avoid publishing personal information."
+        },
+        {
+          "key": "limitation",
+          "value": "Status: New. An open job is not necessarily an active emergency."
+        }
+      ],
+      "datasetId": "live",
+      "synthetic": false,
+      "hazardType": "flooding",
+      "mediaType": "none",
+      "collectedAt": "2026-08-08T02:01:55.795Z",
+      "authorIsPseudonymised": false,
+      "textGenerated": false
+    },
+    {
+      "text": "Fault GLENMORE STREET, Kelburn-Northland · Storm Water · General Fault",
+      "source": "wellington-water-faults",
+      "sourceClass": "community_report",
+      "occurredAt": "2026-08-05T04:47:12.000Z",
+      "externalId": "949205",
+      "lat": -41.2856744189116,
+      "lng": 174.758319600843,
+      "geoConfidence": 0.95,
+      "annotations": [
+        {
+          "key": "location_text",
+          "value": "Glenmore Street, Northland, Wellington, 6012"
+        },
+        {
+          "key": "location_method",
+          "value": "reprojected"
+        },
+        {
+          "key": "text_generated",
+          "value": "false"
+        },
+        {
+          "key": "limitation",
+          "value": "Public report logged through Wellington Water's customer channel — recorded by an official system, but the underlying report is unverified."
+        },
+        {
+          "key": "limitation",
+          "value": "Street numbers removed to avoid publishing personal information."
+        },
+        {
+          "key": "limitation",
+          "value": "Status: New. An open job is not necessarily an active emergency."
+        }
+      ],
+      "datasetId": "live",
+      "synthetic": false,
+      "hazardType": "flooding",
+      "mediaType": "none",
+      "collectedAt": "2026-08-08T02:01:55.795Z",
+      "authorIsPseudonymised": false,
+      "textGenerated": false
+    },
+    {
+      "text": "Fault HAINING STREET, Te Aro · Potable Water · General Fault",
+      "source": "wellington-water-faults",
+      "sourceClass": "community_report",
+      "occurredAt": "2026-08-05T04:52:08.000Z",
+      "externalId": "949209",
+      "lat": -41.2965900456884,
+      "lng": 174.777042509424,
+      "geoConfidence": 0.95,
+      "annotations": [
+        {
+          "key": "location_text",
+          "value": "Haining Street, Te Aro, Wellington, 6011"
+        },
+        {
+          "key": "location_method",
+          "value": "reprojected"
+        },
+        {
+          "key": "text_generated",
+          "value": "false"
+        },
+        {
+          "key": "limitation",
+          "value": "Public report logged through Wellington Water's customer channel — recorded by an official system, but the underlying report is unverified."
+        },
+        {
+          "key": "limitation",
+          "value": "Street numbers removed to avoid publishing personal information."
+        },
+        {
+          "key": "limitation",
+          "value": "Status: New. An open job is not necessarily an active emergency."
+        }
+      ],
+      "datasetId": "live",
+      "synthetic": false,
+      "hazardType": "water",
+      "mediaType": "none",
+      "collectedAt": "2026-08-08T02:01:55.795Z",
+      "authorIsPseudonymised": false,
+      "textGenerated": false
+    },
+    {
+      "text": "Fault LUCKNOW TERRACE, Khandallah · Storm Water · General Fault",
+      "source": "wellington-water-faults",
+      "sourceClass": "community_report",
+      "occurredAt": "2026-08-05T04:47:27.000Z",
+      "externalId": "949206",
+      "lat": -41.248313468521,
+      "lng": 174.785088046825,
+      "geoConfidence": 0.95,
+      "annotations": [
+        {
+          "key": "location_text",
+          "value": "Lucknow Terrace, Khandallah, Wellington, 6035"
+        },
+        {
+          "key": "location_method",
+          "value": "reprojected"
+        },
+        {
+          "key": "text_generated",
+          "value": "false"
+        },
+        {
+          "key": "limitation",
+          "value": "Public report logged through Wellington Water's customer channel — recorded by an official system, but the underlying report is unverified."
+        },
+        {
+          "key": "limitation",
+          "value": "Street numbers removed to avoid publishing personal information."
+        },
+        {
+          "key": "limitation",
+          "value": "Status: New. An open job is not necessarily an active emergency."
+        }
+      ],
+      "datasetId": "live",
+      "synthetic": false,
+      "hazardType": "flooding",
+      "mediaType": "none",
+      "collectedAt": "2026-08-08T02:01:55.795Z",
+      "authorIsPseudonymised": false,
+      "textGenerated": false
+    },
+    {
+      "text": "Fault HUGH STREET, Mount Cook · Waste Water · General Fault",
+      "source": "wellington-water-faults",
+      "sourceClass": "community_report",
+      "occurredAt": "2026-08-05T20:45:18.000Z",
+      "externalId": "949274",
+      "lat": -41.3061481394269,
+      "lng": 174.779050813424,
+      "geoConfidence": 0.95,
+      "annotations": [
+        {
+          "key": "location_text",
+          "value": "Hugh Street, Wellington, 6021, Wellington"
+        },
+        {
+          "key": "location_method",
+          "value": "reprojected"
+        },
+        {
+          "key": "text_generated",
+          "value": "false"
+        },
+        {
+          "key": "limitation",
+          "value": "Public report logged through Wellington Water's customer channel — recorded by an official system, but the underlying report is unverified."
+        },
+        {
+          "key": "limitation",
+          "value": "Street numbers removed to avoid publishing personal information."
+        },
+        {
+          "key": "limitation",
+          "value": "Status: New. An open job is not necessarily an active emergency."
+        }
+      ],
+      "datasetId": "live",
+      "synthetic": false,
+      "hazardType": "water",
+      "mediaType": "none",
+      "collectedAt": "2026-08-08T02:01:55.795Z",
+      "authorIsPseudonymised": false,
+      "textGenerated": false
+    },
+    {
+      "text": "Leak COLCHESTER CRESCENT, Newlands · Potable Water · Leaky or Faulty Connection/Meter/Toby",
+      "source": "wellington-water-faults",
+      "sourceClass": "community_report",
+      "occurredAt": "2026-08-05T20:38:09.000Z",
+      "externalId": "949270",
+      "lat": -41.2214573897419,
+      "lng": 174.830055113343,
+      "geoConfidence": 0.95,
+      "annotations": [
+        {
+          "key": "location_text",
+          "value": "Colchester Crescent, Newlands, Wellington, 6037"
+        },
+        {
+          "key": "location_method",
+          "value": "reprojected"
+        },
+        {
+          "key": "text_generated",
+          "value": "false"
+        },
+        {
+          "key": "limitation",
+          "value": "Public report logged through Wellington Water's customer channel — recorded by an official system, but the underlying report is unverified."
+        },
+        {
+          "key": "limitation",
+          "value": "Street numbers removed to avoid publishing personal information."
+        },
+        {
+          "key": "limitation",
+          "value": "Status: In Queue. An open job is not necessarily an active emergency."
+        }
+      ],
+      "datasetId": "live",
+      "synthetic": false,
+      "hazardType": "water",
+      "mediaType": "none",
+      "collectedAt": "2026-08-08T02:01:55.795Z",
+      "authorIsPseudonymised": false,
+      "textGenerated": false
+    },
+    {
+      "text": "Leaking Con Magnolia Grove, MAUNGARAKI · Potable Water · Leaky or Faulty Connection/Meter/Toby",
+      "source": "wellington-water-faults",
+      "sourceClass": "community_report",
+      "occurredAt": "2026-08-05T20:47:52.360Z",
+      "externalId": "949276",
+      "lat": -41.2148921802602,
+      "lng": 174.881625778459,
+      "geoConfidence": 0.95,
+      "annotations": [
+        {
+          "key": "location_text",
+          "value": "Magnolia Grove, Maungaraki, Lower Hutt, Wellington, 5010"
+        },
+        {
+          "key": "location_method",
+          "value": "reprojected"
+        },
+        {
+          "key": "text_generated",
+          "value": "false"
+        },
+        {
+          "key": "limitation",
+          "value": "Public report logged through Wellington Water's customer channel — recorded by an official system, but the underlying report is unverified."
+        },
+        {
+          "key": "limitation",
+          "value": "Street numbers removed to avoid publishing personal information."
+        },
+        {
+          "key": "limitation",
+          "value": "Status: Under Investigation. An open job is not necessarily an active emergency."
+        }
+      ],
+      "datasetId": "live",
+      "synthetic": false,
+      "hazardType": "water",
+      "mediaType": "none",
+      "collectedAt": "2026-08-08T02:01:55.795Z",
+      "authorIsPseudonymised": false,
+      "textGenerated": false
+    },
+    {
+      "text": "Leaking Pipes Arawhata Street Ranui, Porirua City 5024 · Potable Water · General Fault",
+      "source": "wellington-water-faults",
+      "sourceClass": "community_report",
+      "occurredAt": "2026-08-05T20:39:23.000Z",
+      "externalId": "949271",
+      "lat": -41.1431180690978,
+      "lng": 174.847409424773,
+      "geoConfidence": 0.95,
+      "annotations": [
+        {
+          "key": "location_text",
+          "value": "Arawhata Street, Ranui, Porirua, Wellington, 5024"
+        },
+        {
+          "key": "location_method",
+          "value": "reprojected"
+        },
+        {
+          "key": "text_generated",
+          "value": "false"
+        },
+        {
+          "key": "limitation",
+          "value": "Public report logged through Wellington Water's customer channel — recorded by an official system, but the underlying report is unverified."
+        },
+        {
+          "key": "limitation",
+          "value": "Street numbers removed to avoid publishing personal information."
+        },
+        {
+          "key": "limitation",
+          "value": "Status: In Queue. An open job is not necessarily an active emergency."
+        }
+      ],
+      "datasetId": "live",
+      "synthetic": false,
+      "hazardType": "water",
+      "mediaType": "none",
+      "collectedAt": "2026-08-08T02:01:55.795Z",
+      "authorIsPseudonymised": false,
+      "textGenerated": false
+    },
+    {
+      "text": "Fault NOTTINGHAM STREET, Karori · Potable Water · General Fault",
+      "source": "wellington-water-faults",
+      "sourceClass": "community_report",
+      "occurredAt": "2026-08-05T20:04:10.000Z",
+      "externalId": "949264",
+      "lat": -41.2770830100663,
+      "lng": 174.74682273099,
+      "geoConfidence": 0.95,
+      "annotations": [
+        {
+          "key": "location_text",
+          "value": "Nottingham Street, Karori, Wellington, 6012"
+        },
+        {
+          "key": "location_method",
+          "value": "reprojected"
+        },
+        {
+          "key": "text_generated",
+          "value": "false"
+        },
+        {
+          "key": "limitation",
+          "value": "Public report logged through Wellington Water's customer channel — recorded by an official system, but the underlying report is unverified."
+        },
+        {
+          "key": "limitation",
+          "value": "Street numbers removed to avoid publishing personal information."
+        },
+        {
+          "key": "limitation",
+          "value": "Status: New. An open job is not necessarily an active emergency."
+        }
+      ],
+      "datasetId": "live",
+      "synthetic": false,
+      "hazardType": "water",
+      "mediaType": "none",
+      "collectedAt": "2026-08-08T02:01:55.795Z",
+      "authorIsPseudonymised": false,
+      "textGenerated": false
+    },
+    {
+      "text": "Fault AKAROA DRIVE, Maupuia · Storm Water · General Fault",
+      "source": "wellington-water-faults",
+      "sourceClass": "community_report",
+      "occurredAt": "2026-08-05T20:57:08.000Z",
+      "externalId": "949279",
+      "lat": -41.3051715638875,
+      "lng": 174.820259937473,
+      "geoConfidence": 0.95,
+      "annotations": [
+        {
+          "key": "location_text",
+          "value": "Akaroa Drive, Maupuia, Wellington, 6022"
+        },
+        {
+          "key": "location_method",
+          "value": "reprojected"
+        },
+        {
+          "key": "text_generated",
+          "value": "false"
+        },
+        {
+          "key": "limitation",
+          "value": "Public report logged through Wellington Water's customer channel — recorded by an official system, but the underlying report is unverified."
+        },
+        {
+          "key": "limitation",
+          "value": "Street numbers removed to avoid publishing personal information."
+        },
+        {
+          "key": "limitation",
+          "value": "Status: New. An open job is not necessarily an active emergency."
+        }
+      ],
+      "datasetId": "live",
+      "synthetic": false,
+      "hazardType": "flooding",
+      "mediaType": "none",
+      "collectedAt": "2026-08-08T02:01:55.795Z",
+      "authorIsPseudonymised": false,
+      "textGenerated": false
+    },
+    {
+      "text": "Fault WEBB STREET, Mount Cook-Te Aro · Potable Water · General Fault",
+      "source": "wellington-water-faults",
+      "sourceClass": "community_report",
+      "occurredAt": "2026-08-05T22:05:08.000Z",
+      "externalId": "949315",
+      "lat": -41.2972941255551,
+      "lng": 174.772425589516,
+      "geoConfidence": 0.95,
+      "annotations": [
+        {
+          "key": "location_text",
+          "value": "Webb Street, Te Aro, Wellington, 6011"
+        },
+        {
+          "key": "location_method",
+          "value": "reprojected"
+        },
+        {
+          "key": "text_generated",
+          "value": "false"
+        },
+        {
+          "key": "limitation",
+          "value": "Public report logged through Wellington Water's customer channel — recorded by an official system, but the underlying report is unverified."
+        },
+        {
+          "key": "limitation",
+          "value": "Street numbers removed to avoid publishing personal information."
+        },
+        {
+          "key": "limitation",
+          "value": "Status: New. An open job is not necessarily an active emergency."
+        }
+      ],
+      "datasetId": "live",
+      "synthetic": false,
+      "hazardType": "water",
+      "mediaType": "none",
+      "collectedAt": "2026-08-08T02:01:55.795Z",
+      "authorIsPseudonymised": false,
+      "textGenerated": false
+    },
+    {
+      "text": "Fault RINTOUL STREET, Newtown · Storm Water · General Fault",
+      "source": "wellington-water-faults",
+      "sourceClass": "community_report",
+      "occurredAt": "2026-08-05T22:53:08.000Z",
+      "externalId": "949339",
+      "lat": -41.3134261878635,
+      "lng": 174.778477575066,
+      "geoConfidence": 0.95,
+      "annotations": [
+        {
+          "key": "location_text",
+          "value": "Rintoul Street, Newtown, Wellington, 6021"
+        },
+        {
+          "key": "location_method",
+          "value": "reprojected"
+        },
+        {
+          "key": "text_generated",
+          "value": "false"
+        },
+        {
+          "key": "limitation",
+          "value": "Public report logged through Wellington Water's customer channel — recorded by an official system, but the underlying report is unverified."
+        },
+        {
+          "key": "limitation",
+          "value": "Street numbers removed to avoid publishing personal information."
+        },
+        {
+          "key": "limitation",
+          "value": "Status: New. An open job is not necessarily an active emergency."
+        }
+      ],
+      "datasetId": "live",
+      "synthetic": false,
+      "hazardType": "flooding",
+      "mediaType": "none",
+      "collectedAt": "2026-08-08T02:01:55.795Z",
+      "authorIsPseudonymised": false,
+      "textGenerated": false
+    },
+    {
+      "text": "Leaky Connection Poto Road, NORMANDALE · Potable Water · Leaky or Faulty Connection/Meter/Toby",
+      "source": "wellington-water-faults",
+      "sourceClass": "community_report",
+      "occurredAt": "2026-08-05T22:43:23.200Z",
+      "externalId": "949332",
+      "lat": -41.2003508355362,
+      "lng": 174.888112784784,
+      "geoConfidence": 0.95,
+      "annotations": [
+        {
+          "key": "location_text",
+          "value": "Poto Road, Normandale, Lower Hutt, Wellington, 5010"
+        },
+        {
+          "key": "location_method",
+          "value": "reprojected"
+        },
+        {
+          "key": "text_generated",
+          "value": "false"
+        },
+        {
+          "key": "limitation",
+          "value": "Public report logged through Wellington Water's customer channel — recorded by an official system, but the underlying report is unverified."
+        },
+        {
+          "key": "limitation",
+          "value": "Street numbers removed to avoid publishing personal information."
+        },
+        {
+          "key": "limitation",
+          "value": "Status: New. An open job is not necessarily an active emergency."
+        }
+      ],
+      "datasetId": "live",
+      "synthetic": false,
+      "hazardType": "water",
+      "mediaType": "none",
+      "collectedAt": "2026-08-08T02:01:55.795Z",
+      "authorIsPseudonymised": false,
+      "textGenerated": false
+    },
+    {
+      "text": "Fault FARM ROAD, Northland · Waste Water · General Fault",
+      "source": "wellington-water-faults",
+      "sourceClass": "community_report",
+      "occurredAt": "2026-08-05T23:04:07.000Z",
+      "externalId": "949344",
+      "lat": -41.2829100253348,
+      "lng": 174.756578679554,
+      "geoConfidence": 0.95,
+      "annotations": [
+        {
+          "key": "location_text",
+          "value": "Farm Road, Northland, Wellington, 6012"
+        },
+        {
+          "key": "location_method",
+          "value": "reprojected"
+        },
+        {
+          "key": "text_generated",
+          "value": "false"
+        },
+        {
+          "key": "limitation",
+          "value": "Public report logged through Wellington Water's customer channel — recorded by an official system, but the underlying report is unverified."
+        },
+        {
+          "key": "limitation",
+          "value": "Street numbers removed to avoid publishing personal information."
+        },
+        {
+          "key": "limitation",
+          "value": "Status: New. An open job is not necessarily an active emergency."
+        }
+      ],
+      "datasetId": "live",
+      "synthetic": false,
+      "hazardType": "water",
+      "mediaType": "none",
+      "collectedAt": "2026-08-08T02:01:55.795Z",
+      "authorIsPseudonymised": false,
+      "textGenerated": false
+    },
+    {
+      "text": "Leaking Pipes Naenae Road, NAENAE · Potable Water · Leaking Pipes",
+      "source": "wellington-water-faults",
+      "sourceClass": "community_report",
+      "occurredAt": "2026-08-05T23:35:49.933Z",
+      "externalId": "949360",
+      "lat": -41.2055248167279,
+      "lng": 174.934755896661,
+      "geoConfidence": 0.95,
+      "annotations": [
+        {
+          "key": "location_text",
+          "value": "Naenae Road, Naenae, Lower Hutt, Wellington, 5011"
+        },
+        {
+          "key": "location_method",
+          "value": "reprojected"
+        },
+        {
+          "key": "text_generated",
+          "value": "false"
+        },
+        {
+          "key": "limitation",
+          "value": "Public report logged through Wellington Water's customer channel — recorded by an official system, but the underlying report is unverified."
+        },
+        {
+          "key": "limitation",
+          "value": "Street numbers removed to avoid publishing personal information."
+        },
+        {
+          "key": "limitation",
+          "value": "Status: New. An open job is not necessarily an active emergency."
+        }
+      ],
+      "datasetId": "live",
+      "synthetic": false,
+      "hazardType": "water",
+      "mediaType": "none",
+      "collectedAt": "2026-08-08T02:01:55.795Z",
+      "authorIsPseudonymised": false,
+      "textGenerated": false
+    },
+    {
+      "text": "Leak BAY ROAD, Kilbirnie · Potable Water · Leaking Pipes",
+      "source": "wellington-water-faults",
+      "sourceClass": "community_report",
+      "occurredAt": "2026-08-05T23:21:08.000Z",
+      "externalId": "949349",
+      "lat": -41.3188286597362,
+      "lng": 174.794556496109,
+      "geoConfidence": 0.95,
+      "annotations": [
+        {
+          "key": "location_text",
+          "value": "Bay Road, Kilbirnie, Wellington, 6022"
+        },
+        {
+          "key": "location_method",
+          "value": "reprojected"
+        },
+        {
+          "key": "text_generated",
+          "value": "false"
+        },
+        {
+          "key": "limitation",
+          "value": "Public report logged through Wellington Water's customer channel — recorded by an official system, but the underlying report is unverified."
+        },
+        {
+          "key": "limitation",
+          "value": "Street numbers removed to avoid publishing personal information."
+        },
+        {
+          "key": "limitation",
+          "value": "Status: In Queue. An open job is not necessarily an active emergency."
+        }
+      ],
+      "datasetId": "live",
+      "synthetic": false,
+      "hazardType": "water",
+      "mediaType": "none",
+      "collectedAt": "2026-08-08T02:01:55.795Z",
+      "authorIsPseudonymised": false,
+      "textGenerated": false
+    },
+    {
+      "text": "Fault WELD STREET, Wadestown · Storm Water · General Fault",
+      "source": "wellington-water-faults",
+      "sourceClass": "community_report",
+      "occurredAt": "2026-08-06T01:56:31.000Z",
+      "externalId": "949426",
+      "lat": -41.2594648782342,
+      "lng": 174.77468820046,
+      "geoConfidence": 0.95,
+      "annotations": [
+        {
+          "key": "location_text",
+          "value": "Weld Street, Wadestown, Wellington, 6012"
+        },
+        {
+          "key": "location_method",
+          "value": "reprojected"
+        },
+        {
+          "key": "text_generated",
+          "value": "false"
+        },
+        {
+          "key": "limitation",
+          "value": "Public report logged through Wellington Water's customer channel — recorded by an official system, but the underlying report is unverified."
+        },
+        {
+          "key": "limitation",
+          "value": "Street numbers removed to avoid publishing personal information."
+        },
+        {
+          "key": "limitation",
+          "value": "Status: In Queue. An open job is not necessarily an active emergency."
+        }
+      ],
+      "datasetId": "live",
+      "synthetic": false,
+      "hazardType": "flooding",
+      "mediaType": "none",
+      "collectedAt": "2026-08-08T02:01:55.795Z",
+      "authorIsPseudonymised": false,
+      "textGenerated": false
+    },
+    {
+      "text": "Fault BASSETT ROAD, Johnsonville · Potable Water · General Fault",
+      "source": "wellington-water-faults",
+      "sourceClass": "community_report",
+      "occurredAt": "2026-08-06T01:54:09.000Z",
+      "externalId": "949425",
+      "lat": -41.2189880810665,
+      "lng": 174.807199507402,
+      "geoConfidence": 0.95,
+      "annotations": [
+        {
+          "key": "location_text",
+          "value": "Bassett Road, Johnsonville, Wellington, 6037"
+        },
+        {
+          "key": "location_method",
+          "value": "reprojected"
+        },
+        {
+          "key": "text_generated",
+          "value": "false"
+        },
+        {
+          "key": "limitation",
+          "value": "Public report logged through Wellington Water's customer channel — recorded by an official system, but the underlying report is unverified."
+        },
+        {
+          "key": "limitation",
+          "value": "Street numbers removed to avoid publishing personal information."
+        },
+        {
+          "key": "limitation",
+          "value": "Status: New. An open job is not necessarily an active emergency."
+        }
+      ],
+      "datasetId": "live",
+      "synthetic": false,
+      "hazardType": "water",
+      "mediaType": "none",
+      "collectedAt": "2026-08-08T02:01:55.795Z",
+      "authorIsPseudonymised": false,
+      "textGenerated": false
+    },
+    {
+      "text": "Fault RINTOUL STREET, Newtown · Potable Water · General Fault",
+      "source": "wellington-water-faults",
+      "sourceClass": "community_report",
+      "occurredAt": "2026-08-06T01:35:07.000Z",
+      "externalId": "949413",
+      "lat": -41.3136895472614,
+      "lng": 174.778417979735,
+      "geoConfidence": 0.95,
+      "annotations": [
+        {
+          "key": "location_text",
+          "value": "Rintoul Street, Newtown, Wellington, 6021"
+        },
+        {
+          "key": "location_method",
+          "value": "reprojected"
+        },
+        {
+          "key": "text_generated",
+          "value": "false"
+        },
+        {
+          "key": "limitation",
+          "value": "Public report logged through Wellington Water's customer channel — recorded by an official system, but the underlying report is unverified."
+        },
+        {
+          "key": "limitation",
+          "value": "Street numbers removed to avoid publishing personal information."
+        },
+        {
+          "key": "limitation",
+          "value": "Status: New. An open job is not necessarily an active emergency."
+        }
+      ],
+      "datasetId": "live",
+      "synthetic": false,
+      "hazardType": "water",
+      "mediaType": "none",
+      "collectedAt": "2026-08-08T02:01:55.795Z",
+      "authorIsPseudonymised": false,
+      "textGenerated": false
+    },
+    {
+      "text": "Leaking Pipes Bristol Square, HUTT CENTRAL · Potable Water · Leaking Pipes",
+      "source": "wellington-water-faults",
+      "sourceClass": "community_report",
+      "occurredAt": "2026-08-06T01:36:22.177Z",
+      "externalId": "949414",
+      "lat": -41.206187070898,
+      "lng": 174.913883365192,
+      "geoConfidence": 0.95,
+      "annotations": [
+        {
+          "key": "location_text",
+          "value": "Bristol Square, Hutt Central, Lower Hutt, Wellington, 5010"
+        },
+        {
+          "key": "location_method",
+          "value": "reprojected"
+        },
+        {
+          "key": "text_generated",
+          "value": "false"
+        },
+        {
+          "key": "limitation",
+          "value": "Public report logged through Wellington Water's customer channel — recorded by an official system, but the underlying report is unverified."
+        },
+        {
+          "key": "limitation",
+          "value": "Street numbers removed to avoid publishing personal information."
+        },
+        {
+          "key": "limitation",
+          "value": "Status: New. An open job is not necessarily an active emergency."
+        }
+      ],
+      "datasetId": "live",
+      "synthetic": false,
+      "hazardType": "water",
+      "mediaType": "none",
+      "collectedAt": "2026-08-08T02:01:55.795Z",
+      "authorIsPseudonymised": false,
+      "textGenerated": false
+    },
+    {
+      "text": "Fault Pinkerton Park · Storm Water · General Fault",
+      "source": "wellington-water-faults",
+      "sourceClass": "community_report",
+      "occurredAt": "2026-08-06T01:04:07.000Z",
+      "externalId": "949394",
+      "lat": -41.2209843999897,
+      "lng": 174.826849700006,
+      "geoConfidence": 0.95,
+      "annotations": [
+        {
+          "key": "location_text",
+          "value": "Pinkerton Park"
+        },
+        {
+          "key": "location_method",
+          "value": "reprojected"
+        },
+        {
+          "key": "text_generated",
+          "value": "false"
+        },
+        {
+          "key": "limitation",
+          "value": "Public report logged through Wellington Water's customer channel — recorded by an official system, but the underlying report is unverified."
+        },
+        {
+          "key": "limitation",
+          "value": "Street numbers removed to avoid publishing personal information."
+        },
+        {
+          "key": "limitation",
+          "value": "Status: In Queue. An open job is not necessarily an active emergency."
+        }
+      ],
+      "datasetId": "live",
+      "synthetic": false,
+      "hazardType": "flooding",
+      "mediaType": "none",
+      "collectedAt": "2026-08-08T02:01:55.795Z",
+      "authorIsPseudonymised": false,
+      "textGenerated": false
+    },
+    {
+      "text": "Leaking Pipes Orr Crescent, HUTT CENTRAL · Potable Water · Leaking Pipes",
+      "source": "wellington-water-faults",
+      "sourceClass": "community_report",
+      "occurredAt": "2026-08-06T00:37:31.303Z",
+      "externalId": "949386",
+      "lat": -41.2070038873623,
+      "lng": 174.921986067173,
+      "geoConfidence": 0.95,
+      "annotations": [
+        {
+          "key": "location_text",
+          "value": "Orr Crescent, Hutt Central, Lower Hutt, Wellington, 5011"
+        },
+        {
+          "key": "location_method",
+          "value": "reprojected"
+        },
+        {
+          "key": "text_generated",
+          "value": "false"
+        },
+        {
+          "key": "limitation",
+          "value": "Public report logged through Wellington Water's customer channel — recorded by an official system, but the underlying report is unverified."
+        },
+        {
+          "key": "limitation",
+          "value": "Street numbers removed to avoid publishing personal information."
+        },
+        {
+          "key": "limitation",
+          "value": "Status: New. An open job is not necessarily an active emergency."
+        }
+      ],
+      "datasetId": "live",
+      "synthetic": false,
+      "hazardType": "water",
+      "mediaType": "none",
+      "collectedAt": "2026-08-08T02:01:55.795Z",
+      "authorIsPseudonymised": false,
+      "textGenerated": false
+    },
+    {
+      "text": "Leaking Pipes Riverside Drive, WAIWHETU · Potable Water · Leaking Pipes",
+      "source": "wellington-water-faults",
+      "sourceClass": "community_report",
+      "occurredAt": "2026-08-06T00:17:17.763Z",
+      "externalId": "949376",
+      "lat": -41.2262995313864,
+      "lng": 174.920343214151,
+      "geoConfidence": 0.95,
+      "annotations": [
+        {
+          "key": "location_text",
+          "value": "Riverside Drive, Waiwhetu, Lower Hutt, Wellington, 5010"
+        },
+        {
+          "key": "location_method",
+          "value": "reprojected"
+        },
+        {
+          "key": "text_generated",
+          "value": "false"
+        },
+        {
+          "key": "limitation",
+          "value": "Public report logged through Wellington Water's customer channel — recorded by an official system, but the underlying report is unverified."
+        },
+        {
+          "key": "limitation",
+          "value": "Street numbers removed to avoid publishing personal information."
+        },
+        {
+          "key": "limitation",
+          "value": "Status: Resolved. An open job is not necessarily an active emergency."
+        }
+      ],
+      "datasetId": "live",
+      "synthetic": false,
+      "hazardType": "water",
+      "mediaType": "none",
+      "collectedAt": "2026-08-08T02:01:55.795Z",
+      "authorIsPseudonymised": false,
+      "textGenerated": false
+    },
+    {
+      "text": "Leaking Pipes Maire Street, EASTBOURNE · Potable Water · Leaking Pipes",
+      "source": "wellington-water-faults",
+      "sourceClass": "community_report",
+      "occurredAt": "2026-08-06T00:55:07.370Z",
+      "externalId": "949391",
+      "lat": -41.2966665305538,
+      "lng": 174.894081370397,
+      "geoConfidence": 0.95,
+      "annotations": [
+        {
+          "key": "location_text",
+          "value": "Maire Street, Eastbourne, Lower Hutt, Wellington, 5013"
+        },
+        {
+          "key": "location_method",
+          "value": "reprojected"
+        },
+        {
+          "key": "text_generated",
+          "value": "false"
+        },
+        {
+          "key": "limitation",
+          "value": "Public report logged through Wellington Water's customer channel — recorded by an official system, but the underlying report is unverified."
+        },
+        {
+          "key": "limitation",
+          "value": "Street numbers removed to avoid publishing personal information."
+        },
+        {
+          "key": "limitation",
+          "value": "Status: New. An open job is not necessarily an active emergency."
+        }
+      ],
+      "datasetId": "live",
+      "synthetic": false,
+      "hazardType": "water",
+      "mediaType": "none",
+      "collectedAt": "2026-08-08T02:01:55.795Z",
+      "authorIsPseudonymised": false,
+      "textGenerated": false
+    },
+    {
+      "text": "Fault LYNDHURST ROAD, Tawa · Potable Water · General Fault",
+      "source": "wellington-water-faults",
+      "sourceClass": "community_report",
+      "occurredAt": "2026-08-06T00:30:08.000Z",
+      "externalId": "949382",
+      "lat": -41.1710708360882,
+      "lng": 174.819977718793,
+      "geoConfidence": 0.95,
+      "annotations": [
+        {
+          "key": "location_text",
+          "value": "Lyndhurst Road, Tawa, Wellington, 5028"
+        },
+        {
+          "key": "location_method",
+          "value": "reprojected"
+        },
+        {
+          "key": "text_generated",
+          "value": "false"
+        },
+        {
+          "key": "limitation",
+          "value": "Public report logged through Wellington Water's customer channel — recorded by an official system, but the underlying report is unverified."
+        },
+        {
+          "key": "limitation",
+          "value": "Street numbers removed to avoid publishing personal information."
+        },
+        {
+          "key": "limitation",
+          "value": "Status: New. An open job is not necessarily an active emergency."
+        }
+      ],
+      "datasetId": "live",
+      "synthetic": false,
+      "hazardType": "water",
+      "mediaType": "none",
+      "collectedAt": "2026-08-08T02:01:55.795Z",
+      "authorIsPseudonymised": false,
+      "textGenerated": false
+    },
+    {
+      "text": "Fault Evans Bay Parade, Hataitai, Wellington, 6021 · Potable Water · General Fault",
+      "source": "wellington-water-faults",
+      "sourceClass": "community_report",
+      "occurredAt": "2026-08-06T00:24:11.000Z",
+      "externalId": "949378",
+      "lat": -41.3043768337381,
+      "lng": 174.800495745061,
+      "geoConfidence": 0.95,
+      "annotations": [
+        {
+          "key": "location_text",
+          "value": "Evans Bay Parade, Hataitai, Wellington, 6021"
+        },
+        {
+          "key": "location_method",
+          "value": "reprojected"
+        },
+        {
+          "key": "text_generated",
+          "value": "false"
+        },
+        {
+          "key": "limitation",
+          "value": "Public report logged through Wellington Water's customer channel — recorded by an official system, but the underlying report is unverified."
+        },
+        {
+          "key": "limitation",
+          "value": "Street numbers removed to avoid publishing personal information."
+        },
+        {
+          "key": "limitation",
+          "value": "Status: New. An open job is not necessarily an active emergency."
+        }
+      ],
+      "datasetId": "live",
+      "synthetic": false,
+      "hazardType": "water",
+      "mediaType": "none",
+      "collectedAt": "2026-08-08T02:01:55.795Z",
+      "authorIsPseudonymised": false,
+      "textGenerated": false
+    },
+    {
+      "text": "Fault MAIRANGI ROAD, Wadestown · Waste Water · General Fault",
+      "source": "wellington-water-faults",
+      "sourceClass": "community_report",
+      "occurredAt": "2026-08-06T02:47:09.000Z",
+      "externalId": "949446",
+      "lat": -41.2657653872132,
+      "lng": 174.766506289494,
+      "geoConfidence": 0.95,
+      "annotations": [
+        {
+          "key": "location_text",
+          "value": "Mairangi Road, Wadestown, Wellington, 6012"
+        },
+        {
+          "key": "location_method",
+          "value": "reprojected"
+        },
+        {
+          "key": "text_generated",
+          "value": "false"
+        },
+        {
+          "key": "limitation",
+          "value": "Public report logged through Wellington Water's customer channel — recorded by an official system, but the underlying report is unverified."
+        },
+        {
+          "key": "limitation",
+          "value": "Street numbers removed to avoid publishing personal information."
+        },
+        {
+          "key": "limitation",
+          "value": "Status: New. An open job is not necessarily an active emergency."
+        }
+      ],
+      "datasetId": "live",
+      "synthetic": false,
+      "hazardType": "water",
+      "mediaType": "none",
+      "collectedAt": "2026-08-08T02:01:55.795Z",
+      "authorIsPseudonymised": false,
+      "textGenerated": false
+    },
+    {
+      "text": "Fault LINK ROAD, Newlands · Potable Water · General Fault",
+      "source": "wellington-water-faults",
+      "sourceClass": "community_report",
+      "occurredAt": "2026-08-06T02:48:07.000Z",
+      "externalId": "949447",
+      "lat": -41.2272355385149,
+      "lng": 174.824979116599,
+      "geoConfidence": 0.95,
+      "annotations": [
+        {
+          "key": "location_text",
+          "value": "Link Road, Newlands, Wellington, 6037"
+        },
+        {
+          "key": "location_method",
+          "value": "reprojected"
+        },
+        {
+          "key": "text_generated",
+          "value": "false"
+        },
+        {
+          "key": "limitation",
+          "value": "Public report logged through Wellington Water's customer channel — recorded by an official system, but the underlying report is unverified."
+        },
+        {
+          "key": "limitation",
+          "value": "Street numbers removed to avoid publishing personal information."
+        },
+        {
+          "key": "limitation",
+          "value": "Status: In Queue. An open job is not necessarily an active emergency."
+        }
+      ],
+      "datasetId": "live",
+      "synthetic": false,
+      "hazardType": "water",
+      "mediaType": "none",
+      "collectedAt": "2026-08-08T02:01:55.795Z",
+      "authorIsPseudonymised": false,
+      "textGenerated": false
+    },
+    {
+      "text": "Blockage Muritai Road Eastbourne · Waste Water · Blockage - Significant",
+      "source": "wellington-water-faults",
+      "sourceClass": "community_report",
+      "occurredAt": "2026-08-06T02:16:04.243Z",
+      "externalId": "949433",
+      "lat": -41.2922187155432,
+      "lng": 174.897184099496,
+      "geoConfidence": 0.95,
+      "annotations": [
+        {
+          "key": "location_text",
+          "value": "Muritai Road, Eastbourne, Lower Hutt, Wellington, 5013"
+        },
+        {
+          "key": "location_method",
+          "value": "reprojected"
+        },
+        {
+          "key": "text_generated",
+          "value": "false"
+        },
+        {
+          "key": "limitation",
+          "value": "Public report logged through Wellington Water's customer channel — recorded by an official system, but the underlying report is unverified."
+        },
+        {
+          "key": "limitation",
+          "value": "Street numbers removed to avoid publishing personal information."
+        },
+        {
+          "key": "limitation",
+          "value": "Status: New. An open job is not necessarily an active emergency."
+        }
+      ],
+      "datasetId": "live",
+      "synthetic": false,
+      "hazardType": "water",
+      "mediaType": "none",
+      "collectedAt": "2026-08-08T02:01:55.795Z",
+      "authorIsPseudonymised": false,
+      "textGenerated": false
+    },
+    {
+      "text": "Blockage Park Road, BELMONT · Storm Water · Blockage - Significant",
+      "source": "wellington-water-faults",
+      "sourceClass": "community_report",
+      "occurredAt": "2026-08-06T02:12:08.800Z",
+      "externalId": "949430",
+      "lat": -41.1926075495634,
+      "lng": 174.92066013391,
+      "geoConfidence": 0.95,
+      "annotations": [
+        {
+          "key": "location_text",
+          "value": "Park Road, Belmont, Lower Hutt, Wellington, 5010"
+        },
+        {
+          "key": "location_method",
+          "value": "reprojected"
+        },
+        {
+          "key": "text_generated",
+          "value": "false"
+        },
+        {
+          "key": "limitation",
+          "value": "Public report logged through Wellington Water's customer channel — recorded by an official system, but the underlying report is unverified."
+        },
+        {
+          "key": "limitation",
+          "value": "Street numbers removed to avoid publishing personal information."
+        },
+        {
+          "key": "limitation",
+          "value": "Status: In Queue. An open job is not necessarily an active emergency."
+        }
+      ],
+      "datasetId": "live",
+      "synthetic": false,
+      "hazardType": "flooding",
+      "mediaType": "none",
+      "collectedAt": "2026-08-08T02:01:55.795Z",
+      "authorIsPseudonymised": false,
+      "textGenerated": false
+    },
+    {
+      "text": "Blockage Totara Street, EASTBOURNE · Storm Water · Blockage - Significant",
+      "source": "wellington-water-faults",
+      "sourceClass": "community_report",
+      "occurredAt": "2026-08-06T02:14:08.213Z",
+      "externalId": "949432",
+      "lat": -41.2876232952178,
+      "lng": 174.902571400124,
+      "geoConfidence": 0.95,
+      "annotations": [
+        {
+          "key": "location_text",
+          "value": "Totara Street, Eastbourne, Lower Hutt, Wellington, 5013"
+        },
+        {
+          "key": "location_method",
+          "value": "reprojected"
+        },
+        {
+          "key": "text_generated",
+          "value": "false"
+        },
+        {
+          "key": "limitation",
+          "value": "Public report logged through Wellington Water's customer channel — recorded by an official system, but the underlying report is unverified."
+        },
+        {
+          "key": "limitation",
+          "value": "Street numbers removed to avoid publishing personal information."
+        },
+        {
+          "key": "limitation",
+          "value": "Status: In Queue. An open job is not necessarily an active emergency."
+        }
+      ],
+      "datasetId": "live",
+      "synthetic": false,
+      "hazardType": "flooding",
+      "mediaType": "none",
+      "collectedAt": "2026-08-08T02:01:55.795Z",
+      "authorIsPseudonymised": false,
+      "textGenerated": false
+    },
+    {
+      "text": "Leak GARDEN ROAD, Northland · Potable Water · Leaking Pipes",
+      "source": "wellington-water-faults",
+      "sourceClass": "community_report",
+      "occurredAt": "2026-08-06T03:26:07.000Z",
+      "externalId": "949456",
+      "lat": -41.2819995830119,
+      "lng": 174.761605725983,
+      "geoConfidence": 0.95,
+      "annotations": [
+        {
+          "key": "location_text",
+          "value": "Garden Road, Northland, Wellington, 6012"
+        },
+        {
+          "key": "location_method",
+          "value": "reprojected"
+        },
+        {
+          "key": "text_generated",
+          "value": "false"
+        },
+        {
+          "key": "limitation",
+          "value": "Public report logged through Wellington Water's customer channel — recorded by an official system, but the underlying report is unverified."
+        },
+        {
+          "key": "limitation",
+          "value": "Street numbers removed to avoid publishing personal information."
+        },
+        {
+          "key": "limitation",
+          "value": "Status: In Queue. An open job is not necessarily an active emergency."
+        }
+      ],
+      "datasetId": "live",
+      "synthetic": false,
+      "hazardType": "water",
+      "mediaType": "none",
+      "collectedAt": "2026-08-08T02:01:55.795Z",
+      "authorIsPseudonymised": false,
+      "textGenerated": false
+    },
+    {
+      "text": "Leak LEVY STREET, Mount Victoria · Potable Water · Leaking Pipes",
+      "source": "wellington-water-faults",
+      "sourceClass": "community_report",
+      "occurredAt": "2026-08-06T03:35:15.000Z",
+      "externalId": "949460",
+      "lat": -41.2952483125374,
+      "lng": 174.785625075361,
+      "geoConfidence": 0.95,
+      "annotations": [
+        {
+          "key": "location_text",
+          "value": "Levy Street, Mount Victoria, Wellington, 6011"
+        },
+        {
+          "key": "location_method",
+          "value": "reprojected"
+        },
+        {
+          "key": "text_generated",
+          "value": "false"
+        },
+        {
+          "key": "limitation",
+          "value": "Public report logged through Wellington Water's customer channel — recorded by an official system, but the underlying report is unverified."
+        },
+        {
+          "key": "limitation",
+          "value": "Street numbers removed to avoid publishing personal information."
+        },
+        {
+          "key": "limitation",
+          "value": "Status: In Queue. An open job is not necessarily an active emergency."
+        }
+      ],
+      "datasetId": "live",
+      "synthetic": false,
+      "hazardType": "water",
+      "mediaType": "none",
+      "collectedAt": "2026-08-08T02:01:55.795Z",
+      "authorIsPseudonymised": false,
+      "textGenerated": false
+    },
+    {
+      "text": "Leaking Pipes Rona Street Eastbourne · Potable Water · Leaking Pipes",
+      "source": "wellington-water-faults",
+      "sourceClass": "community_report",
+      "occurredAt": "2026-08-06T05:59:17.490Z",
+      "externalId": "949485",
+      "lat": -41.288233749226,
+      "lng": 174.902350536975,
+      "geoConfidence": 0.95,
+      "annotations": [
+        {
+          "key": "location_text",
+          "value": "Rona Street, Eastbourne, Lower Hutt, Wellington, 5013"
+        },
+        {
+          "key": "location_method",
+          "value": "reprojected"
+        },
+        {
+          "key": "text_generated",
+          "value": "false"
+        },
+        {
+          "key": "limitation",
+          "value": "Public report logged through Wellington Water's customer channel — recorded by an official system, but the underlying report is unverified."
+        },
+        {
+          "key": "limitation",
+          "value": "Street numbers removed to avoid publishing personal information."
+        },
+        {
+          "key": "limitation",
+          "value": "Status: New. An open job is not necessarily an active emergency."
+        }
+      ],
+      "datasetId": "live",
+      "synthetic": false,
+      "hazardType": "water",
+      "mediaType": "none",
+      "collectedAt": "2026-08-08T02:01:55.795Z",
+      "authorIsPseudonymised": false,
+      "textGenerated": false
+    },
+    {
+      "text": "Leaking Pipes Queens Drive Hutt Central · Potable Water · Leaking Pipes",
+      "source": "wellington-water-faults",
+      "sourceClass": "community_report",
+      "occurredAt": "2026-08-06T18:42:32.893Z",
+      "externalId": "949568",
+      "lat": -41.2108394677314,
+      "lng": 174.902402131343,
+      "geoConfidence": 0.95,
+      "annotations": [
+        {
+          "key": "location_text",
+          "value": "Queens Drive, Hutt Central, Lower Hutt, Wellington, 5010"
+        },
+        {
+          "key": "location_method",
+          "value": "reprojected"
+        },
+        {
+          "key": "text_generated",
+          "value": "false"
+        },
+        {
+          "key": "limitation",
+          "value": "Public report logged through Wellington Water's customer channel — recorded by an official system, but the underlying report is unverified."
+        },
+        {
+          "key": "limitation",
+          "value": "Street numbers removed to avoid publishing personal information."
+        },
+        {
+          "key": "limitation",
+          "value": "Status: New. An open job is not necessarily an active emergency."
+        }
+      ],
+      "datasetId": "live",
+      "synthetic": false,
+      "hazardType": "water",
+      "mediaType": "none",
+      "collectedAt": "2026-08-08T02:01:55.795Z",
+      "authorIsPseudonymised": false,
+      "textGenerated": false
+    },
+    {
+      "text": "Leaking Pipes Queens Drive, HUTT CENTRAL | Out · Potable Water · Leaking Pipes",
+      "source": "wellington-water-faults",
+      "sourceClass": "community_report",
+      "occurredAt": "2026-08-06T20:09:50.313Z",
+      "externalId": "949579",
+      "lat": -41.2108174856693,
+      "lng": 174.902605682108,
+      "geoConfidence": 0.95,
+      "annotations": [
+        {
+          "key": "location_text",
+          "value": "Queens Drive, Hutt Central, Lower Hutt, Wellington, 5010"
+        },
+        {
+          "key": "location_method",
+          "value": "reprojected"
+        },
+        {
+          "key": "text_generated",
+          "value": "false"
+        },
+        {
+          "key": "limitation",
+          "value": "Public report logged through Wellington Water's customer channel — recorded by an official system, but the underlying report is unverified."
+        },
+        {
+          "key": "limitation",
+          "value": "Street numbers removed to avoid publishing personal information."
+        },
+        {
+          "key": "limitation",
+          "value": "Status: New. An open job is not necessarily an active emergency."
+        }
+      ],
+      "datasetId": "live",
+      "synthetic": false,
+      "hazardType": "water",
+      "mediaType": "none",
+      "collectedAt": "2026-08-08T02:01:55.795Z",
+      "authorIsPseudonymised": false,
+      "textGenerated": false
+    },
+    {
+      "text": "Leaking Pipes Near Queens Drive, HUTT CENTRAL | near the car park in front of Queens Drive · Potable Water · Leaking Pipes",
+      "source": "wellington-water-faults",
+      "sourceClass": "community_report",
+      "occurredAt": "2026-08-06T21:04:00.500Z",
+      "externalId": "949601",
+      "lat": -41.2108174856693,
+      "lng": 174.902605682108,
+      "geoConfidence": 0.95,
+      "annotations": [
+        {
+          "key": "location_text",
+          "value": "Queens Drive, Hutt Central, Lower Hutt, Wellington, 5010"
+        },
+        {
+          "key": "location_method",
+          "value": "reprojected"
+        },
+        {
+          "key": "text_generated",
+          "value": "false"
+        },
+        {
+          "key": "limitation",
+          "value": "Public report logged through Wellington Water's customer channel — recorded by an official system, but the underlying report is unverified."
+        },
+        {
+          "key": "limitation",
+          "value": "Street numbers removed to avoid publishing personal information."
+        },
+        {
+          "key": "limitation",
+          "value": "Status: Under Investigation. An open job is not necessarily an active emergency."
+        }
+      ],
+      "datasetId": "live",
+      "synthetic": false,
+      "hazardType": "water",
+      "mediaType": "none",
+      "collectedAt": "2026-08-08T02:01:55.795Z",
+      "authorIsPseudonymised": false,
+      "textGenerated": false
+    },
+    {
+      "text": "Fault TAUHINU ROAD, Miramar · Potable Water · General Fault",
+      "source": "wellington-water-faults",
+      "sourceClass": "community_report",
+      "occurredAt": "2026-08-06T21:48:07.000Z",
+      "externalId": "949639",
+      "lat": -41.3099792978204,
+      "lng": 174.819654428787,
+      "geoConfidence": 0.95,
+      "annotations": [
+        {
+          "key": "location_text",
+          "value": "Tauhinu Road, Miramar, Wellington, 6022"
+        },
+        {
+          "key": "location_method",
+          "value": "reprojected"
+        },
+        {
+          "key": "text_generated",
+          "value": "false"
+        },
+        {
+          "key": "limitation",
+          "value": "Public report logged through Wellington Water's customer channel — recorded by an official system, but the underlying report is unverified."
+        },
+        {
+          "key": "limitation",
+          "value": "Street numbers removed to avoid publishing personal information."
+        },
+        {
+          "key": "limitation",
+          "value": "Status: New. An open job is not necessarily an active emergency."
+        }
+      ],
+      "datasetId": "live",
+      "synthetic": false,
+      "hazardType": "water",
+      "mediaType": "none",
+      "collectedAt": "2026-08-08T02:01:55.795Z",
+      "authorIsPseudonymised": false,
+      "textGenerated": false
+    },
+    {
+      "text": "Fault ASCOT STREET, Thorndon · Waste Water · General Fault",
+      "source": "wellington-water-faults",
+      "sourceClass": "community_report",
+      "occurredAt": "2026-08-06T21:47:11.000Z",
+      "externalId": "949636",
+      "lat": -41.2788077123731,
+      "lng": 174.770686176969,
+      "geoConfidence": 0.95,
+      "annotations": [
+        {
+          "key": "location_text",
+          "value": "Ascot Street, Thorndon, Wellington, 6011"
+        },
+        {
+          "key": "location_method",
+          "value": "reprojected"
+        },
+        {
+          "key": "text_generated",
+          "value": "false"
+        },
+        {
+          "key": "limitation",
+          "value": "Public report logged through Wellington Water's customer channel — recorded by an official system, but the underlying report is unverified."
+        },
+        {
+          "key": "limitation",
+          "value": "Street numbers removed to avoid publishing personal information."
+        },
+        {
+          "key": "limitation",
+          "value": "Status: New. An open job is not necessarily an active emergency."
+        }
+      ],
+      "datasetId": "live",
+      "synthetic": false,
+      "hazardType": "water",
+      "mediaType": "none",
+      "collectedAt": "2026-08-08T02:01:55.795Z",
+      "authorIsPseudonymised": false,
+      "textGenerated": false
+    },
+    {
+      "text": "Fault LOWER NORTH TERRACE, Kelburn · Potable Water · General Fault",
+      "source": "wellington-water-faults",
+      "sourceClass": "community_report",
+      "occurredAt": "2026-08-06T21:47:15.000Z",
+      "externalId": "949637",
+      "lat": -41.2859809451107,
+      "lng": 174.765905055579,
+      "geoConfidence": 0.95,
+      "annotations": [
+        {
+          "key": "location_text",
+          "value": "Lower North Terrace, Kelburn, Wellington, 6012"
+        },
+        {
+          "key": "location_method",
+          "value": "reprojected"
+        },
+        {
+          "key": "text_generated",
+          "value": "false"
+        },
+        {
+          "key": "limitation",
+          "value": "Public report logged through Wellington Water's customer channel — recorded by an official system, but the underlying report is unverified."
+        },
+        {
+          "key": "limitation",
+          "value": "Street numbers removed to avoid publishing personal information."
+        },
+        {
+          "key": "limitation",
+          "value": "Status: New. An open job is not necessarily an active emergency."
+        }
+      ],
+      "datasetId": "live",
+      "synthetic": false,
+      "hazardType": "water",
+      "mediaType": "none",
+      "collectedAt": "2026-08-08T02:01:55.795Z",
+      "authorIsPseudonymised": false,
+      "textGenerated": false
+    },
+    {
+      "text": "Fault THE CRESCENT, Roseneath · Potable Water · General Fault",
+      "source": "wellington-water-faults",
+      "sourceClass": "community_report",
+      "occurredAt": "2026-08-06T21:35:09.000Z",
+      "externalId": "949628",
+      "lat": -41.2919009156852,
+      "lng": 174.800285359291,
+      "geoConfidence": 0.95,
+      "annotations": [
+        {
+          "key": "location_text",
+          "value": "The Crescent, Roseneath, Wellington, 6011"
+        },
+        {
+          "key": "location_method",
+          "value": "reprojected"
+        },
+        {
+          "key": "text_generated",
+          "value": "false"
+        },
+        {
+          "key": "limitation",
+          "value": "Public report logged through Wellington Water's customer channel — recorded by an official system, but the underlying report is unverified."
+        },
+        {
+          "key": "limitation",
+          "value": "Street numbers removed to avoid publishing personal information."
+        },
+        {
+          "key": "limitation",
+          "value": "Status: New. An open job is not necessarily an active emergency."
+        }
+      ],
+      "datasetId": "live",
+      "synthetic": false,
+      "hazardType": "water",
+      "mediaType": "none",
+      "collectedAt": "2026-08-08T02:01:55.795Z",
+      "authorIsPseudonymised": false,
+      "textGenerated": false
+    },
+    {
+      "text": "Fault CLYDE STREET, Island Bay · Storm Water · General Fault",
+      "source": "wellington-water-faults",
+      "sourceClass": "community_report",
+      "occurredAt": "2026-08-06T21:21:12.000Z",
+      "externalId": "949620",
+      "lat": -41.3398275483952,
+      "lng": 174.773236706287,
+      "geoConfidence": 0.95,
+      "annotations": [
+        {
+          "key": "location_text",
+          "value": "Clyde Street, Island Bay, Wellington, 6023"
+        },
+        {
+          "key": "location_method",
+          "value": "reprojected"
+        },
+        {
+          "key": "text_generated",
+          "value": "false"
+        },
+        {
+          "key": "limitation",
+          "value": "Public report logged through Wellington Water's customer channel — recorded by an official system, but the underlying report is unverified."
+        },
+        {
+          "key": "limitation",
+          "value": "Street numbers removed to avoid publishing personal information."
+        },
+        {
+          "key": "limitation",
+          "value": "Status: New. An open job is not necessarily an active emergency."
+        }
+      ],
+      "datasetId": "live",
+      "synthetic": false,
+      "hazardType": "flooding",
+      "mediaType": "none",
+      "collectedAt": "2026-08-08T02:01:55.795Z",
+      "authorIsPseudonymised": false,
+      "textGenerated": false
+    },
+    {
+      "text": "Fault ELLESMERE AVENUE, Miramar · Storm Water · General Fault",
+      "source": "wellington-water-faults",
+      "sourceClass": "community_report",
+      "occurredAt": "2026-08-06T21:17:22.000Z",
+      "externalId": "949618",
+      "lat": -41.3199255155856,
+      "lng": 174.815139013728,
+      "geoConfidence": 0.95,
+      "annotations": [
+        {
+          "key": "location_text",
+          "value": "Ellesmere Avenue, Miramar, Wellington, 6022"
+        },
+        {
+          "key": "location_method",
+          "value": "reprojected"
+        },
+        {
+          "key": "text_generated",
+          "value": "false"
+        },
+        {
+          "key": "limitation",
+          "value": "Public report logged through Wellington Water's customer channel — recorded by an official system, but the underlying report is unverified."
+        },
+        {
+          "key": "limitation",
+          "value": "Street numbers removed to avoid publishing personal information."
+        },
+        {
+          "key": "limitation",
+          "value": "Status: New. An open job is not necessarily an active emergency."
+        }
+      ],
+      "datasetId": "live",
+      "synthetic": false,
+      "hazardType": "flooding",
+      "mediaType": "none",
+      "collectedAt": "2026-08-08T02:01:55.795Z",
+      "authorIsPseudonymised": false,
+      "textGenerated": false
+    },
+    {
+      "text": "Fault NICHOLSON ROAD, Khandallah · Potable Water · General Fault",
+      "source": "wellington-water-faults",
+      "sourceClass": "community_report",
+      "occurredAt": "2026-08-06T21:17:08.000Z",
+      "externalId": "949615",
+      "lat": -41.2480892945205,
+      "lng": 174.79088849146,
+      "geoConfidence": 0.95,
+      "annotations": [
+        {
+          "key": "location_text",
+          "value": "Nicholson Road, Khandallah, Wellington, 6035"
+        },
+        {
+          "key": "location_method",
+          "value": "reprojected"
+        },
+        {
+          "key": "text_generated",
+          "value": "false"
+        },
+        {
+          "key": "limitation",
+          "value": "Public report logged through Wellington Water's customer channel — recorded by an official system, but the underlying report is unverified."
+        },
+        {
+          "key": "limitation",
+          "value": "Street numbers removed to avoid publishing personal information."
+        },
+        {
+          "key": "limitation",
+          "value": "Status: New. An open job is not necessarily an active emergency."
+        }
+      ],
+      "datasetId": "live",
+      "synthetic": false,
+      "hazardType": "water",
+      "mediaType": "none",
+      "collectedAt": "2026-08-08T02:01:55.795Z",
+      "authorIsPseudonymised": false,
+      "textGenerated": false
+    },
+    {
+      "text": "Fault DUNCAN STREET, Tawa · Potable Water · General Fault",
+      "source": "wellington-water-faults",
+      "sourceClass": "community_report",
+      "occurredAt": "2026-08-06T21:10:20.000Z",
+      "externalId": "949608",
+      "lat": -41.1732970695716,
+      "lng": 174.828021160718,
+      "geoConfidence": 0.95,
+      "annotations": [
+        {
+          "key": "location_text",
+          "value": "Duncan Street, Tawa, Wellington, 5028"
+        },
+        {
+          "key": "location_method",
+          "value": "reprojected"
+        },
+        {
+          "key": "text_generated",
+          "value": "false"
+        },
+        {
+          "key": "limitation",
+          "value": "Public report logged through Wellington Water's customer channel — recorded by an official system, but the underlying report is unverified."
+        },
+        {
+          "key": "limitation",
+          "value": "Street numbers removed to avoid publishing personal information."
+        },
+        {
+          "key": "limitation",
+          "value": "Status: In Queue. An open job is not necessarily an active emergency."
+        }
+      ],
+      "datasetId": "live",
+      "synthetic": false,
+      "hazardType": "water",
+      "mediaType": "none",
+      "collectedAt": "2026-08-08T02:01:55.795Z",
+      "authorIsPseudonymised": false,
+      "textGenerated": false
+    },
+    {
+      "text": "Fault AWARUA STREET, Ngaio · Potable Water · General Fault",
+      "source": "wellington-water-faults",
+      "sourceClass": "community_report",
+      "occurredAt": "2026-08-06T21:48:17.000Z",
+      "externalId": "949641",
+      "lat": -41.2420806015008,
+      "lng": 174.766999564496,
+      "geoConfidence": 0.95,
+      "annotations": [
+        {
+          "key": "location_text",
+          "value": "Awarua Street, Ngaio, Wellington, 6035"
+        },
+        {
+          "key": "location_method",
+          "value": "reprojected"
+        },
+        {
+          "key": "text_generated",
+          "value": "false"
+        },
+        {
+          "key": "limitation",
+          "value": "Public report logged through Wellington Water's customer channel — recorded by an official system, but the underlying report is unverified."
+        },
+        {
+          "key": "limitation",
+          "value": "Street numbers removed to avoid publishing personal information."
+        },
+        {
+          "key": "limitation",
+          "value": "Status: New. An open job is not necessarily an active emergency."
+        }
+      ],
+      "datasetId": "live",
+      "synthetic": false,
+      "hazardType": "water",
+      "mediaType": "none",
+      "collectedAt": "2026-08-08T02:01:55.795Z",
+      "authorIsPseudonymised": false,
+      "textGenerated": false
+    },
+    {
+      "text": "Fault GRAFTON ROAD, Roseneath · Potable Water · General Fault",
+      "source": "wellington-water-faults",
+      "sourceClass": "community_report",
+      "occurredAt": "2026-08-06T21:47:20.000Z",
+      "externalId": "949638",
+      "lat": -41.2914730614376,
+      "lng": 174.800792967348,
+      "geoConfidence": 0.95,
+      "annotations": [
+        {
+          "key": "location_text",
+          "value": "Grafton Road, Roseneath, Wellington, 6011"
+        },
+        {
+          "key": "location_method",
+          "value": "reprojected"
+        },
+        {
+          "key": "text_generated",
+          "value": "false"
+        },
+        {
+          "key": "limitation",
+          "value": "Public report logged through Wellington Water's customer channel — recorded by an official system, but the underlying report is unverified."
+        },
+        {
+          "key": "limitation",
+          "value": "Street numbers removed to avoid publishing personal information."
+        },
+        {
+          "key": "limitation",
+          "value": "Status: New. An open job is not necessarily an active emergency."
+        }
+      ],
+      "datasetId": "live",
+      "synthetic": false,
+      "hazardType": "water",
+      "mediaType": "none",
+      "collectedAt": "2026-08-08T02:01:55.795Z",
+      "authorIsPseudonymised": false,
+      "textGenerated": false
+    },
+    {
+      "text": "Fault PALLISER ROAD, Oriental Bay-Roseneath · Potable Water · General Fault",
+      "source": "wellington-water-faults",
+      "sourceClass": "community_report",
+      "occurredAt": "2026-08-06T21:38:08.000Z",
+      "externalId": "949630",
+      "lat": -41.293770457279,
+      "lng": 174.797636845526,
+      "geoConfidence": 0.95,
+      "annotations": [
+        {
+          "key": "location_text",
+          "value": "Palliser Road, Roseneath, Wellington, 6011"
+        },
+        {
+          "key": "location_method",
+          "value": "reprojected"
+        },
+        {
+          "key": "text_generated",
+          "value": "false"
+        },
+        {
+          "key": "limitation",
+          "value": "Public report logged through Wellington Water's customer channel — recorded by an official system, but the underlying report is unverified."
+        },
+        {
+          "key": "limitation",
+          "value": "Street numbers removed to avoid publishing personal information."
+        },
+        {
+          "key": "limitation",
+          "value": "Status: New. An open job is not necessarily an active emergency."
+        }
+      ],
+      "datasetId": "live",
+      "synthetic": false,
+      "hazardType": "water",
+      "mediaType": "none",
+      "collectedAt": "2026-08-08T02:01:55.795Z",
+      "authorIsPseudonymised": false,
+      "textGenerated": false
+    },
+    {
+      "text": "Fault COURTENAY PLACE, Te Aro · Potable Water · General Fault",
+      "source": "wellington-water-faults",
+      "sourceClass": "community_report",
+      "occurredAt": "2026-08-06T21:29:14.000Z",
+      "externalId": "949626",
+      "lat": -41.2942985590887,
+      "lng": 174.783317872693,
+      "geoConfidence": 0.95,
+      "annotations": [
+        {
+          "key": "location_text",
+          "value": "Courtenay Place, Te Aro, Wellington, 6011"
+        },
+        {
+          "key": "location_method",
+          "value": "reprojected"
+        },
+        {
+          "key": "text_generated",
+          "value": "false"
+        },
+        {
+          "key": "limitation",
+          "value": "Public report logged through Wellington Water's customer channel — recorded by an official system, but the underlying report is unverified."
+        },
+        {
+          "key": "limitation",
+          "value": "Street numbers removed to avoid publishing personal information."
+        },
+        {
+          "key": "limitation",
+          "value": "Status: Under Investigation. An open job is not necessarily an active emergency."
+        }
+      ],
+      "datasetId": "live",
+      "synthetic": false,
+      "hazardType": "water",
+      "mediaType": "none",
+      "collectedAt": "2026-08-08T02:01:55.795Z",
+      "authorIsPseudonymised": false,
+      "textGenerated": false
+    },
+    {
+      "text": "Muritai Road Eastbourne · Storm Water · General Fault",
+      "source": "wellington-water-faults",
+      "sourceClass": "community_report",
+      "occurredAt": "2026-08-06T21:25:07.803Z",
+      "externalId": "949621",
+      "lat": -41.2922187155432,
+      "lng": 174.897184099496,
+      "geoConfidence": 0.95,
+      "annotations": [
+        {
+          "key": "location_text",
+          "value": "Muritai Road, Eastbourne, Lower Hutt, Wellington, 5013"
+        },
+        {
+          "key": "location_method",
+          "value": "reprojected"
+        },
+        {
+          "key": "text_generated",
+          "value": "false"
+        },
+        {
+          "key": "limitation",
+          "value": "Public report logged through Wellington Water's customer channel — recorded by an official system, but the underlying report is unverified."
+        },
+        {
+          "key": "limitation",
+          "value": "Street numbers removed to avoid publishing personal information."
+        },
+        {
+          "key": "limitation",
+          "value": "Status: Under Investigation. An open job is not necessarily an active emergency."
+        }
+      ],
+      "datasetId": "live",
+      "synthetic": false,
+      "hazardType": "flooding",
+      "mediaType": "none",
+      "collectedAt": "2026-08-08T02:01:55.795Z",
+      "authorIsPseudonymised": false,
+      "textGenerated": false
+    },
+    {
+      "text": "Fault Rata Street, Naenae, Lower Hutt, Wellington, 5011 · Storm Water · General Fault",
+      "source": "wellington-water-faults",
+      "sourceClass": "community_report",
+      "occurredAt": "2026-08-06T21:17:27.000Z",
+      "externalId": "949619",
+      "lat": -41.28489352399,
+      "lng": 174.776100466005,
+      "geoConfidence": 0.95,
+      "annotations": [
+        {
+          "key": "location_text",
+          "value": "Wellington"
+        },
+        {
+          "key": "location_method",
+          "value": "reprojected"
+        },
+        {
+          "key": "text_generated",
+          "value": "false"
+        },
+        {
+          "key": "limitation",
+          "value": "Public report logged through Wellington Water's customer channel — recorded by an official system, but the underlying report is unverified."
+        },
+        {
+          "key": "limitation",
+          "value": "Street numbers removed to avoid publishing personal information."
+        },
+        {
+          "key": "limitation",
+          "value": "Status: New. An open job is not necessarily an active emergency."
+        }
+      ],
+      "datasetId": "live",
+      "synthetic": false,
+      "hazardType": "flooding",
+      "mediaType": "none",
+      "collectedAt": "2026-08-08T02:01:55.795Z",
+      "authorIsPseudonymised": false,
+      "textGenerated": false
+    },
+    {
+      "text": "Fault Nicholson Road, Khandallah, Wellington, 6035 · Potable Water · General Fault",
+      "source": "wellington-water-faults",
+      "sourceClass": "community_report",
+      "occurredAt": "2026-08-06T21:17:13.000Z",
+      "externalId": "949616",
+      "lat": -41.2521207095774,
+      "lng": 174.795046416558,
+      "geoConfidence": 0.95,
+      "annotations": [
+        {
+          "key": "location_text",
+          "value": "Nicholson Road, Khandallah, Wellington, 6035"
+        },
+        {
+          "key": "location_method",
+          "value": "reprojected"
+        },
+        {
+          "key": "text_generated",
+          "value": "false"
+        },
+        {
+          "key": "limitation",
+          "value": "Public report logged through Wellington Water's customer channel — recorded by an official system, but the underlying report is unverified."
+        },
+        {
+          "key": "limitation",
+          "value": "Street numbers removed to avoid publishing personal information."
+        },
+        {
+          "key": "limitation",
+          "value": "Status: New. An open job is not necessarily an active emergency."
+        }
+      ],
+      "datasetId": "live",
+      "synthetic": false,
+      "hazardType": "water",
+      "mediaType": "none",
+      "collectedAt": "2026-08-08T02:01:55.795Z",
+      "authorIsPseudonymised": false,
+      "textGenerated": false
+    },
+    {
+      "text": "Fault MELBOURNE ROAD, Island Bay · Waste Water · General Fault",
+      "source": "wellington-water-faults",
+      "sourceClass": "community_report",
+      "occurredAt": "2026-08-06T21:09:35.000Z",
+      "externalId": "949605",
+      "lat": -41.3288719818496,
+      "lng": 174.776213790657,
+      "geoConfidence": 0.95,
+      "annotations": [
+        {
+          "key": "location_text",
+          "value": "Melbourne Road, Island Bay, Wellington, 6023"
+        },
+        {
+          "key": "location_method",
+          "value": "reprojected"
+        },
+        {
+          "key": "text_generated",
+          "value": "false"
+        },
+        {
+          "key": "limitation",
+          "value": "Public report logged through Wellington Water's customer channel — recorded by an official system, but the underlying report is unverified."
+        },
+        {
+          "key": "limitation",
+          "value": "Street numbers removed to avoid publishing personal information."
+        },
+        {
+          "key": "limitation",
+          "value": "Status: Under Investigation. An open job is not necessarily an active emergency."
+        }
+      ],
+      "datasetId": "live",
+      "synthetic": false,
+      "hazardType": "water",
+      "mediaType": "none",
+      "collectedAt": "2026-08-08T02:01:55.795Z",
+      "authorIsPseudonymised": false,
+      "textGenerated": false
+    },
+    {
+      "text": "Fault PARKVALE ROAD, Karori · Potable Water · General Fault",
+      "source": "wellington-water-faults",
+      "sourceClass": "community_report",
+      "occurredAt": "2026-08-06T22:59:24.000Z",
+      "externalId": "949675",
+      "lat": -41.2822060292873,
+      "lng": 174.736469739464,
+      "geoConfidence": 0.95,
+      "annotations": [
+        {
+          "key": "location_text",
+          "value": "Parkvale Road, Karori, Wellington, 6012"
+        },
+        {
+          "key": "location_method",
+          "value": "reprojected"
+        },
+        {
+          "key": "text_generated",
+          "value": "false"
+        },
+        {
+          "key": "limitation",
+          "value": "Public report logged through Wellington Water's customer channel — recorded by an official system, but the underlying report is unverified."
+        },
+        {
+          "key": "limitation",
+          "value": "Street numbers removed to avoid publishing personal information."
+        },
+        {
+          "key": "limitation",
+          "value": "Status: New. An open job is not necessarily an active emergency."
+        }
+      ],
+      "datasetId": "live",
+      "synthetic": false,
+      "hazardType": "water",
+      "mediaType": "none",
+      "collectedAt": "2026-08-08T02:01:55.795Z",
+      "authorIsPseudonymised": false,
+      "textGenerated": false
+    },
+    {
+      "text": "Fault APUKA STREET, Brooklyn · Potable Water · General Fault",
+      "source": "wellington-water-faults",
+      "sourceClass": "community_report",
+      "occurredAt": "2026-08-06T23:01:12.000Z",
+      "externalId": "949676",
+      "lat": -41.3025157578668,
+      "lng": 174.761627518931,
+      "geoConfidence": 0.95,
+      "annotations": [
+        {
+          "key": "location_text",
+          "value": "Apuka Street, Brooklyn, Wellington, 6021"
+        },
+        {
+          "key": "location_method",
+          "value": "reprojected"
+        },
+        {
+          "key": "text_generated",
+          "value": "false"
+        },
+        {
+          "key": "limitation",
+          "value": "Public report logged through Wellington Water's customer channel — recorded by an official system, but the underlying report is unverified."
+        },
+        {
+          "key": "limitation",
+          "value": "Street numbers removed to avoid publishing personal information."
+        },
+        {
+          "key": "limitation",
+          "value": "Status: New. An open job is not necessarily an active emergency."
+        }
+      ],
+      "datasetId": "live",
+      "synthetic": false,
+      "hazardType": "water",
+      "mediaType": "none",
+      "collectedAt": "2026-08-08T02:01:55.795Z",
+      "authorIsPseudonymised": false,
+      "textGenerated": false
+    },
+    {
+      "text": "Fault RINTOUL STREET, Newtown · Potable Water · General Fault",
+      "source": "wellington-water-faults",
+      "sourceClass": "community_report",
+      "occurredAt": "2026-08-06T22:57:12.000Z",
+      "externalId": "949673",
+      "lat": -41.3137351029051,
+      "lng": 174.778402137938,
+      "geoConfidence": 0.95,
+      "annotations": [
+        {
+          "key": "location_text",
+          "value": "Rintoul Street, Newtown, Wellington, 6021"
+        },
+        {
+          "key": "location_method",
+          "value": "reprojected"
+        },
+        {
+          "key": "text_generated",
+          "value": "false"
+        },
+        {
+          "key": "limitation",
+          "value": "Public report logged through Wellington Water's customer channel — recorded by an official system, but the underlying report is unverified."
+        },
+        {
+          "key": "limitation",
+          "value": "Street numbers removed to avoid publishing personal information."
+        },
+        {
+          "key": "limitation",
+          "value": "Status: New. An open job is not necessarily an active emergency."
+        }
+      ],
+      "datasetId": "live",
+      "synthetic": false,
+      "hazardType": "water",
+      "mediaType": "none",
+      "collectedAt": "2026-08-08T02:01:55.795Z",
+      "authorIsPseudonymised": false,
+      "textGenerated": false
+    },
+    {
+      "text": "Leaky Connection Knights Road, HUTT CENTRAL · Potable Water · Leaky or Faulty Connection/Meter/Toby",
+      "source": "wellington-water-faults",
+      "sourceClass": "community_report",
+      "occurredAt": "2026-08-06T22:48:42.610Z",
+      "externalId": "949667",
+      "lat": -41.2112085014524,
+      "lng": 174.906989501288,
+      "geoConfidence": 0.95,
+      "annotations": [
+        {
+          "key": "location_text",
+          "value": "Knights Road, Hutt Central, Lower Hutt, Wellington, 5010"
+        },
+        {
+          "key": "location_method",
+          "value": "reprojected"
+        },
+        {
+          "key": "text_generated",
+          "value": "false"
+        },
+        {
+          "key": "limitation",
+          "value": "Public report logged through Wellington Water's customer channel — recorded by an official system, but the underlying report is unverified."
+        },
+        {
+          "key": "limitation",
+          "value": "Street numbers removed to avoid publishing personal information."
+        },
+        {
+          "key": "limitation",
+          "value": "Status: New. An open job is not necessarily an active emergency."
+        }
+      ],
+      "datasetId": "live",
+      "synthetic": false,
+      "hazardType": "water",
+      "mediaType": "none",
+      "collectedAt": "2026-08-08T02:01:55.795Z",
+      "authorIsPseudonymised": false,
+      "textGenerated": false
+    },
+    {
+      "text": "Leaking Pipes Near Momona Street, WAINUIOMATA | On the drive of number momona street Wainuiomata · Potable Water · Leaking Pipes",
+      "source": "wellington-water-faults",
+      "sourceClass": "community_report",
+      "occurredAt": "2026-08-06T23:46:46.883Z",
+      "externalId": "949698",
+      "lat": -41.2498543975993,
+      "lng": 174.934566633288,
+      "geoConfidence": 0.95,
+      "annotations": [
+        {
+          "key": "location_text",
+          "value": "Momona Street, Wainuiomata, Lower Hutt, Wellington, 5014"
+        },
+        {
+          "key": "location_method",
+          "value": "reprojected"
+        },
+        {
+          "key": "text_generated",
+          "value": "false"
+        },
+        {
+          "key": "limitation",
+          "value": "Public report logged through Wellington Water's customer channel — recorded by an official system, but the underlying report is unverified."
+        },
+        {
+          "key": "limitation",
+          "value": "Street numbers removed to avoid publishing personal information."
+        },
+        {
+          "key": "limitation",
+          "value": "Status: New. An open job is not necessarily an active emergency."
+        }
+      ],
+      "datasetId": "live",
+      "synthetic": false,
+      "hazardType": "water",
+      "mediaType": "none",
+      "collectedAt": "2026-08-08T02:01:55.795Z",
+      "authorIsPseudonymised": false,
+      "textGenerated": false
+    },
+    {
+      "text": "Leaking Pipes Maungaraki Road, KOROKORO · Potable Water · Leaking Pipes",
+      "source": "wellington-water-faults",
+      "sourceClass": "community_report",
+      "occurredAt": "2026-08-06T23:05:42.853Z",
+      "externalId": "949679",
+      "lat": -41.2122482765417,
+      "lng": 174.867456003503,
+      "geoConfidence": 0.95,
+      "annotations": [
+        {
+          "key": "location_text",
+          "value": "Maungaraki Road, Korokoro, Lower Hutt, Wellington, 5012"
+        },
+        {
+          "key": "location_method",
+          "value": "reprojected"
+        },
+        {
+          "key": "text_generated",
+          "value": "false"
+        },
+        {
+          "key": "limitation",
+          "value": "Public report logged through Wellington Water's customer channel — recorded by an official system, but the underlying report is unverified."
+        },
+        {
+          "key": "limitation",
+          "value": "Street numbers removed to avoid publishing personal information."
+        },
+        {
+          "key": "limitation",
+          "value": "Status: New. An open job is not necessarily an active emergency."
+        }
+      ],
+      "datasetId": "live",
+      "synthetic": false,
+      "hazardType": "water",
+      "mediaType": "none",
+      "collectedAt": "2026-08-08T02:01:55.795Z",
+      "authorIsPseudonymised": false,
+      "textGenerated": false
+    },
+    {
+      "text": "Fault MANA STREET, Vogeltown · Waste Water · General Fault",
+      "source": "wellington-water-faults",
+      "sourceClass": "community_report",
+      "occurredAt": "2026-08-06T23:42:10.000Z",
+      "externalId": "949695",
+      "lat": -41.3148500636656,
+      "lng": 174.766250976723,
+      "geoConfidence": 0.95,
+      "annotations": [
+        {
+          "key": "location_text",
+          "value": "Mana Street, Vogeltown, Wellington, 6021"
+        },
+        {
+          "key": "location_method",
+          "value": "reprojected"
+        },
+        {
+          "key": "text_generated",
+          "value": "false"
+        },
+        {
+          "key": "limitation",
+          "value": "Public report logged through Wellington Water's customer channel — recorded by an official system, but the underlying report is unverified."
+        },
+        {
+          "key": "limitation",
+          "value": "Street numbers removed to avoid publishing personal information."
+        },
+        {
+          "key": "limitation",
+          "value": "Status: In Queue. An open job is not necessarily an active emergency."
+        }
+      ],
+      "datasetId": "live",
+      "synthetic": false,
+      "hazardType": "water",
+      "mediaType": "none",
+      "collectedAt": "2026-08-08T02:01:55.795Z",
+      "authorIsPseudonymised": false,
+      "textGenerated": false
+    },
+    {
+      "text": "Leaky Connection Leighton Avenue Waiwhetu | Leighton AvenueWaiwhetu, Lower Hutt 5010 · Potable Water · Leaky or Faulty Connection/Meter/Toby",
+      "source": "wellington-water-faults",
+      "sourceClass": "community_report",
+      "occurredAt": "2026-08-06T23:31:28.163Z",
+      "externalId": "949689",
+      "lat": -41.2256803182894,
+      "lng": 174.909945295623,
+      "geoConfidence": 0.95,
+      "annotations": [
+        {
+          "key": "location_text",
+          "value": "Leighton Avenue, Waiwhetu, Lower Hutt, Wellington, 5010"
+        },
+        {
+          "key": "location_method",
+          "value": "reprojected"
+        },
+        {
+          "key": "text_generated",
+          "value": "false"
+        },
+        {
+          "key": "limitation",
+          "value": "Public report logged through Wellington Water's customer channel — recorded by an official system, but the underlying report is unverified."
+        },
+        {
+          "key": "limitation",
+          "value": "Street numbers removed to avoid publishing personal information."
+        },
+        {
+          "key": "limitation",
+          "value": "Status: New. An open job is not necessarily an active emergency."
+        }
+      ],
+      "datasetId": "live",
+      "synthetic": false,
+      "hazardType": "water",
+      "mediaType": "none",
+      "collectedAt": "2026-08-08T02:01:55.795Z",
+      "authorIsPseudonymised": false,
+      "textGenerated": false
+    },
+    {
+      "text": "Fault NEWLANDS ROAD, Newlands · Potable Water · General Fault",
+      "source": "wellington-water-faults",
+      "sourceClass": "community_report",
+      "occurredAt": "2026-08-06T23:19:08.000Z",
+      "externalId": "949684",
+      "lat": -41.2306312151294,
+      "lng": 174.815931438854,
+      "geoConfidence": 0.95,
+      "annotations": [
+        {
+          "key": "location_text",
+          "value": "Newlands Road, Newlands, Wellington, 6037"
+        },
+        {
+          "key": "location_method",
+          "value": "reprojected"
+        },
+        {
+          "key": "text_generated",
+          "value": "false"
+        },
+        {
+          "key": "limitation",
+          "value": "Public report logged through Wellington Water's customer channel — recorded by an official system, but the underlying report is unverified."
+        },
+        {
+          "key": "limitation",
+          "value": "Street numbers removed to avoid publishing personal information."
+        },
+        {
+          "key": "limitation",
+          "value": "Status: New. An open job is not necessarily an active emergency."
+        }
+      ],
+      "datasetId": "live",
+      "synthetic": false,
+      "hazardType": "water",
+      "mediaType": "none",
+      "collectedAt": "2026-08-08T02:01:55.795Z",
+      "authorIsPseudonymised": false,
+      "textGenerated": false
+    },
+    {
+      "text": "Fault OBAN STREET, Wadestown · Potable Water · General Fault",
+      "source": "wellington-water-faults",
+      "sourceClass": "community_report",
+      "occurredAt": "2026-08-06T23:28:11.000Z",
+      "externalId": "949687",
+      "lat": -41.2630469683752,
+      "lng": 174.778701120424,
+      "geoConfidence": 0.95,
+      "annotations": [
+        {
+          "key": "location_text",
+          "value": "Oban Street, Wadestown, Wellington, 6012"
+        },
+        {
+          "key": "location_method",
+          "value": "reprojected"
+        },
+        {
+          "key": "text_generated",
+          "value": "false"
+        },
+        {
+          "key": "limitation",
+          "value": "Public report logged through Wellington Water's customer channel — recorded by an official system, but the underlying report is unverified."
+        },
+        {
+          "key": "limitation",
+          "value": "Street numbers removed to avoid publishing personal information."
+        },
+        {
+          "key": "limitation",
+          "value": "Status: In Queue. An open job is not necessarily an active emergency."
+        }
+      ],
+      "datasetId": "live",
+      "synthetic": false,
+      "hazardType": "water",
+      "mediaType": "none",
+      "collectedAt": "2026-08-08T02:01:55.795Z",
+      "authorIsPseudonymised": false,
+      "textGenerated": false
+    },
+    {
+      "text": "Leaking Pipes Tama Street, ALICETOWN · Potable Water · Leaking Pipes",
+      "source": "wellington-water-faults",
+      "sourceClass": "community_report",
+      "occurredAt": "2026-08-06T23:15:40.617Z",
+      "externalId": "949683",
+      "lat": -41.2143473984632,
+      "lng": 174.895866548136,
+      "geoConfidence": 0.95,
+      "annotations": [
+        {
+          "key": "location_text",
+          "value": "Tama Street, Alicetown, Lower Hutt, Wellington, 5010"
+        },
+        {
+          "key": "location_method",
+          "value": "reprojected"
+        },
+        {
+          "key": "text_generated",
+          "value": "false"
+        },
+        {
+          "key": "limitation",
+          "value": "Public report logged through Wellington Water's customer channel — recorded by an official system, but the underlying report is unverified."
+        },
+        {
+          "key": "limitation",
+          "value": "Street numbers removed to avoid publishing personal information."
+        },
+        {
+          "key": "limitation",
+          "value": "Status: New. An open job is not necessarily an active emergency."
+        }
+      ],
+      "datasetId": "live",
+      "synthetic": false,
+      "hazardType": "water",
+      "mediaType": "none",
+      "collectedAt": "2026-08-08T02:01:55.795Z",
+      "authorIsPseudonymised": false,
+      "textGenerated": false
+    },
+    {
+      "text": "Leaking Pipes Queens Drive, HUTT CENTRAL · Potable Water · Leaking Pipes",
+      "source": "wellington-water-faults",
+      "sourceClass": "community_report",
+      "occurredAt": "2026-08-07T00:59:46.897Z",
+      "externalId": "949723",
+      "lat": -41.2108174856693,
+      "lng": 174.902605682108,
+      "geoConfidence": 0.95,
+      "annotations": [
+        {
+          "key": "location_text",
+          "value": "Queens Drive, Hutt Central, Lower Hutt, Wellington, 5010"
+        },
+        {
+          "key": "location_method",
+          "value": "reprojected"
+        },
+        {
+          "key": "text_generated",
+          "value": "false"
+        },
+        {
+          "key": "limitation",
+          "value": "Public report logged through Wellington Water's customer channel — recorded by an official system, but the underlying report is unverified."
+        },
+        {
+          "key": "limitation",
+          "value": "Street numbers removed to avoid publishing personal information."
+        },
+        {
+          "key": "limitation",
+          "value": "Status: New. An open job is not necessarily an active emergency."
+        }
+      ],
+      "datasetId": "live",
+      "synthetic": false,
+      "hazardType": "water",
+      "mediaType": "none",
+      "collectedAt": "2026-08-08T02:01:55.795Z",
+      "authorIsPseudonymised": false,
+      "textGenerated": false
+    },
+    {
+      "text": "Blockage Whites Line East, WAIWHETU · Storm Water · Blockage - Significant",
+      "source": "wellington-water-faults",
+      "sourceClass": "community_report",
+      "occurredAt": "2026-08-07T00:37:17.660Z",
+      "externalId": "949714",
+      "lat": -41.2261742638434,
+      "lng": 174.926125302419,
+      "geoConfidence": 0.95,
+      "annotations": [
+        {
+          "key": "location_text",
+          "value": "Whites Line East, Waiwhetu, Lower Hutt, Wellington, 5010"
+        },
+        {
+          "key": "location_method",
+          "value": "reprojected"
+        },
+        {
+          "key": "text_generated",
+          "value": "false"
+        },
+        {
+          "key": "limitation",
+          "value": "Public report logged through Wellington Water's customer channel — recorded by an official system, but the underlying report is unverified."
+        },
+        {
+          "key": "limitation",
+          "value": "Street numbers removed to avoid publishing personal information."
+        },
+        {
+          "key": "limitation",
+          "value": "Status: New. An open job is not necessarily an active emergency."
+        }
+      ],
+      "datasetId": "live",
+      "synthetic": false,
+      "hazardType": "flooding",
+      "mediaType": "none",
+      "collectedAt": "2026-08-08T02:01:55.795Z",
+      "authorIsPseudonymised": false,
+      "textGenerated": false
+    },
+    {
+      "text": "Fault CALCUTTA STREET, Khandallah · Potable Water · General Fault",
+      "source": "wellington-water-faults",
+      "sourceClass": "community_report",
+      "occurredAt": "2026-08-07T00:51:15.000Z",
+      "externalId": "949722",
+      "lat": -41.2533783592432,
+      "lng": 174.792221214065,
+      "geoConfidence": 0.95,
+      "annotations": [
+        {
+          "key": "location_text",
+          "value": "Calcutta Street, Khandallah, Wellington, 6035"
+        },
+        {
+          "key": "location_method",
+          "value": "reprojected"
+        },
+        {
+          "key": "text_generated",
+          "value": "false"
+        },
+        {
+          "key": "limitation",
+          "value": "Public report logged through Wellington Water's customer channel — recorded by an official system, but the underlying report is unverified."
+        },
+        {
+          "key": "limitation",
+          "value": "Street numbers removed to avoid publishing personal information."
+        },
+        {
+          "key": "limitation",
+          "value": "Status: New. An open job is not necessarily an active emergency."
+        }
+      ],
+      "datasetId": "live",
+      "synthetic": false,
+      "hazardType": "water",
+      "mediaType": "none",
+      "collectedAt": "2026-08-08T02:01:55.795Z",
+      "authorIsPseudonymised": false,
+      "textGenerated": false
+    },
+    {
+      "text": "Fault KAINUI ROAD, Hataitai · Potable Water · General Fault",
+      "source": "wellington-water-faults",
+      "sourceClass": "community_report",
+      "occurredAt": "2026-08-07T00:21:08.000Z",
+      "externalId": "949709",
+      "lat": -41.3013786269722,
+      "lng": 174.802815101489,
+      "geoConfidence": 0.95,
+      "annotations": [
+        {
+          "key": "location_text",
+          "value": "Kainui Road, Hataitai, Wellington, 6021"
+        },
+        {
+          "key": "location_method",
+          "value": "reprojected"
+        },
+        {
+          "key": "text_generated",
+          "value": "false"
+        },
+        {
+          "key": "limitation",
+          "value": "Public report logged through Wellington Water's customer channel — recorded by an official system, but the underlying report is unverified."
+        },
+        {
+          "key": "limitation",
+          "value": "Street numbers removed to avoid publishing personal information."
+        },
+        {
+          "key": "limitation",
+          "value": "Status: New. An open job is not necessarily an active emergency."
+        }
+      ],
+      "datasetId": "live",
+      "synthetic": false,
+      "hazardType": "water",
+      "mediaType": "none",
+      "collectedAt": "2026-08-08T02:01:55.795Z",
+      "authorIsPseudonymised": false,
+      "textGenerated": false
+    },
+    {
+      "text": "Fault PARKVALE ROAD, Karori · Potable Water · General Fault",
+      "source": "wellington-water-faults",
+      "sourceClass": "community_report",
+      "occurredAt": "2026-08-07T00:11:12.000Z",
+      "externalId": "949702",
+      "lat": -41.2820010498451,
+      "lng": 174.736382148576,
+      "geoConfidence": 0.95,
+      "annotations": [
+        {
+          "key": "location_text",
+          "value": "Parkvale Road, Karori, Wellington, 6012"
+        },
+        {
+          "key": "location_method",
+          "value": "reprojected"
+        },
+        {
+          "key": "text_generated",
+          "value": "false"
+        },
+        {
+          "key": "limitation",
+          "value": "Public report logged through Wellington Water's customer channel — recorded by an official system, but the underlying report is unverified."
+        },
+        {
+          "key": "limitation",
+          "value": "Street numbers removed to avoid publishing personal information."
+        },
+        {
+          "key": "limitation",
+          "value": "Status: New. An open job is not necessarily an active emergency."
+        }
+      ],
+      "datasetId": "live",
+      "synthetic": false,
+      "hazardType": "water",
+      "mediaType": "none",
+      "collectedAt": "2026-08-08T02:01:55.795Z",
+      "authorIsPseudonymised": false,
+      "textGenerated": false
+    },
+    {
+      "text": "Fault ORIENTAL PARADE, Oriental Bay · Potable Water · General Fault",
+      "source": "wellington-water-faults",
+      "sourceClass": "community_report",
+      "occurredAt": "2026-08-07T02:01:22.000Z",
+      "externalId": "949738",
+      "lat": -41.2918722076669,
+      "lng": 174.786856544576,
+      "geoConfidence": 0.95,
+      "annotations": [
+        {
+          "key": "location_text",
+          "value": "Oriental Parade, Oriental Bay, Wellington, 6011"
+        },
+        {
+          "key": "location_method",
+          "value": "reprojected"
+        },
+        {
+          "key": "text_generated",
+          "value": "false"
+        },
+        {
+          "key": "limitation",
+          "value": "Public report logged through Wellington Water's customer channel — recorded by an official system, but the underlying report is unverified."
+        },
+        {
+          "key": "limitation",
+          "value": "Street numbers removed to avoid publishing personal information."
+        },
+        {
+          "key": "limitation",
+          "value": "Status: New. An open job is not necessarily an active emergency."
+        }
+      ],
+      "datasetId": "live",
+      "synthetic": false,
+      "hazardType": "water",
+      "mediaType": "none",
+      "collectedAt": "2026-08-08T02:01:55.795Z",
+      "authorIsPseudonymised": false,
+      "textGenerated": false
+    },
+    {
+      "text": "Leaky Connection Trafalgar Street, Waiwhetu | Trafalgar Street, Waiwhetu, Lower Hutt 5010 · Potable Water · Leaky or Faulty Connection/Meter/Toby",
+      "source": "wellington-water-faults",
+      "sourceClass": "community_report",
+      "occurredAt": "2026-08-07T01:52:49.677Z",
+      "externalId": "949735",
+      "lat": -41.2196507124211,
+      "lng": 174.915138136098,
+      "geoConfidence": 0.95,
+      "annotations": [
+        {
+          "key": "location_text",
+          "value": "Trafalgar Street, Waiwhetu, Lower Hutt, Wellington, 5010"
+        },
+        {
+          "key": "location_method",
+          "value": "reprojected"
+        },
+        {
+          "key": "text_generated",
+          "value": "false"
+        },
+        {
+          "key": "limitation",
+          "value": "Public report logged through Wellington Water's customer channel — recorded by an official system, but the underlying report is unverified."
+        },
+        {
+          "key": "limitation",
+          "value": "Street numbers removed to avoid publishing personal information."
+        },
+        {
+          "key": "limitation",
+          "value": "Status: In Queue. An open job is not necessarily an active emergency."
+        }
+      ],
+      "datasetId": "live",
+      "synthetic": false,
+      "hazardType": "water",
+      "mediaType": "none",
+      "collectedAt": "2026-08-08T02:01:55.795Z",
+      "authorIsPseudonymised": false,
+      "textGenerated": false
+    },
+    {
+      "text": "Leaking Pipes Mission Street, WATERLOO · Potable Water · Leaking Pipes",
+      "source": "wellington-water-faults",
+      "sourceClass": "community_report",
+      "occurredAt": "2026-08-07T01:46:22.117Z",
+      "externalId": "949732",
+      "lat": -41.2205824866874,
+      "lng": 174.93244986746,
+      "geoConfidence": 0.95,
+      "annotations": [
+        {
+          "key": "location_text",
+          "value": "Mission Street, Waterloo, Lower Hutt, Wellington, 5011"
+        },
+        {
+          "key": "location_method",
+          "value": "reprojected"
+        },
+        {
+          "key": "text_generated",
+          "value": "false"
+        },
+        {
+          "key": "limitation",
+          "value": "Public report logged through Wellington Water's customer channel — recorded by an official system, but the underlying report is unverified."
+        },
+        {
+          "key": "limitation",
+          "value": "Street numbers removed to avoid publishing personal information."
+        },
+        {
+          "key": "limitation",
+          "value": "Status: New. An open job is not necessarily an active emergency."
+        }
+      ],
+      "datasetId": "live",
+      "synthetic": false,
+      "hazardType": "water",
+      "mediaType": "none",
+      "collectedAt": "2026-08-08T02:01:55.795Z",
+      "authorIsPseudonymised": false,
+      "textGenerated": false
+    },
+    {
+      "text": "Fault CALCUTTA STREET, Khandallah · Potable Water · General Fault",
+      "source": "wellington-water-faults",
+      "sourceClass": "community_report",
+      "occurredAt": "2026-08-07T01:32:08.000Z",
+      "externalId": "949728",
+      "lat": -41.2533783592432,
+      "lng": 174.792221214065,
+      "geoConfidence": 0.95,
+      "annotations": [
+        {
+          "key": "location_text",
+          "value": "Calcutta Street, Khandallah, Wellington, 6035"
+        },
+        {
+          "key": "location_method",
+          "value": "reprojected"
+        },
+        {
+          "key": "text_generated",
+          "value": "false"
+        },
+        {
+          "key": "limitation",
+          "value": "Public report logged through Wellington Water's customer channel — recorded by an official system, but the underlying report is unverified."
+        },
+        {
+          "key": "limitation",
+          "value": "Street numbers removed to avoid publishing personal information."
+        },
+        {
+          "key": "limitation",
+          "value": "Status: New. An open job is not necessarily an active emergency."
+        }
+      ],
+      "datasetId": "live",
+      "synthetic": false,
+      "hazardType": "water",
+      "mediaType": "none",
+      "collectedAt": "2026-08-08T02:01:55.795Z",
+      "authorIsPseudonymised": false,
+      "textGenerated": false
+    },
+    {
+      "text": "Fault HUDSON STREET, Island Bay · Potable Water · General Fault",
+      "source": "wellington-water-faults",
+      "sourceClass": "community_report",
+      "occurredAt": "2026-08-07T01:55:15.000Z",
+      "externalId": "949737",
+      "lat": -41.335696275958,
+      "lng": 174.778498613643,
+      "geoConfidence": 0.95,
+      "annotations": [
+        {
+          "key": "location_text",
+          "value": "Hudson Street, Island Bay, Wellington, 6023"
+        },
+        {
+          "key": "location_method",
+          "value": "reprojected"
+        },
+        {
+          "key": "text_generated",
+          "value": "false"
+        },
+        {
+          "key": "limitation",
+          "value": "Public report logged through Wellington Water's customer channel — recorded by an official system, but the underlying report is unverified."
+        },
+        {
+          "key": "limitation",
+          "value": "Street numbers removed to avoid publishing personal information."
+        },
+        {
+          "key": "limitation",
+          "value": "Status: New. An open job is not necessarily an active emergency."
+        }
+      ],
+      "datasetId": "live",
+      "synthetic": false,
+      "hazardType": "water",
+      "mediaType": "none",
+      "collectedAt": "2026-08-08T02:01:55.795Z",
+      "authorIsPseudonymised": false,
+      "textGenerated": false
+    },
+    {
+      "text": "Fault KARAKA BAY ROAD, Karaka Bays · Potable Water · General Fault",
+      "source": "wellington-water-faults",
+      "sourceClass": "community_report",
+      "occurredAt": "2026-08-07T02:46:08.000Z",
+      "externalId": "949757",
+      "lat": -41.3009194244066,
+      "lng": 174.831486658586,
+      "geoConfidence": 0.95,
+      "annotations": [
+        {
+          "key": "location_text",
+          "value": "Karaka Bay Road, Karaka Bays, Wellington, 6022"
+        },
+        {
+          "key": "location_method",
+          "value": "reprojected"
+        },
+        {
+          "key": "text_generated",
+          "value": "false"
+        },
+        {
+          "key": "limitation",
+          "value": "Public report logged through Wellington Water's customer channel — recorded by an official system, but the underlying report is unverified."
+        },
+        {
+          "key": "limitation",
+          "value": "Street numbers removed to avoid publishing personal information."
+        },
+        {
+          "key": "limitation",
+          "value": "Status: New. An open job is not necessarily an active emergency."
+        }
+      ],
+      "datasetId": "live",
+      "synthetic": false,
+      "hazardType": "water",
+      "mediaType": "none",
+      "collectedAt": "2026-08-08T02:01:55.795Z",
+      "authorIsPseudonymised": false,
+      "textGenerated": false
+    },
+    {
+      "text": "Leaking Pipes York Street MOERA · Potable Water · Leaking Pipes",
+      "source": "wellington-water-faults",
+      "sourceClass": "community_report",
+      "occurredAt": "2026-08-07T02:14:02.600Z",
+      "externalId": "949744",
+      "lat": -41.2274602573383,
+      "lng": 174.906537465249,
+      "geoConfidence": 0.95,
+      "annotations": [
+        {
+          "key": "location_text",
+          "value": "York Street, #1, Moera, Lower Hutt, Wellington, 5010"
+        },
+        {
+          "key": "location_method",
+          "value": "reprojected"
+        },
+        {
+          "key": "text_generated",
+          "value": "false"
+        },
+        {
+          "key": "limitation",
+          "value": "Public report logged through Wellington Water's customer channel — recorded by an official system, but the underlying report is unverified."
+        },
+        {
+          "key": "limitation",
+          "value": "Street numbers removed to avoid publishing personal information."
+        },
+        {
+          "key": "limitation",
+          "value": "Status: In Queue. An open job is not necessarily an active emergency."
+        }
+      ],
+      "datasetId": "live",
+      "synthetic": false,
+      "hazardType": "water",
+      "mediaType": "none",
+      "collectedAt": "2026-08-08T02:01:55.795Z",
+      "authorIsPseudonymised": false,
+      "textGenerated": false
+    },
+    {
+      "text": "Reduced Service Orr Crescent, HUTT CENTRAL · Potable Water · Reduced Service",
+      "source": "wellington-water-faults",
+      "sourceClass": "community_report",
+      "occurredAt": "2026-08-07T02:28:54.500Z",
+      "externalId": "949753",
+      "lat": -41.2065024400049,
+      "lng": 174.919610468175,
+      "geoConfidence": 0.95,
+      "annotations": [
+        {
+          "key": "location_text",
+          "value": "Orr Crescent, Hutt Central, Lower Hutt, Wellington, 5011"
+        },
+        {
+          "key": "location_method",
+          "value": "reprojected"
+        },
+        {
+          "key": "text_generated",
+          "value": "false"
+        },
+        {
+          "key": "limitation",
+          "value": "Public report logged through Wellington Water's customer channel — recorded by an official system, but the underlying report is unverified."
+        },
+        {
+          "key": "limitation",
+          "value": "Street numbers removed to avoid publishing personal information."
+        },
+        {
+          "key": "limitation",
+          "value": "Status: New. An open job is not necessarily an active emergency."
+        }
+      ],
+      "datasetId": "live",
+      "synthetic": false,
+      "hazardType": "water",
+      "mediaType": "none",
+      "collectedAt": "2026-08-08T02:01:55.795Z",
+      "authorIsPseudonymised": false,
+      "textGenerated": false
+    },
+    {
+      "text": "Lid Issue Nevis Street PETONE · Storm Water · General Fault",
+      "source": "wellington-water-faults",
+      "sourceClass": "community_report",
+      "occurredAt": "2026-08-07T03:53:34.787Z",
+      "externalId": "949790",
+      "lat": -41.2243379257559,
+      "lng": 174.868028385674,
+      "geoConfidence": 0.95,
+      "annotations": [
+        {
+          "key": "location_text",
+          "value": "Nevis Street, Petone Central, Petone, Lower Hutt, Wellington, 5012"
+        },
+        {
+          "key": "location_method",
+          "value": "reprojected"
+        },
+        {
+          "key": "text_generated",
+          "value": "false"
+        },
+        {
+          "key": "limitation",
+          "value": "Public report logged through Wellington Water's customer channel — recorded by an official system, but the underlying report is unverified."
+        },
+        {
+          "key": "limitation",
+          "value": "Street numbers removed to avoid publishing personal information."
+        },
+        {
+          "key": "limitation",
+          "value": "Status: New. An open job is not necessarily an active emergency."
+        }
+      ],
+      "datasetId": "live",
+      "synthetic": false,
+      "hazardType": "flooding",
+      "mediaType": "none",
+      "collectedAt": "2026-08-08T02:01:55.795Z",
+      "authorIsPseudonymised": false,
+      "textGenerated": false
+    },
+    {
+      "text": "Fault BAY ROAD, Kilbirnie · Potable Water · General Fault",
+      "source": "wellington-water-faults",
+      "sourceClass": "community_report",
+      "occurredAt": "2026-08-07T03:39:43.000Z",
+      "externalId": "949787",
+      "lat": -41.3191061845504,
+      "lng": 174.79432616141,
+      "geoConfidence": 0.95,
+      "annotations": [
+        {
+          "key": "location_text",
+          "value": "Bay Road, Kilbirnie, Wellington, 6022"
+        },
+        {
+          "key": "location_method",
+          "value": "reprojected"
+        },
+        {
+          "key": "text_generated",
+          "value": "false"
+        },
+        {
+          "key": "limitation",
+          "value": "Public report logged through Wellington Water's customer channel — recorded by an official system, but the underlying report is unverified."
+        },
+        {
+          "key": "limitation",
+          "value": "Street numbers removed to avoid publishing personal information."
+        },
+        {
+          "key": "limitation",
+          "value": "Status: New. An open job is not necessarily an active emergency."
+        }
+      ],
+      "datasetId": "live",
+      "synthetic": false,
+      "hazardType": "water",
+      "mediaType": "none",
+      "collectedAt": "2026-08-08T02:01:55.795Z",
+      "authorIsPseudonymised": false,
+      "textGenerated": false
+    },
+    {
+      "text": "Fault THE CRESCENT, Roseneath · Potable Water · General Fault",
+      "source": "wellington-water-faults",
+      "sourceClass": "community_report",
+      "occurredAt": "2026-08-07T03:31:08.000Z",
+      "externalId": "949784",
+      "lat": -41.2919012928708,
+      "lng": 174.799865006847,
+      "geoConfidence": 0.95,
+      "annotations": [
+        {
+          "key": "location_text",
+          "value": "The Crescent, Roseneath, Wellington, 6011"
+        },
+        {
+          "key": "location_method",
+          "value": "reprojected"
+        },
+        {
+          "key": "text_generated",
+          "value": "false"
+        },
+        {
+          "key": "limitation",
+          "value": "Public report logged through Wellington Water's customer channel — recorded by an official system, but the underlying report is unverified."
+        },
+        {
+          "key": "limitation",
+          "value": "Street numbers removed to avoid publishing personal information."
+        },
+        {
+          "key": "limitation",
+          "value": "Status: New. An open job is not necessarily an active emergency."
+        }
+      ],
+      "datasetId": "live",
+      "synthetic": false,
+      "hazardType": "water",
+      "mediaType": "none",
+      "collectedAt": "2026-08-08T02:01:55.795Z",
+      "authorIsPseudonymised": false,
+      "textGenerated": false
+    },
+    {
+      "text": "Leaking Pipes Central Terrace, ALICETOWN · Potable Water · Leaking Pipes",
+      "source": "wellington-water-faults",
+      "sourceClass": "community_report",
+      "occurredAt": "2026-08-07T05:01:08.153Z",
+      "externalId": "949804",
+      "lat": -41.218613829089,
+      "lng": 174.893095574765,
+      "geoConfidence": 0.95,
+      "annotations": [
+        {
+          "key": "location_text",
+          "value": "Central Terrace, Alicetown, Lower Hutt, Wellington, 5010"
+        },
+        {
+          "key": "location_method",
+          "value": "reprojected"
+        },
+        {
+          "key": "text_generated",
+          "value": "false"
+        },
+        {
+          "key": "limitation",
+          "value": "Public report logged through Wellington Water's customer channel — recorded by an official system, but the underlying report is unverified."
+        },
+        {
+          "key": "limitation",
+          "value": "Street numbers removed to avoid publishing personal information."
+        },
+        {
+          "key": "limitation",
+          "value": "Status: New. An open job is not necessarily an active emergency."
+        }
+      ],
+      "datasetId": "live",
+      "synthetic": false,
+      "hazardType": "water",
+      "mediaType": "none",
+      "collectedAt": "2026-08-08T02:01:55.795Z",
+      "authorIsPseudonymised": false,
+      "textGenerated": false
+    },
+    {
+      "text": "Fault THE PARADE, Island Bay · Waste Water · General Fault",
+      "source": "wellington-water-faults",
+      "sourceClass": "community_report",
+      "occurredAt": "2026-08-07T04:27:18.000Z",
+      "externalId": "949799",
+      "lat": -41.3359794166473,
+      "lng": 174.772527345821,
+      "geoConfidence": 0.95,
+      "annotations": [
+        {
+          "key": "location_text",
+          "value": "The Parade, Island Bay, Wellington, 6023"
+        },
+        {
+          "key": "location_method",
+          "value": "reprojected"
+        },
+        {
+          "key": "text_generated",
+          "value": "false"
+        },
+        {
+          "key": "limitation",
+          "value": "Public report logged through Wellington Water's customer channel — recorded by an official system, but the underlying report is unverified."
+        },
+        {
+          "key": "limitation",
+          "value": "Street numbers removed to avoid publishing personal information."
+        },
+        {
+          "key": "limitation",
+          "value": "Status: In Progress. An open job is not necessarily an active emergency."
+        }
+      ],
+      "datasetId": "live",
+      "synthetic": false,
+      "hazardType": "water",
+      "mediaType": "none",
+      "collectedAt": "2026-08-08T02:01:55.795Z",
+      "authorIsPseudonymised": false,
+      "textGenerated": false
+    },
+    {
+      "text": "Fault CALCUTTA STREET, Khandallah · Potable Water · General Fault",
+      "source": "wellington-water-faults",
+      "sourceClass": "community_report",
+      "occurredAt": "2026-08-07T04:48:09.000Z",
+      "externalId": "949802",
+      "lat": -41.2533783592432,
+      "lng": 174.792221214065,
+      "geoConfidence": 0.95,
+      "annotations": [
+        {
+          "key": "location_text",
+          "value": "Calcutta Street, Khandallah, Wellington, 6035"
+        },
+        {
+          "key": "location_method",
+          "value": "reprojected"
+        },
+        {
+          "key": "text_generated",
+          "value": "false"
+        },
+        {
+          "key": "limitation",
+          "value": "Public report logged through Wellington Water's customer channel — recorded by an official system, but the underlying report is unverified."
+        },
+        {
+          "key": "limitation",
+          "value": "Street numbers removed to avoid publishing personal information."
+        },
+        {
+          "key": "limitation",
+          "value": "Status: New. An open job is not necessarily an active emergency."
+        }
+      ],
+      "datasetId": "live",
+      "synthetic": false,
+      "hazardType": "water",
+      "mediaType": "none",
+      "collectedAt": "2026-08-08T02:01:55.795Z",
+      "authorIsPseudonymised": false,
+      "textGenerated": false
+    },
+    {
+      "text": "Fault HORNSEY ROAD, Melrose · Potable Water · General Fault",
+      "source": "wellington-water-faults",
+      "sourceClass": "community_report",
+      "occurredAt": "2026-08-07T04:33:12.000Z",
+      "externalId": "949801",
+      "lat": -41.3296641555187,
+      "lng": 174.78684145715,
+      "geoConfidence": 0.95,
+      "annotations": [
+        {
+          "key": "location_text",
+          "value": "Hornsey Road, Melrose, Wellington, 6023"
+        },
+        {
+          "key": "location_method",
+          "value": "reprojected"
+        },
+        {
+          "key": "text_generated",
+          "value": "false"
+        },
+        {
+          "key": "limitation",
+          "value": "Public report logged through Wellington Water's customer channel — recorded by an official system, but the underlying report is unverified."
+        },
+        {
+          "key": "limitation",
+          "value": "Street numbers removed to avoid publishing personal information."
+        },
+        {
+          "key": "limitation",
+          "value": "Status: New. An open job is not necessarily an active emergency."
+        }
+      ],
+      "datasetId": "live",
+      "synthetic": false,
+      "hazardType": "water",
+      "mediaType": "none",
+      "collectedAt": "2026-08-08T02:01:55.795Z",
+      "authorIsPseudonymised": false,
+      "textGenerated": false
+    },
+    {
+      "text": "Leaking Pipes Queens Drive, HUTT CENTRAL · Potable Water · Leaking Pipes",
+      "source": "wellington-water-faults",
+      "sourceClass": "community_report",
+      "occurredAt": "2026-08-07T04:15:26.940Z",
+      "externalId": "949797",
+      "lat": -41.2108174856693,
+      "lng": 174.902605682108,
+      "geoConfidence": 0.95,
+      "annotations": [
+        {
+          "key": "location_text",
+          "value": "Queens Drive, Hutt Central, Lower Hutt, Wellington, 5010"
+        },
+        {
+          "key": "location_method",
+          "value": "reprojected"
+        },
+        {
+          "key": "text_generated",
+          "value": "false"
+        },
+        {
+          "key": "limitation",
+          "value": "Public report logged through Wellington Water's customer channel — recorded by an official system, but the underlying report is unverified."
+        },
+        {
+          "key": "limitation",
+          "value": "Street numbers removed to avoid publishing personal information."
+        },
+        {
+          "key": "limitation",
+          "value": "Status: New. An open job is not necessarily an active emergency."
+        }
+      ],
+      "datasetId": "live",
+      "synthetic": false,
+      "hazardType": "water",
+      "mediaType": "none",
+      "collectedAt": "2026-08-08T02:01:55.795Z",
+      "authorIsPseudonymised": false,
+      "textGenerated": false
+    },
+    {
+      "text": "Poor Water Quality Boulcott Street BOULCOTT · Potable Water · Poor Water Quality",
+      "source": "wellington-water-faults",
+      "sourceClass": "community_report",
+      "occurredAt": "2026-08-07T05:27:48.327Z",
+      "externalId": "949807",
+      "lat": -41.2005956709276,
+      "lng": 174.920806817215,
+      "geoConfidence": 0.95,
+      "annotations": [
+        {
+          "key": "location_text",
+          "value": "Boulcott Street, Boulcott, Lower Hutt, Wellington, 5010"
+        },
+        {
+          "key": "location_method",
+          "value": "reprojected"
+        },
+        {
+          "key": "text_generated",
+          "value": "false"
+        },
+        {
+          "key": "limitation",
+          "value": "Public report logged through Wellington Water's customer channel — recorded by an official system, but the underlying report is unverified."
+        },
+        {
+          "key": "limitation",
+          "value": "Street numbers removed to avoid publishing personal information."
+        },
+        {
+          "key": "limitation",
+          "value": "Status: New. An open job is not necessarily an active emergency."
+        }
+      ],
+      "datasetId": "live",
+      "synthetic": false,
+      "hazardType": "water",
+      "mediaType": "none",
+      "collectedAt": "2026-08-08T02:01:55.795Z",
+      "authorIsPseudonymised": false,
+      "textGenerated": false
+    },
+    {
+      "text": "Fault ADAMS TERRACE, Aro Valley · Waste Water · General Fault",
+      "source": "wellington-water-faults",
+      "sourceClass": "community_report",
+      "occurredAt": "2026-08-07T05:07:09.000Z",
+      "externalId": "949805",
+      "lat": -41.2934263801538,
+      "lng": 174.763856266986,
+      "geoConfidence": 0.95,
+      "annotations": [
+        {
+          "key": "location_text",
+          "value": "Adams Terrace, Aro Valley, Wellington, 6021"
+        },
+        {
+          "key": "location_method",
+          "value": "reprojected"
+        },
+        {
+          "key": "text_generated",
+          "value": "false"
+        },
+        {
+          "key": "limitation",
+          "value": "Public report logged through Wellington Water's customer channel — recorded by an official system, but the underlying report is unverified."
+        },
+        {
+          "key": "limitation",
+          "value": "Street numbers removed to avoid publishing personal information."
+        },
+        {
+          "key": "limitation",
+          "value": "Status: New. An open job is not necessarily an active emergency."
+        }
+      ],
+      "datasetId": "live",
+      "synthetic": false,
+      "hazardType": "water",
+      "mediaType": "none",
+      "collectedAt": "2026-08-08T02:01:55.795Z",
+      "authorIsPseudonymised": false,
+      "textGenerated": false
+    },
+    {
+      "text": "Blockage High Street Petone · Waste Water · Blockage - Significant",
+      "source": "wellington-water-faults",
+      "sourceClass": "community_report",
+      "occurredAt": "2026-08-07T22:17:23.310Z",
+      "externalId": "949930",
+      "lat": -41.2250282062225,
+      "lng": 174.889450117436,
+      "geoConfidence": 0.95,
+      "annotations": [
+        {
+          "key": "location_text",
+          "value": "High Street, Petone, Lower Hutt, Wellington, 5012"
+        },
+        {
+          "key": "location_method",
+          "value": "reprojected"
+        },
+        {
+          "key": "text_generated",
+          "value": "false"
+        },
+        {
+          "key": "limitation",
+          "value": "Public report logged through Wellington Water's customer channel — recorded by an official system, but the underlying report is unverified."
+        },
+        {
+          "key": "limitation",
+          "value": "Street numbers removed to avoid publishing personal information."
+        },
+        {
+          "key": "limitation",
+          "value": "Status: In Progress. An open job is not necessarily an active emergency."
+        }
+      ],
+      "datasetId": "live",
+      "synthetic": false,
+      "hazardType": "water",
+      "mediaType": "none",
+      "collectedAt": "2026-08-08T02:01:55.795Z",
+      "authorIsPseudonymised": false,
+      "textGenerated": false
+    },
+    {
+      "text": "Magnitude 2.9 earthquake Within 5 km of Culverden, 33 km deep. Estimated shaking intensity MMI 3. Epicentre approximately 231 km from Wellington.",
+      "source": "geonet-quakes",
+      "sourceClass": "official_feed",
+      "occurredAt": "2026-08-07T16:46:50.556Z",
+      "externalId": "2026p591078",
+      "url": "https://www.geonet.org.nz/earthquake/2026p591078",
+      "lat": -42.775669098,
+      "lng": 172.833297729,
+      "geoConfidence": 0.9,
+      "annotations": [
+        {
+          "key": "location_text",
+          "value": "Within 5 km of Culverden"
+        },
+        {
+          "key": "location_method",
+          "value": "exact"
+        },
+        {
+          "key": "text_generated",
+          "value": "true"
+        },
+        {
+          "key": "limitation",
+          "value": "Instrument-measured by GeoNet. Solution quality: best."
+        },
+        {
+          "key": "limitation",
+          "value": "The plotted point is the epicentre — impacts occur elsewhere, and shaking is felt well beyond it."
+        },
+        {
+          "key": "limitation",
+          "value": "Magnitude and depth are automatic estimates and may be revised."
+        },
+        {
+          "key": "limitation",
+          "value": "Description text is composed from GeoNet's structured fields, not written by a person."
+        }
+      ],
+      "datasetId": "live",
+      "synthetic": false,
+      "hazardType": "earthquake",
+      "mediaType": "link",
+      "collectedAt": "2026-08-08T02:01:55.513Z",
+      "authorIsPseudonymised": false,
+      "textGenerated": true
+    },
+    {
+      "text": "Magnitude 2.6 earthquake 5 km south of Dannevirke, 19 km deep. Estimated shaking intensity MMI 3. Epicentre approximately 161 km from Wellington.",
+      "source": "geonet-quakes",
+      "sourceClass": "official_feed",
+      "occurredAt": "2026-08-05T13:10:43.567Z",
+      "externalId": "2026p585267",
+      "url": "https://www.geonet.org.nz/earthquake/2026p585267",
+      "lat": -40.264060974,
+      "lng": 176.12487793,
+      "geoConfidence": 0.9,
+      "annotations": [
+        {
+          "key": "location_text",
+          "value": "5 km south of Dannevirke"
+        },
+        {
+          "key": "location_method",
+          "value": "exact"
+        },
+        {
+          "key": "text_generated",
+          "value": "true"
+        },
+        {
+          "key": "limitation",
+          "value": "Instrument-measured by GeoNet. Solution quality: best."
+        },
+        {
+          "key": "limitation",
+          "value": "The plotted point is the epicentre — impacts occur elsewhere, and shaking is felt well beyond it."
+        },
+        {
+          "key": "limitation",
+          "value": "Magnitude and depth are automatic estimates and may be revised."
+        },
+        {
+          "key": "limitation",
+          "value": "Description text is composed from GeoNet's structured fields, not written by a person."
+        }
+      ],
+      "datasetId": "live",
+      "synthetic": false,
+      "hazardType": "earthquake",
+      "mediaType": "link",
+      "collectedAt": "2026-08-08T02:01:55.513Z",
+      "authorIsPseudonymised": false,
+      "textGenerated": true
+    },
+    {
+      "text": "Magnitude 2.7 earthquake 10 km north-west of Kaikoura, 4 km deep. Estimated shaking intensity MMI 3. Epicentre approximately 157 km from Wellington.",
+      "source": "geonet-quakes",
+      "sourceClass": "official_feed",
+      "occurredAt": "2026-08-05T09:18:41.906Z",
+      "externalId": "2026p584833",
+      "url": "https://www.geonet.org.nz/earthquake/2026p584833",
+      "lat": -42.346408844,
+      "lng": 173.530105591,
+      "geoConfidence": 0.9,
+      "annotations": [
+        {
+          "key": "location_text",
+          "value": "10 km north-west of Kaikoura"
+        },
+        {
+          "key": "location_method",
+          "value": "exact"
+        },
+        {
+          "key": "text_generated",
+          "value": "true"
+        },
+        {
+          "key": "limitation",
+          "value": "Instrument-measured by GeoNet. Solution quality: best."
+        },
+        {
+          "key": "limitation",
+          "value": "The plotted point is the epicentre — impacts occur elsewhere, and shaking is felt well beyond it."
+        },
+        {
+          "key": "limitation",
+          "value": "Magnitude and depth are automatic estimates and may be revised."
+        },
+        {
+          "key": "limitation",
+          "value": "Description text is composed from GeoNet's structured fields, not written by a person."
+        }
+      ],
+      "datasetId": "live",
+      "synthetic": false,
+      "hazardType": "earthquake",
+      "mediaType": "link",
+      "collectedAt": "2026-08-08T02:01:55.513Z",
+      "authorIsPseudonymised": false,
+      "textGenerated": true
+    },
+    {
+      "text": "Magnitude 2.6 earthquake 10 km west of Kaikoura, 8 km deep. Estimated shaking intensity MMI 3. Epicentre approximately 161 km from Wellington.",
+      "source": "geonet-quakes",
+      "sourceClass": "official_feed",
+      "occurredAt": "2026-08-05T09:18:03.135Z",
+      "externalId": "2026p584831",
+      "url": "https://www.geonet.org.nz/earthquake/2026p584831",
+      "lat": -42.392307281,
+      "lng": 173.518280029,
+      "geoConfidence": 0.9,
+      "annotations": [
+        {
+          "key": "location_text",
+          "value": "10 km west of Kaikoura"
+        },
+        {
+          "key": "location_method",
+          "value": "exact"
+        },
+        {
+          "key": "text_generated",
+          "value": "true"
+        },
+        {
+          "key": "limitation",
+          "value": "Instrument-measured by GeoNet. Solution quality: best."
+        },
+        {
+          "key": "limitation",
+          "value": "The plotted point is the epicentre — impacts occur elsewhere, and shaking is felt well beyond it."
+        },
+        {
+          "key": "limitation",
+          "value": "Magnitude and depth are automatic estimates and may be revised."
+        },
+        {
+          "key": "limitation",
+          "value": "Description text is composed from GeoNet's structured fields, not written by a person."
+        }
+      ],
+      "datasetId": "live",
+      "synthetic": false,
+      "hazardType": "earthquake",
+      "mediaType": "link",
+      "collectedAt": "2026-08-08T02:01:55.513Z",
+      "authorIsPseudonymised": false,
+      "textGenerated": true
+    },
+    {
+      "text": "1 public report of feeling earthquake shaking here. Reported intensity MMI 4 (light, felt by many indoors).",
+      "source": "geonet-felt-reports",
+      "sourceClass": "community_report",
+      "occurredAt": "2026-08-08T02:01:55.592Z",
+      "externalId": "felt:174.776,-41.273",
+      "lat": -41.272888184,
+      "lng": 174.776000977,
+      "geoConfidence": 0.7,
+      "annotations": [
+        {
+          "key": "location_method",
+          "value": "exact"
+        },
+        {
+          "key": "text_generated",
+          "value": "true"
+        },
+        {
+          "key": "limitation",
+          "value": "Public 'felt it' reports collected by GeoNet — unverified individual observations, officially aggregated."
+        },
+        {
+          "key": "limitation",
+          "value": "Locations are aggregated to a grid cell; individual reporters are not identified."
+        },
+        {
+          "key": "limitation",
+          "value": "GeoNet does not publish a per-report timestamp on this endpoint, so collection time is used."
+        },
+        {
+          "key": "limitation",
+          "value": "Report density reflects where people are, not where shaking was strongest — 1 report(s) here."
+        },
+        {
+          "key": "limitation",
+          "value": "Description text is composed from GeoNet's structured fields, not written by a person."
+        }
+      ],
+      "datasetId": "live",
+      "synthetic": false,
+      "hazardType": "earthquake",
+      "mediaType": "none",
+      "collectedAt": "2026-08-08T02:01:55.592Z",
+      "authorIsPseudonymised": false,
+      "textGenerated": true
+    }
+  ]
+}

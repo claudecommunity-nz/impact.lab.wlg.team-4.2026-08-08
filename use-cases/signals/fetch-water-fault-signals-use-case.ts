@@ -90,6 +90,8 @@ export const fetchWaterFaultSignalsUseCase = createUseCase(
             ? SourceKind.OfficialCrowd
             : SourceKind.Official,
           text,
+          // The job description is written by a person taking the report.
+          textGenerated: false,
           observedAt: reportedAt,
           collectedAt,
           location: {

@@ -19,6 +19,8 @@ export const signalsRouter = router({
           sinceHours: z.number().int().positive().optional(),
           datasetId: z.string().optional(),
           upload: z.boolean().optional(),
+          write: z.boolean().optional(),
+          outputDir: z.string().optional(),
         })
         .optional(),
     )

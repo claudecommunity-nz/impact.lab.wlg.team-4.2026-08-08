@@ -86,6 +86,45 @@ export const queryArcgisUseCase = createUseCase(
     }
 
     const features = Array.isArray(body?.features) ? body.features : [];
+
+    /**
+     * Verify the server actually honoured `outSR=4326`.
+     *
+     * Requesting `f=geojson` is NOT sufficient on its own: this WCC server will
+     * happily return NZTM2000 easting/northing inside a GeoJSON envelope if
+     * asked (verified — `outSR=2193&f=geojson` yields [1742648, 5435693]), even
+     * though RFC 7946 mandates WGS84. Nothing downstream re-checks this either:
+     * `createUseCase` does not parse `outputSchema` at runtime, so the lat/lng
+     * bounds on SignalLocationSchema are compile-time only.
+     *
+     * So we check here, at the single door every ArcGIS call passes through. A
+     * projected coordinate is orders of magnitude outside lng/lat range, which
+     * makes this cheap and unambiguous — and failing loudly is far better than
+     * plotting Wellington off the coast of West Africa.
+     */
+    const unprojected = features.find((feature: unknown) => {
+      const point = firstCoordinate(
+        (feature as { geometry?: { coordinates?: unknown } })?.geometry
+          ?.coordinates,
+      );
+      return (
+        point !== null && (Math.abs(point[0]) > 180 || Math.abs(point[1]) > 90)
+      );
+    });
+
+    if (unprojected) {
+      const point = firstCoordinate(
+        (unprojected as { geometry?: { coordinates?: unknown } })?.geometry
+          ?.coordinates,
+      );
+      return error({
+        message:
+          "ArcGIS returned coordinates outside WGS84 range — the layer was not reprojected to EPSG:4326.",
+        layerUrl,
+        sampleCoordinate: point,
+      });
+    }
+
     log?.info({ layerUrl, count: features.length }, "ArcGIS layer queried");
 
     return success({
@@ -96,3 +135,14 @@ export const queryArcgisUseCase = createUseCase(
     });
   },
 );
+
+/** First [x, y] pair inside an arbitrarily nested GeoJSON coordinates array. */
+function firstCoordinate(coordinates: unknown): [number, number] | null {
+  let node: unknown = coordinates;
+  while (Array.isArray(node) && Array.isArray(node[0])) node = node[0];
+  return Array.isArray(node) &&
+    typeof node[0] === "number" &&
+    typeof node[1] === "number"
+    ? [node[0], node[1]]
+    : null;
+}

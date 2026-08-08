@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { createUseCase } from "@/utilities/create-use-case";
-import { SignalSchema, SourceKind, LocationMethod } from "./signal-schema";
+import { SignalSchema, SourceKind } from "./signal-schema";
 import {
   classifyHazard,
   extractUrls,
@@ -32,6 +32,14 @@ export const fetchBlueskySignalsUseCase = createUseCase(
     const url = new URL("https://api.bsky.app/xrpc/app.bsky.feed.searchPosts");
     url.searchParams.set("q", query);
     url.searchParams.set("limit", String(limit ?? 25));
+    /**
+     * Default search ranks by relevance, which for a monitoring tool is the
+     * wrong axis entirely — it surfaces the most-engaged post about Wellington
+     * flooding regardless of whether it is from today or last month. Verified:
+     * the default response's newest post was 14 days old. Sort by recency so
+     * the window filter has fresh candidates to work with.
+     */
+    url.searchParams.set("sort", "latest");
 
     const response = await fetch(url, {
       headers: { accept: "application/json" },
@@ -85,6 +93,8 @@ export const fetchBlueskySignalsUseCase = createUseCase(
           source: "bluesky-search",
           sourceKind: SourceKind.Social,
           text,
+          // The author's own words.
+          textGenerated: false,
           observedAt: new Date(post.record?.createdAt ?? collectedAt),
           collectedAt,
           location,

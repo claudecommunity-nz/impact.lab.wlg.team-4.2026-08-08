@@ -10,6 +10,7 @@
     "start": "next start",
     "lint": "eslint",
     "db:push": "drizzle-kit push",
+    "signals:collect": "tsx --require ./scripts/allow-server-only.cjs scripts/collect-signals.ts",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {

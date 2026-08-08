@@ -69,6 +69,8 @@ export const fetchMetserviceSignalsUseCase = createUseCase(
           source: "metservice-cap-alerts",
           sourceKind: SourceKind.Official,
           text: text.slice(0, 2000),
+          // MetService's own headline and description — human-written prose.
+          textGenerated: false,
           observedAt: props.sent ? new Date(String(props.sent)) : collectedAt,
           collectedAt,
           location: centroid

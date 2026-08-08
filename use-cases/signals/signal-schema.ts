@@ -96,6 +96,17 @@ export const SignalSchema = z.object({
   sourceKind: SourceKindSchema,
   /** The human-readable claim. Never treated as fact. */
   text: z.string(),
+  /**
+   * True when `text` was composed by us from structured fields rather than
+   * containing prose a person actually wrote.
+   *
+   * This matters specifically because `text` is what a vector store embeds.
+   * GeoNet returns numbers (`mmi: 4`, `count: 1`), so a sentence must be
+   * generated for the embedding to mean anything — but an analyst retrieving
+   * that chunk must be able to tell it is derived, not testimony. It is NOT
+   * the same as `synthetic`, which marks hand-authored demo items.
+   */
+  textGenerated: z.boolean(),
   /** When the source says it happened/was published. */
   observedAt: z.coerce.date(),
   /** When we pulled it. */
