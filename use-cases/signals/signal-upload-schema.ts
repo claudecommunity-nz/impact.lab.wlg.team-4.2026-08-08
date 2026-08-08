@@ -100,6 +100,13 @@ export function toSignalUploadItem(
     value: signal.location?.method ?? "none",
   });
 
+  // `text` is the field a vector store embeds, so whether it is testimony or a
+  // sentence we composed from structured numbers must travel with it.
+  annotations.push({
+    key: "text_generated",
+    value: String(signal.textGenerated),
+  });
+
   for (const limitation of signal.limitations) {
     annotations.push({ key: "limitation", value: limitation });
   }
@@ -129,5 +136,6 @@ export function toSignalUploadItem(
     mediaType: signal.mediaType,
     collectedAt: signal.collectedAt.toISOString(),
     authorIsPseudonymised: signal.authorRef !== null,
+    textGenerated: signal.textGenerated,
   };
 }

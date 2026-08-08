@@ -93,6 +93,8 @@ export const fetchRedditSignalsUseCase = createUseCase(
           source: `reddit-r-${sub.toLowerCase()}`,
           sourceKind: SourceKind.Social,
           text: text.slice(0, 2000),
+          // The poster's own words (title and body).
+          textGenerated: false,
           observedAt: new Date(
             pick("updated") ?? pick("published") ?? collectedAt,
           ),
