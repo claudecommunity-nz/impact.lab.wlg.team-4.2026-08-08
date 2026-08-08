@@ -128,3 +128,89 @@
     @apply font-sans;
   }
 }
+
+/*
+ * MapLibre ships its own popup chrome, hardcoded white and light-theme only. In
+ * dark mode our near-white popup text lands on that white background and simply
+ * disappears. These rules repaint the popup as the app's popover surface, in
+ * both themes. `.hazard-popup` is the class map-canvas.tsx passes to the Popup,
+ * so nothing else on the page is affected.
+ *
+ * Every rule below outranks MapLibre's on specificity rather than source order:
+ * its stylesheet is injected by the component import, and which of the two
+ * lands last is not something we control.
+ *
+ * Radii are computed from `--radius` instead of `--radius-3xl`/`--radius-sm`:
+ * Tailwind only emits the theme variables that utilities actually reference,
+ * and these two are not currently among them.
+ */
+.hazard-popup .maplibregl-popup-content {
+  background: var(--popover);
+  color: var(--popover-foreground);
+  border: 1px solid var(--border);
+  border-radius: calc(var(--radius) * 2.2);
+  box-shadow:
+    0 10px 15px -3px oklch(0 0 0 / 10%),
+    0 4px 6px -4px oklch(0 0 0 / 10%);
+  padding: 0.75rem 1.75rem 0.75rem 0.75rem;
+}
+
+/* MapLibre squares off the corner the tip grows out of. Re-stated so the shape
+   survives regardless of which stylesheet wins on order. */
+.hazard-popup.maplibregl-popup-anchor-top-left .maplibregl-popup-content {
+  border-top-left-radius: 0;
+}
+.hazard-popup.maplibregl-popup-anchor-top-right .maplibregl-popup-content {
+  border-top-right-radius: 0;
+}
+.hazard-popup.maplibregl-popup-anchor-bottom-left .maplibregl-popup-content {
+  border-bottom-left-radius: 0;
+}
+.hazard-popup.maplibregl-popup-anchor-bottom-right .maplibregl-popup-content {
+  border-bottom-right-radius: 0;
+}
+
+/*
+ * The tip is a CSS triangle: only the border edge facing the popup is painted,
+ * and which edge that is depends on the anchor MapLibre chose at open time.
+ * Every anchor variant needs its own colour, or the tip stays white against a
+ * dark popup on whichever side we missed.
+ */
+.hazard-popup.maplibregl-popup-anchor-top .maplibregl-popup-tip,
+.hazard-popup.maplibregl-popup-anchor-top-left .maplibregl-popup-tip,
+.hazard-popup.maplibregl-popup-anchor-top-right .maplibregl-popup-tip {
+  border-bottom-color: var(--popover);
+}
+.hazard-popup.maplibregl-popup-anchor-bottom .maplibregl-popup-tip,
+.hazard-popup.maplibregl-popup-anchor-bottom-left .maplibregl-popup-tip,
+.hazard-popup.maplibregl-popup-anchor-bottom-right .maplibregl-popup-tip {
+  border-top-color: var(--popover);
+}
+.hazard-popup.maplibregl-popup-anchor-left .maplibregl-popup-tip {
+  border-right-color: var(--popover);
+}
+.hazard-popup.maplibregl-popup-anchor-right .maplibregl-popup-tip {
+  border-left-color: var(--popover);
+}
+
+.hazard-popup .maplibregl-popup-close-button {
+  top: 0.25rem;
+  right: 0.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.25rem;
+  height: 1.25rem;
+  border-radius: calc(var(--radius) * 0.6);
+  color: var(--muted-foreground);
+  font-size: 1rem;
+  line-height: 1;
+}
+.hazard-popup .maplibregl-popup-close-button:hover {
+  background-color: var(--accent);
+  color: var(--accent-foreground);
+}
+.hazard-popup .maplibregl-popup-close-button:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 1px;
+}

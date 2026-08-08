@@ -48,3 +48,6 @@ next-env.d.ts
 /data/inbox/processed/*
 /data/inbox/failed/*
 !/data/inbox/**/.gitkeep
+
+# Copied from node_modules by scripts/copy-maplibre-worker.mjs
+public/maplibre/

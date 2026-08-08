@@ -1,0 +1,369 @@
+"use client";
+
+import { useEffect, useRef, useState } from "react";
+// maplibre-gl v6 has no default export — everything is a named import.
+import {
+  Map as MapLibreMap,
+  NavigationControl,
+  Popup,
+  ScaleControl,
+  setWorkerUrl,
+  type GeoJSONSource,
+  type RasterTileSource,
+} from "maplibre-gl";
+import "maplibre-gl/dist/maplibre-gl.css";
+import type { MapLayer } from "@/use-cases/gis/map-layer-schema";
+import {
+  BASEMAP_ATTRIBUTION,
+  WELLINGTON_CENTER,
+  WELLINGTON_MAX_BOUNDS,
+  WELLINGTON_ZOOM,
+  basemapTiles,
+} from "./basemap";
+import { paintFor } from "./layer-paint";
+
+const BASEMAP_SOURCE_ID = "basemap";
+
+/**
+ * Turbopack can't rewrite the `import.meta.url` worker path inside MapLibre's
+ * pre-bundled dist, so we serve the worker from /public instead (copied there
+ * by scripts/copy-maplibre-worker.mjs). Without this the worker fails to load
+ * and vector layers never render — while raster tiles still do, which makes it
+ * look like a data problem rather than a bundling one.
+ *
+ * Must be called before the first Map is constructed.
+ */
+setWorkerUrl("/maplibre/maplibre-gl-worker.mjs");
+
+/**
+ * ArcGIS bookkeeping columns — noise in a popup. Services vary in how they
+ * spell these (`Shape_Length` on MapServer, `Shape__Length` on FeatureServer),
+ * so both forms are listed rather than pattern-matched.
+ */
+const HIDDEN_PROPERTIES = new Set([
+  "OBJECTID",
+  "OBJECTID_1",
+  "objectid",
+  "FID",
+  "Shape",
+  "Shape_Length",
+  "Shape_Leng",
+  "Shape_Area",
+  "Shape__Length",
+  "Shape__Length_2",
+  "Shape__Area",
+  "X",
+  "Y",
+  // Cartography instructions for the publisher's own map, not facts about the
+  // feature: "Fill colour: #65C7EA. Outline width: 1..." tells an analyst nothing.
+  "Symbology",
+  "Col_Code",
+]);
+const MAX_POPUP_ROWS = 8;
+
+const sourceIdFor = (datasetId: string) => `gis-${datasetId}`;
+const fillLayerIdFor = (datasetId: string) => `gis-${datasetId}-fill`;
+const outlineLayerIdFor = (datasetId: string) => `gis-${datasetId}-outline`;
+const circleLayerIdFor = (datasetId: string) => `gis-${datasetId}-circle`;
+const lineLayerIdFor = (datasetId: string) => `gis-${datasetId}-line`;
+
+/** One dataset can be more than one MapLibre layer — a polygon needs both. */
+function styleLayerIdsFor(layer: MapLayer): string[] {
+  switch (layer.geometryKind) {
+    case "polygon":
+      return [fillLayerIdFor(layer.datasetId), outlineLayerIdFor(layer.datasetId)];
+    case "line":
+      return [lineLayerIdFor(layer.datasetId)];
+    default:
+      return [circleLayerIdFor(layer.datasetId)];
+  }
+}
+
+/**
+ * Renders a value as a link when it is one, and as text otherwise.
+ *
+ * Only http(s) survives: an href is the one place third-party data could become
+ * executable (`javascript:`), and these values come from servers we don't own.
+ * Anything that fails to parse, or parses to another scheme, falls back to
+ * plain text — which can't do anything.
+ *
+ * The visible text is the host, not the URL: these are ePlan and ArcGIS item
+ * links that run to 80+ characters and were the thing blowing the popup open.
+ */
+function valueNode(value: unknown): HTMLElement | Text {
+  const text = String(value);
+  if (/^https?:\/\//i.test(text)) {
+    try {
+      const url = new URL(text);
+      if (url.protocol === "http:" || url.protocol === "https:") {
+        const link = document.createElement("a");
+        link.href = url.href;
+        link.target = "_blank";
+        link.rel = "noopener noreferrer";
+        link.title = url.href;
+        link.className = "text-primary underline underline-offset-2";
+        link.textContent = `${url.host} ↗`;
+        return link;
+      }
+    } catch {
+      // Not a parseable URL — fall through to text.
+    }
+  }
+  return document.createTextNode(text);
+}
+
+/**
+ * Popup content is built with createElement/textContent rather than innerHTML.
+ * These values come from third-party servers and are rendered verbatim, so
+ * escaping has to be structural — textContent cannot execute markup.
+ */
+function popupContent(layer: MapLayer, properties: Record<string, unknown>): HTMLElement {
+  const root = document.createElement("div");
+  // Tall popups scroll rather than run off the map; the width cap is here
+  // because MapLibre's own maxWidth can't restrain a grid (see the dd below).
+  root.className = "max-w-72 max-h-80 overflow-y-auto space-y-1.5 text-xs";
+
+  // Colours are named rather than inherited: the popup lives in MapLibre's own
+  // chrome, outside anything that sets a foreground colour for us.
+  const title = document.createElement("p");
+  title.className = "text-sm font-semibold text-popover-foreground";
+  title.textContent = layer.displayName;
+  root.append(title);
+
+  const authority = document.createElement("p");
+  authority.className = "text-muted-foreground";
+  authority.textContent = `Published by ${layer.authority}`;
+  root.append(authority);
+
+  // Each layer carries its own limitation, and it belongs next to the values it
+  // qualifies — a reader who only ever opens a popup still sees it.
+  const caveat = document.createElement("p");
+  caveat.className = "text-[11px] leading-snug text-muted-foreground";
+  caveat.textContent = layer.caveat;
+  root.append(caveat);
+
+  const list = document.createElement("dl");
+  list.className = "grid grid-cols-[auto_1fr] gap-x-2 gap-y-0.5 pt-1";
+  const rows = Object.entries(properties)
+    .filter(([key, value]) => !HIDDEN_PROPERTIES.has(key) && value !== null && value !== "")
+    .slice(0, MAX_POPUP_ROWS);
+
+  for (const [key, value] of rows) {
+    const term = document.createElement("dt");
+    term.className = "text-muted-foreground";
+    term.textContent = key;
+    const definition = document.createElement("dd");
+    // min-w-0 is load-bearing: a grid item defaults to min-width:auto, so a long
+    // unbroken value sets the track's minimum and the popup grows past its
+    // max-width instead of wrapping. break-words alone can't prevent that.
+    definition.className = "min-w-0 font-medium break-words text-popover-foreground";
+    definition.append(valueNode(value));
+    list.append(term, definition);
+  }
+  root.append(list);
+
+  return root;
+}
+
+/**
+ * Presentational: GeoJSON in, a map out. No hooks beyond the ones that own the
+ * MapLibre instance, no fetching — the feature's -client file supplies the data.
+ *
+ * MapLibre touches `window` at construction, so this component is only ever
+ * reached through a next/dynamic({ ssr: false }) import.
+ */
+export function MapCanvas({
+  layers,
+  basemap,
+  hiddenDatasetIds,
+}: {
+  layers: MapLayer[];
+  basemap: "light" | "dark";
+  hiddenDatasetIds: ReadonlySet<string>;
+}) {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const mapRef = useRef<MapLibreMap | null>(null);
+  const popupRef = useRef<Popup | null>(null);
+  const wiredLayers = useRef(new Set<string>());
+
+  // The basemap at mount builds the initial style; later changes go through
+  // setTiles below, which swaps tiles without discarding the data layers.
+  const [initialBasemap] = useState(basemap);
+
+  useEffect(() => {
+    if (!containerRef.current) return;
+    const wired = wiredLayers.current; // captured for the cleanup, per the hooks lint rule
+
+    const map = new MapLibreMap({
+      container: containerRef.current,
+      style: {
+        version: 8,
+        sources: {
+          [BASEMAP_SOURCE_ID]: {
+            type: "raster",
+            tiles: basemapTiles(initialBasemap),
+            tileSize: 256,
+            attribution: BASEMAP_ATTRIBUTION,
+          },
+        },
+        layers: [{ id: "basemap-tiles", type: "raster", source: BASEMAP_SOURCE_ID }],
+      },
+      center: WELLINGTON_CENTER,
+      zoom: WELLINGTON_ZOOM,
+      maxBounds: WELLINGTON_MAX_BOUNDS,
+    });
+
+    map.addControl(new NavigationControl({ showCompass: false }), "top-right");
+    map.addControl(new ScaleControl({ unit: "metric" }), "bottom-left");
+
+    // `hazard-popup` scopes the theme overrides in globals.css to this popup —
+    // MapLibre's own popup chrome is light-only and would otherwise stay white.
+    popupRef.current = new Popup({
+      closeButton: true,
+      closeOnClick: true,
+      maxWidth: "320px",
+      className: "hazard-popup",
+    });
+    mapRef.current = map;
+
+    return () => {
+      popupRef.current?.remove();
+      popupRef.current = null;
+      wired.clear();
+      map.remove();
+      mapRef.current = null;
+    };
+  }, [initialBasemap]);
+
+  // Theme swap: same map, different tiles.
+  useEffect(() => {
+    const source = mapRef.current?.getSource<RasterTileSource>(BASEMAP_SOURCE_ID);
+    source?.setTiles(basemapTiles(basemap));
+  }, [basemap]);
+
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map) return;
+
+    const draw = () => {
+      for (const layer of layers) {
+        const sourceId = sourceIdFor(layer.datasetId);
+        // Geometry is `unknown` through the tRPC boundary by design — it is
+        // never inspected here, only handed to MapLibre.
+        const data = layer.featureCollection as unknown as GeoJSON.FeatureCollection;
+
+        const existing = map.getSource<GeoJSONSource>(sourceId);
+        if (existing) {
+          existing.setData(data);
+          continue;
+        }
+
+        map.addSource(sourceId, { type: "geojson", data });
+        const paint = paintFor(layer.datasetId);
+        const clickTargets: string[] = [];
+
+        if (layer.geometryKind === "polygon") {
+          map.addLayer({
+            id: fillLayerIdFor(layer.datasetId),
+            type: "fill",
+            source: sourceId,
+            paint: { "fill-color": paint.fill, "fill-opacity": paint.opacity },
+          });
+          map.addLayer({
+            id: outlineLayerIdFor(layer.datasetId),
+            type: "line",
+            source: sourceId,
+            paint: { "line-color": paint.outline, "line-width": 1.5 },
+          });
+          clickTargets.push(fillLayerIdFor(layer.datasetId));
+        } else if (layer.geometryKind === "line") {
+          map.addLayer({
+            id: lineLayerIdFor(layer.datasetId),
+            type: "line",
+            source: sourceId,
+            layout: { "line-cap": "round", "line-join": "round" },
+            paint: {
+              // Thicker as you zoom in: a 2px line is close to unclickable, and
+              // road-priority routes are only meaningful once you can see streets.
+              "line-width": ["interpolate", ["linear"], ["zoom"], 10, 1.5, 15, 4],
+              "line-color": paint.fill,
+              "line-opacity": paint.opacity,
+            },
+          });
+          clickTargets.push(lineLayerIdFor(layer.datasetId));
+        } else {
+          map.addLayer({
+            id: circleLayerIdFor(layer.datasetId),
+            type: "circle",
+            source: sourceId,
+            paint: {
+              "circle-radius": ["interpolate", ["linear"], ["zoom"], 10, 3.5, 15, 8],
+              "circle-color": paint.fill,
+              "circle-opacity": paint.opacity,
+              "circle-stroke-color": paint.outline,
+              "circle-stroke-width": 1,
+            },
+          });
+          clickTargets.push(circleLayerIdFor(layer.datasetId));
+        }
+
+        for (const target of clickTargets) {
+          if (wiredLayers.current.has(target)) continue;
+          wiredLayers.current.add(target);
+
+          map.on("click", target, (event) => {
+            const feature = event.features?.[0];
+            if (!feature || !popupRef.current) return;
+            popupRef.current
+              .setLngLat(event.lngLat)
+              .setDOMContent(popupContent(layer, feature.properties ?? {}))
+              .addTo(map);
+          });
+          map.on("mouseenter", target, () => (map.getCanvas().style.cursor = "pointer"));
+          map.on("mouseleave", target, () => (map.getCanvas().style.cursor = ""));
+        }
+      }
+    };
+
+    if (map.isStyleLoaded()) draw();
+    else map.once("load", draw);
+  }, [layers]);
+
+  // Visibility is a layout property, not a rebuild: the source and its parsed
+  // tiles stay put, so toggling a layer back on is instant and costs no refetch.
+  // Declared after the effect that adds the layers so the "load" handlers run
+  // in that order on first paint.
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map) return;
+
+    const apply = () => {
+      // A popup anchored to a feature that just disappeared is a lie about
+      // what's on the map, so any visibility change closes it.
+      popupRef.current?.remove();
+
+      for (const layer of layers) {
+        const visibility = hiddenDatasetIds.has(layer.datasetId) ? "none" : "visible";
+        for (const styleLayerId of styleLayerIdsFor(layer)) {
+          if (map.getLayer(styleLayerId)) {
+            map.setLayoutProperty(styleLayerId, "visibility", visibility);
+          }
+        }
+      }
+    };
+
+    // Apply straight away — every write is guarded by getLayer, so calling this
+    // before the layers exist is a no-op rather than an error. Do NOT gate on
+    // isStyleLoaded(): with five sources it reads false while tiles are still
+    // settling, and `once("load")` never fires again once load has happened, so
+    // the toggle would silently stop working. `once` here only covers the very
+    // first paint, and is removed on cleanup so listeners can't accumulate.
+    apply();
+    map.once("load", apply);
+    return () => {
+      map.off("load", apply);
+    };
+  }, [layers, hiddenDatasetIds]);
+
+  return <div ref={containerRef} className="h-full w-full" aria-label="Map of Wellington hazard layers" role="application" />;
+}
