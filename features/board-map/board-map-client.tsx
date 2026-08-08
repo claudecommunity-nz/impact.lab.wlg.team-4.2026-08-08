@@ -2,7 +2,7 @@
 
 import { useQueries, useQuery } from "@tanstack/react-query";
 import { useTheme } from "next-themes";
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useMemo, useRef, useState } from "react";
 import { CredibilityLegend } from "@/components/board/grade";
 import { FeatureError } from "@/components/errors/feature-error";
 import { MapLegend } from "@/features/hazard-map/components/map-legend";
@@ -10,6 +10,7 @@ import { MAP_LAYER_IDS } from "@/features/hazard-map/map-layers";
 import { useTRPC } from "@/trpc/client";
 import type { MapLayer } from "@/use-cases/gis/map-layer-schema";
 import { BoardMapSkeleton } from "./board-map-skeleton";
+import { BoardScrubber } from "./board-scrubber";
 import { MapCanvas } from "./components/map-canvas";
 import { UnmappableGutter } from "./components/unmappable-gutter";
 
@@ -38,8 +39,16 @@ export function BoardMapClient({
   const trpc = useTRPC();
   const { resolvedTheme } = useTheme();
 
+  // Time travel: null = live (polling); a number = the board as it stood then.
+  // asAt reconstructs counts and grades from what had been CAPTURED by that
+  // instant, so dragging left literally unwinds what we knew.
+  const [asAt, setAsAt] = useState<number | null>(null);
+
   const signals = useQuery(
-    trpc.signals.geojson.queryOptions({ datasetId }, { refetchInterval: POLL_MS }),
+    trpc.signals.geojson.queryOptions(
+      asAt === null ? { datasetId } : { datasetId, asAt: new Date(asAt) },
+      { refetchInterval: asAt === null ? POLL_MS : false },
+    ),
   );
 
   // One query per layer, driven off a fixed list so the hook count is stable.
@@ -72,6 +81,20 @@ export function BoardMapClient({
       return next;
     });
   }, []);
+
+  // The slider's left edge: the earliest first-report ever seen this session.
+  // A ref rather than a memo of the current response — scrubbing SHRINKS the
+  // response, and the time domain must not shrink with it.
+  const domainStartRef = useRef<number | null>(null);
+  const earliest = signals.data
+    ? Math.min(
+        Infinity,
+        ...signals.data.features.map((f) => new Date(f.properties.firstSeen).getTime()),
+      )
+    : Infinity;
+  if (Number.isFinite(earliest)) {
+    domainStartRef.current = Math.min(domainStartRef.current ?? earliest, earliest);
+  }
 
   if (signals.isError) return <FeatureError name="the map" />;
   if (!signals.data) return <BoardMapSkeleton />;
@@ -119,7 +142,16 @@ export function BoardMapClient({
       >
         {features.length} placed
         {signals.isFetching ? " · refreshing" : ""}
+        {asAt !== null ? " · as at " : ""}
       </p>
+
+      {domainStartRef.current !== null && (
+        <BoardScrubber
+          domainStart={domainStartRef.current}
+          value={asAt}
+          onChange={setAsAt}
+        />
+      )}
 
       {/* An empty map and a broken map look identical, so say which this is. */}
       {features.length === 0 && unmappable.length === 0 && (

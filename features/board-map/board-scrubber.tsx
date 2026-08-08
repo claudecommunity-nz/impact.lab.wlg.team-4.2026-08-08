@@ -6,13 +6,13 @@ import { Pause, Play } from "lucide-react";
 
 /**
  * The time control: drag to see the board as it stood at any moment, press play
- * to watch the picture build. Emits `null` for "live" (the right edge) and a
- * Date for any point in the past — the map passes that straight to
+ * to watch the picture build. Emits `null` for "live" (the right edge) and an
+ * epoch-ms number for any point in the past — the map passes that straight to
  * signals.geojson's asAt, which reconstructs counts and grades from what had
  * actually been captured by then (grade_events + the capture clock).
  *
- * Presentational + local state only; the map owns the query. A full drag from
- * left edge to live replays the whole ingest history; play covers it in ~45s.
+ * Presentational + local state only; the map owns the query. Play covers the
+ * whole capture history in ~45 seconds, then lands back on LIVE.
  */
 export function BoardScrubber({
   domainStart,
@@ -26,36 +26,28 @@ export function BoardScrubber({
   onChange: (asAt: number | null) => void;
 }) {
   const [playing, setPlaying] = useState(false);
-  const playRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const valueRef = useRef(value);
+  valueRef.current = value;
 
   const now = Date.now();
   const span = Math.max(now - domainStart, 60_000);
-  const position = value ?? now;
 
   useEffect(() => {
-    if (!playing) {
-      if (playRef.current) clearInterval(playRef.current);
-      playRef.current = null;
-      return;
-    }
-    const step = span / 45; // cover the whole history in ~45 seconds
-    playRef.current = setInterval(() => {
-      onChange(
-        ((prev) => (prev === null || prev + step >= Date.now() ? null : prev + step))(
-          valueRef.current,
-        ),
-      );
-      if (valueRef.current === null) setPlaying(false);
+    if (!playing) return;
+    const step = span / 45;
+    const timer = setInterval(() => {
+      const prev = valueRef.current;
+      if (prev === null || prev + step >= Date.now()) {
+        onChange(null);
+        setPlaying(false);
+      } else {
+        onChange(prev + step);
+      }
     }, 1_000);
-    return () => {
-      if (playRef.current) clearInterval(playRef.current);
-    };
+    return () => clearInterval(timer);
+    // span intentionally captured per play-press; re-arming mid-play would stutter.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [playing]);
-
-  // Keep the latest value visible to the play tick without re-arming the timer.
-  const valueRef = useRef(value);
-  valueRef.current = value;
 
   const label =
     value === null
@@ -83,7 +75,7 @@ export function BoardScrubber({
         min={domainStart}
         max={now}
         step={Math.max(Math.round(span / 200), 1000)}
-        value={position}
+        value={value ?? now}
         onChange={(e) => {
           setPlaying(false);
           const v = Number(e.target.value);
