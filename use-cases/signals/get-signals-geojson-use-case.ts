@@ -34,6 +34,9 @@ import { ScoredSignalSchema, type ScoredSignal } from "./scored-signal-schema";
 /** More clusters than a four-minute demo — or an operator — can look at. */
 export const GEOJSON_LIMIT = 500;
 
+/** Year 2100: past any feed's clock skew, inside every timestamp encoder. */
+const FAR_FUTURE = new Date("2100-01-01T00:00:00.000Z");
+
 export const BboxSchema = z.object({
   minLng: z.number().min(-180).max(180),
   minLat: z.number().min(-90).max(90),
@@ -94,10 +97,12 @@ export const getSignalsGeojsonUseCase = createUseCase(
 
     const groups = await getGroupsUseCase({
       level: INCIDENT_LEVEL,
-      // The window is the whole picture here: `asAt` is the time control, and
-      // applying a second, different time filter would make the two fight.
+      // The whole picture: `asAt` is this surface's time control, and a second,
+      // different time filter would only fight it. `to` is the far end of any
+      // clock a feed could plausibly claim, not JavaScript's maximum date —
+      // that one serialises to a year Postgres will not read back.
       from: new Date(0),
-      to: new Date(8.64e15),
+      to: FAR_FUTURE,
       datasetId: dataset,
       limit: limit ?? GEOJSON_LIMIT,
       log,

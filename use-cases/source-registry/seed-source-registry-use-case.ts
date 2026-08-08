@@ -49,7 +49,7 @@ export const OFFICIAL_SOURCES = [
 export const seedSourceRegistryUseCase = createUseCase(
   {
     id: "seed-source-registry",
-    inputSchema: z.object({}),
+    inputSchema: z.looseObject({}),
     outputSchema: z.object({
       seeded: z.number().int(),
       entries: z.array(SourceRegistryEntrySchema),

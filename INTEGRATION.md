@@ -2,10 +2,29 @@
 
 **For other teams. You do not need to know anything about this codebase.**
 
-> **Status — Saturday 8 August, 12:30.** Every endpoint in this guide is live and
+> **Status — Saturday 8 August (v2).** Every endpoint in this guide is live and
 > every example below was run against a real server: intake (push and pull),
-> `vectors.process`, and the three read procedures. Nothing here is a plan.
-> `npm run verify` re-proves the whole chain end to end in one command.
+> `vectors.process`, the three galaxy reads, and the **trust surface**
+> (`signals.geojson`, `signals.detail`, `signals.alerts`). Nothing here is a
+> plan. `npm run verify` re-proves the whole chain end to end in one command —
+> 55 checks, all green.
+>
+> **What changed in v2, and what did not.** Ingest now folds an item all the way
+> through — embed, cluster, grade — *before it answers*, so the response tells
+> you which event your item joined and how well that event is currently
+> evidenced. **Every field the v1 response promised is unchanged**, spelled the
+> same and meaning the same; the new ones sit beside them. If you integrated
+> against v1, you do not have to do anything.
+
+### Two words that mean different things
+
+| Word | What it is | Where you see it |
+|---|---|---|
+| **item** | one thing somebody published — a post, a gauge reading, a call | `itemId` (also returned as `id`) |
+| **signal** | a *cluster* of items we believe describe one event | `signalId` |
+
+An item is evidence. A signal is a candidate event. You send items; the map
+shows signals. Nothing on the map is a confirmed fact.
 
 ## What this module is
 
@@ -131,6 +150,17 @@ cannot store them at all.
 | `occurred_at` | `occurred_at`, `observed_at`, `timestamp`, `datetime`, `time`, `date`, `published_at`, `created_at` (ISO 8601, or epoch seconds/ms) |
 | `lat` / `lng` | `lat`/`latitude` + `lng`/`lon`/`long`/`longitude`, or a nested `location`/`geo`/`position`/`point`/`geometry`/`coordinates` — **GeoJSON `[lng, lat]` order is understood**, including a full `{"type":"Feature","geometry":{...},"properties":{...}}` |
 | `geo_confidence` | `geo_confidence`, `geoConfidence` (0–1; defaults to 1 when you send explicit coordinates) |
+| `dataset_id` | `dataset_id`, `datasetId`, `dataset` — the namespace. Omitted becomes `live` |
+| `external_id` | `external_id`, `externalId`, `item_id`, `itemId`, `guid`, `id` — **your** stable id for this item |
+| `author` | `author`, `username`, `screen_name`, `byline`, `user` |
+| `url` | `url`, `link`, `permalink`, `source_url` — the canonical link to the item |
+| `quoted_urls` | `quoted_urls`, `quotedUrls`, `quoted_url`, `in_reply_to_url` — a single link or an array |
+| `synthetic` | `synthetic`, `is_synthetic`, `fixture` — `true` if this item was authored for a demo or a drill |
+
+**The bottom five are new in v2 and all optional.** They buy you better dedupe
+now and an honest independent-source count shortly (see *Why `author`, `url` and
+`quoted_urls` matter* below). Sending none of them costs you nothing you had
+before.
 
 camelCase and snake_case both work. A property bag (`properties`, `meta`,
 `metadata`, `attributes`, `fields`) is looked inside, so a GeoJSON Feature reads
@@ -170,14 +200,49 @@ You can also send annotations explicitly, with a confidence:
   item **and say so**: the signal gets an `assumed_occurred_at = true` annotation
   and the response sets `assumedOccurredAt: true`. We never silently invent a
   timestamp. If you know the real time, send it — the whole UI is time-scrubbed.
-- **We dedupe on `source` + `text` + `occurred_at`.** Re-sending the same item is
-  safe: you get the original id back with `created: false`, and nothing is stored
-  twice. This holds under CONCURRENCY too, not just re-sends: the key is a unique
-  index in the database, so ten simultaneous deliveries of one report (batched
-  clients, parallel pollers, a retrying queue) still leave exactly one row — nine
-  of them come back `created: false`. (Items with no `occurred_at` cannot dedupe
-  against each other — their assumed time differs by milliseconds — so send
-  `occurred_at` if you replay.)
+- **We dedupe two ways, and which one applies is up to you.**
+
+  1. **If you send `external_id`,** identity is `dataset_id` + `source` +
+     `external_id`, and nothing else is consulted. Re-polling your own feed and
+     getting back an edited headline or a corrected timestamp is still **one
+     item** — you get the original id with `created: false`, and the version we
+     stored first is the one that survives (items are immutable). This is the
+     one you want: it is the only key that survives a source editing itself.
+  2. **If you do not,** identity is `dataset_id` + `source` + `text` +
+     `occurred_at` — what was said, by whom, when. Items with no `occurred_at`
+     cannot dedupe against each other (their assumed times differ by
+     milliseconds), so send `occurred_at` if you replay.
+
+  Both hold under CONCURRENCY, not just on re-sends: each is a unique index in
+  the database, so ten simultaneous deliveries of one report (batched clients,
+  parallel pollers, a retrying queue) still leave exactly one row — nine come
+  back `created: false`. **A duplicate never changes a signal's `itemCount` or
+  `independentSources`**, which is the whole point: re-delivery must not look
+  like corroboration.
+
+- **`dataset_id` is a hard wall.** It namespaces everything — items, clusters,
+  grades, alerts — and **clustering never crosses it**. Send `live` (or nothing)
+  for real collection; send anything else (`replay-0809`, `fixtures-demo`,
+  `drill-a`) for a demo, a backfill or a test, and it can never corroborate,
+  grade or alert against real events. `signals.geojson` defaults to `live`, so a
+  fixture set cannot appear on the operational map by accident. The same item
+  sent to two datasets is two separate observations, on purpose.
+
+- **Why `author`, `url` and `quoted_urls` matter.** Three reposts of one
+  photograph are **one** observation, not three, and printing "3 sources" for
+  them would be the single most misleading number this system could produce. We
+  collapse items into *origins* — by author identity, by quoted link, by
+  near-identical text — and publish `independentSources` as the count of
+  distinct **origins**, always beside `itemCount`, never instead of it. Send
+  those fields and your reposts collapse correctly. (Origin fingerprinting is
+  the one piece still landing: today `independentSources` is a placeholder of 1
+  and **says so in every `reasons` array**. The field and its meaning will not
+  change when the real thing arrives.)
+
+- **`synthetic: true` if you made it up.** Fixture and drill items are carried
+  through to every provenance entry and surface as `syntheticContributor` on the
+  signal. A demonstration about trustworthiness must not itself pass fabricated
+  content off as genuine.
 - **Long text is truncated, and we say so.** The stored sentence is capped at
   **4000 characters** and each annotation value at **2000**; anything longer is
   cut, an ellipsis appended, and a `text_truncated = true` annotation written.
@@ -214,24 +279,74 @@ You can also send annotations explicitly, with a confidence:
 
 ## What you get back
 
-Single ingest returns an echo of what we understood — check it if a payload reads
-oddly:
+Single ingest returns an echo of what we understood **and the event your item
+just joined** — because the useful question is never "did you store it?", it is
+"is anyone else reporting this?". You get the answer in the same call; there is
+nothing to poll.
+
+This is a real response, from the curl at the top of this guide:
 
 ```json
 {
-  "id": "896ad279-a487-45d8-bfde-0a8506412cf9",
+  "id": "8b708f91-4385-4453-afe7-2247d3333b48",
   "created": true,
-  "text": "Road closed at Kent Terrace, Wellington Water on site",
-  "source": "wcc-gis",
-  "sourceClass": "official_feed",
-  "occurredAt": "2026-08-07T21:20:00.000Z",
+  "text": "Surface flooding on Adelaide Road, water over both lanes",
+  "source": "antenno",
+  "sourceClass": "human_report",
+  "occurredAt": "2026-08-07T21:12:00.000Z",
   "assumedOccurredAt": false,
   "geoDropped": false,
-  "annotationKeys": ["hazard", "verified", "type"]
+  "annotationKeys": ["hazard", "verified", "source_url"],
+
+  "itemId": "8b708f91-4385-4453-afe7-2247d3333b48",
+  "signalId": "fa7b626e-73d5-4071-962c-752098f5a1b8",
+  "grade": {
+    "sourceReliability": "F",
+    "infoCredibility": 4,
+    "label": "F4 — reliability cannot be judged / doubtful"
+  },
+  "reasons": [
+    "stub: grading module pending",
+    "single origin assumed: origin fingerprinting is not wired yet, so independentSources is reported as 1 regardless of the 1 item in this cluster",
+    "source reliability defaults to F: the registry lookup lands with the rule table"
+  ],
+  "alertWorthy": false,
+  "independentSources": 1,
+  "itemCount": 1,
+  "datasetId": "live",
+  "externalId": null,
+  "synthetic": false,
+  "foldWarnings": []
 }
 ```
 
 (remember: inside `{"result":{"data":{"json": ... }}}`).
+
+Everything above the blank line is v1, unchanged. Everything below it is new:
+
+- `itemId` — the same value as `id`, under the name the trust surface uses.
+- `signalId` — **the event your item was folded into.** Pass it to
+  `signals.detail`. `null` means the fold degraded (see `foldWarnings`); the item
+  is stored regardless and the pipeline will place it on its next sweep.
+- `grade` — the event's Admiralty grade **after** counting your item.
+  `sourceReliability` is A–F (who said it), `infoCredibility` is 1–6 (how well
+  corroborated). **They are never blended into one number**; a single percentage
+  would be false precision, and knowing "a reliable source said something we
+  cannot corroborate" is a different state from "an unknown source said something
+  three others confirm". `1` ("confirmed") is unreachable by code — only a person
+  can write it.
+- `reasons` — why, in order, most decisive first. Render these next to the grade.
+- `alertWorthy` — computed **independently of the grade**. In hour zero nothing
+  has corroboration yet, so a grade-driven alert would stay silent in exactly the
+  window that matters. A weak early signal can be alert-worthy *with its weakness
+  stated*.
+- `independentSources` / `itemCount` — distinct origins, and raw items. Always
+  show both. Never show `itemCount` as if it were source count.
+- `datasetId` / `externalId` / `synthetic` — what we recorded of your identity
+  fields.
+- `foldWarnings` — non-fatal trouble, one sentence each, usually empty. Your item
+  is **always stored**; losing an observation because an embedder timed out would
+  be the worst possible trade, so the fold degrades and says so instead.
 
 - `id` — the signal id. Keep it; it is how you refer to this item forever.
 - `created` — `false` means it matched an item already stored (dedupe).
@@ -267,10 +382,234 @@ that item.
 
 ---
 
+## The trust surface — graded signals on a map
+
+Three read procedures. **If you are building a map, `signals.geojson` is the only
+one you need**; the other two are the drill-down and the alert feed. All are
+tRPC *queries*, so they are `GET` with the input in the query string, same
+superjson envelope.
+
+Every response below was run against a live server.
+
+### `signals.geojson` — hand this straight to MapLibre
+
+```bash
+curl -s -G 'http://localhost:3000/api/trpc/signals.geojson' \
+  --data-urlencode 'input={"json":{}}'
+```
+
+```json
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [174.81472, -41.31732] },
+      "properties": {
+        "signalId": "a733091c-445a-4730-be50-8d293a07152d",
+        "datasetId": "live",
+        "grade": {
+          "sourceReliability": "F",
+          "infoCredibility": 4,
+          "label": "F4 — reliability cannot be judged / doubtful"
+        },
+        "reasons": ["stub: grading module pending", "…"],
+        "independentSources": 1,
+        "itemCount": 22,
+        "alertWorthy": false,
+        "syntheticContributor": false,
+        "label": "wind — Broadway, Miramar",
+        "locationCertainty": "inferred",
+        "sourceClasses": ["human_report","media","official_feed","operator_note","sensor","social"],
+        "firstSeen": "2026-08-08T06:00:00.000Z",
+        "lastSeen": "2026-08-08T08:46:00.000Z",
+        "confirmedBy": null,
+        "radiusM": 187
+      }
+    }
+  ],
+  "unmappable": []
+}
+```
+
+Standard GeoJSON: `Point` geometry, WGS84, `[lng, lat]` order. No conversion, no
+second call.
+
+**Inputs, all optional:**
+
+| Input | Meaning |
+|---|---|
+| `datasetId` | Defaults to `"live"`. Fixture and replay datasets never appear unless you ask for them by name. |
+| `asAt` | ISO timestamp. Returns the picture **as it was knowable then** — only items we had *captured* by that instant, and the grade that was current then, not today's. This is the time-scrub control. |
+| `bbox` | `{minLng, minLat, maxLng, maxLat}` — only signals inside it. |
+| `minCredibility` | 1–6 on the Admiralty scale, where **1 is best**. Keeps features at least this credible (`infoCredibility <= minCredibility`). Ungraded signals never clear it. |
+| `limit` | Max features (default and max 500). |
+
+```bash
+# a bounding box around Wellington, and only reasonably credible signals
+curl -s -G 'http://localhost:3000/api/trpc/signals.geojson' \
+  --data-urlencode 'input={"json":{"bbox":{"minLng":174.6,"minLat":-41.4,"maxLng":174.9,"maxLat":-41.1},"minCredibility":3}}'
+
+# the picture as it stood at 09:00
+curl -s -G 'http://localhost:3000/api/trpc/signals.geojson' \
+  --data-urlencode 'input={"json":{"asAt":"2026-08-08T09:00:00Z"}}'
+```
+
+**Four things this endpoint deliberately refuses to do**, each of which you
+should reflect in your UI:
+
+- **It never emits a signal with no evidence behind it.** Filtered to nothing by
+  `asAt`? Then it is simply absent, not an empty marker.
+- **It never guesses a location.** A signal no item could place is **excluded
+  from `features`** and listed in `unmappable` (`{signalId, itemCount}`) instead.
+  *Please render that list somewhere* — a map that silently drops what it cannot
+  place reads as "nothing is happening there", and a radio call with no
+  coordinates is still evidence. `signals.detail` returns those signals in full.
+- **It never publishes a blended confidence number.** There is no `score`, no
+  percentage, no 0–1 "trust". Two axes, both visible, or nothing.
+- **It never crosses datasets.**
+
+`locationCertainty` is `"stated"` (one item gave us a coordinate — draw the point
+exactly), `"inferred"` (we averaged several — draw `radiusM` as a halo, it is the
+distance to the furthest contributor) or `"unknown"`.
+
+`syntheticContributor: true` means at least one contributing item was authored
+for a demo or drill. Mark it visibly.
+
+### `signals.detail` — open one event and judge the evidence yourself
+
+```bash
+curl -s -G 'http://localhost:3000/api/trpc/signals.detail' \
+  --data-urlencode 'input={"json":{"signalId":"a733091c-445a-4730-be50-8d293a07152d"}}'
+```
+
+Returns every field of the `properties` block above, plus three arrays:
+
+```json
+{
+  "signalId": "a733091c-445a-4730-be50-8d293a07152d",
+  "itemCount": 22,
+  "independentSources": 1,
+
+  "provenance": [
+    {
+      "itemId": "f3ae808c-16a7-43a4-b573-4584d8d2338f",
+      "originId": "f3ae808c-16a7-43a4-b573-4584d8d2338f",
+      "source": "radio-log",
+      "sourceClass": "operator_note",
+      "author": null,
+      "url": null,
+      "quotedUrls": [],
+      "excerpt": "Wind gusts in Miramar have brought roofing iron down on Broadway",
+      "occurredAt": "2026-08-08T08:46:00.000Z",
+      "ingestedAt": "2026-08-08T00:32:54.011Z",
+      "synthetic": false,
+      "lat": null, "lng": null,
+      "membershipReason": "cosine 0.93; no coordinates to compare and 14min apart",
+      "membershipWeight": 0.9308297
+    }
+  ],
+
+  "originGroups": [
+    { "originId": "f3ae808c-…", "itemIds": ["f3ae808c-…"] }
+  ],
+
+  "gradeHistory": [
+    {
+      "at": "2026-08-08T00:32:53.737Z",
+      "fromGrade": null,
+      "toGrade": { "sourceReliability": "F", "infoCredibility": 4, "label": "F4 — …" },
+      "independentSources": 1,
+      "itemCount": 1,
+      "reasons": ["stub: grading module pending", "…"],
+      "alertFired": false,
+      "alertReasons": null
+    }
+  ]
+}
+```
+
+- **`provenance`** — one entry per contributing item, newest first, never empty.
+  `excerpt` is the words somebody actually published, verbatim. **Both clocks are
+  here on purpose**: `occurredAt` is when it happened or was published,
+  `ingestedAt` is when *we* learned of it. They are often hours apart, and only
+  the second one answers "what could we have known at 10:00?".
+  `membershipReason` is the clustering decision in words — an operator who cannot
+  read why two reports were merged cannot act on the merge.
+- **`originGroups`** — `originId` → the items tracing to that one observation.
+  This is where three reposts of one photo collapse into one row. (Today each
+  item is its own origin; the shape is final, the collapsing is landing.)
+- **`gradeHistory`** — append-only, oldest first, starting from `fromGrade: null`.
+  Never edited, never deleted. This is how you show a grade *moving* as evidence
+  arrived, and it is the record behind every alert.
+
+Unlike `signals.geojson`, this returns signals that **cannot be placed on a map**.
+Undrawable is not the same as unimportant.
+
+An unknown id is a `BAD_REQUEST` with `Signal <id> not found`, not an empty shell.
+
+### `signals.alerts` — what a duty officer missed
+
+```bash
+curl -s -G 'http://localhost:3000/api/trpc/signals.alerts' \
+  --data-urlencode 'input={"json":{"since":"2026-08-08T09:00:00Z"}}'
+```
+
+```json
+[]
+```
+
+**That empty array is the honest answer, not a stub with the lights off.** Alerts
+fire on a grade *transition*, never on a state — a feed that re-delivered the
+same three events every thirty seconds is a feed people stop reading — and the
+grading module currently in place is a placeholder that never sets `alertWorthy`
+(it says so in every `reasons` array it writes). The query is real and reads the
+same append-only log you see in `gradeHistory`; the feed fills itself when the
+rule table lands, with no shape change and nothing for you to migrate.
+
+Poll it with `since` = the `at` of the last alert you saw. Inputs: `since`
+(required), `datasetId` (defaults to `live`), `limit` (max 200). Results are
+newest first. Each alert carries `{signalId, datasetId, at, issueType, location,
+grade, alertReasons, independentSources, itemCount}`.
+
+### `sources.list` — why something graded the way it did
+
+Source reliability (the A–F axis) comes from a registry, not from code. A source
+**absent from it grades `F`** — "reliability cannot be judged" — never a middle
+grade, because knowing nothing about a source is not the same as knowing it is
+mediocre.
+
+```bash
+curl -s -G 'http://localhost:3000/api/trpc/sources.list' --data-urlencode 'input={"json":{}}'
+```
+
+```json
+[
+  { "sourceId": "geonet",     "name": "GeoNet",                  "reliability": "A", "kind": "official" },
+  { "sourceId": "metservice", "name": "MetService",              "reliability": "A", "kind": "official" },
+  { "sourceId": "nzta",       "name": "NZTA Waka Kotahi",        "reliability": "A", "kind": "official" },
+  { "sourceId": "wcc",        "name": "Wellington City Council", "reliability": "A", "kind": "official" }
+]
+```
+
+Four entries, deliberately: these are the feeds a duty officer would already act
+on without a second source. Everything else starts unknown and earns its way up.
+`POST sources.seed` re-seeds these idempotently; `POST sources.upsert` records an
+operator's judgement (`{entries:[{sourceId, name, reliability, kind, notes}]}`)
+without a deploy — which matters, because during a real event an operator learns
+which accounts are reliable long before we do.
+
+---
+
 ## Turning signals into bubbles — `POST /api/trpc/vectors.process`
 
-Ingest only stores facts. Grouping is a separate, idempotent verb you (or our
-poller) can call at any time:
+**You almost certainly do not need this any more.** Since v2, `signals.ingest`
+embeds, clusters and grades each item before it answers, so the ordinary path is
+already complete when your call returns. `vectors.process` remains as the
+idempotent sweeper: it picks up anything the synchronous fold could not finish
+(see `foldWarnings`), names new bubbles, and fits the galaxy's 3D projection —
+which is a batch operation by nature and cannot happen one item at a time. Our
+poller calls it; so can you, at any time, safely:
 
 ```bash
 curl -X POST http://localhost:3000/api/trpc/vectors.process \
@@ -378,6 +717,14 @@ placed it. Set the key and the same pipeline upgrades with no code change.
 Three read procedures, and they are one drill-down rather than three views:
 `points` draws the galaxy, `groups` draws the bubbles over it, `groupDetail`
 opens one bubble all the way down to the verbatim payloads behind it.
+
+> **Which set do you want?** These three are the **galaxy** — the 3D embedding
+> view, for exploring how reports relate to each other in meaning-space. The
+> trust surface above (`signals.geojson` / `detail` / `alerts`) is the **map and
+> the grade**, in the PRD's vocabulary. Both read the same clusters from the same
+> database; neither wraps the other. Building a map? Use the trust surface.
+> Building the galaxy? Use these. Note the vocabulary flips: here a "signal" is
+> one raw item and a "group" is the cluster, which is the internal naming.
 
 **These shapes are frozen.** We will add fields; we will not rename or remove
 one. Reads are tRPC *queries*, so they are `GET` with the input in the query
@@ -544,9 +891,22 @@ expect.
 
 ### Proving it yourself
 
-`npm run verify` wipes the database, ingests the fixture set through the ingest
-procedure, runs the pipeline, then reads it all back through these three
-procedures and asserts the chain holds — including that *every* point resolves
-through `groupDetail` to a verbatim payload. It prints the board and one full
-traceability walk. If you change something and that stays green, you have not
-broken us.
+`npm run verify` wipes the database, seeds the source registry, ingests the
+fixture set through the ingest procedure, runs the pipeline, then reads it all
+back through **every published procedure in this guide** — no SQL, no in-process
+shortcuts — and asserts the chain holds. **55 checks, all green**, including:
+
+- every field this guide promised in v1 is still present and still spelled the
+  same (the check that stops us breaking you);
+- both dedupe paths, including a re-worded re-poll under one `external_id`, and
+  that a duplicate leaves `itemCount` and `independentSources` untouched;
+- that the same item in two datasets clusters separately;
+- that `signals.geojson` is a valid FeatureCollection of WGS84 Points, every
+  feature graded, with reasons, with `itemCount` and `independentSources` as
+  distinct figures — and **no `score`, `confidence` or percentage anywhere**;
+- that `signals.detail` returns one provenance entry per item, each with its
+  verbatim excerpt, source, origin and both timestamps;
+- that *every* point resolves through `groupDetail` to a verbatim payload.
+
+It prints the board and one full traceability walk. If you change something and
+that stays green, you have not broken us.
