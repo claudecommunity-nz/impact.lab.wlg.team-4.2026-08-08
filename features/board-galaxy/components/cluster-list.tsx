@@ -23,8 +23,8 @@ export function ClusterList({
   if (groups.length === 0) return null;
 
   return (
-    <div className="board-panel absolute top-3 left-3 z-10 max-h-[70%] w-[250px] overflow-y-auto rounded-lg border p-2">
-      <p className="board-muted px-1 pb-1.5 font-mono text-[10px] tracking-[0.12em] uppercase">
+    <div className="bg-card border-border absolute top-3 left-3 z-10 max-h-[70%] w-[250px] overflow-y-auto rounded-lg border p-2">
+      <p className="text-muted-foreground px-1 pb-1.5 font-mono text-[10px] tracking-[0.12em] uppercase">
         Clusters · {groups.length}
       </p>
       <ul className="space-y-0.5">
@@ -36,8 +36,8 @@ export function ClusterList({
                 type="button"
                 onClick={() => onSelect(group.id)}
                 aria-pressed={selected}
-                className="board-toggle flex w-full items-start gap-2 rounded-md px-1.5 py-1.5 text-left"
-                style={selected ? { background: "var(--board-accent-dim)" } : undefined}
+                className="flex w-full items-start gap-2 rounded-md px-1.5 py-1.5 text-left"
+                style={selected ? { background: "var(--text-primary-dim)" } : undefined}
               >
                 <span
                   aria-hidden
@@ -48,7 +48,7 @@ export function ClusterList({
                   <span className="block truncate text-[11.5px] font-semibold">
                     {group.label ?? `Cluster ${group.id.slice(0, 8)}`}
                   </span>
-                  <span className="board-faint block font-mono text-[10px] tabular-nums">
+                  <span className="text-muted-foreground/80 block font-mono text-[10px] tabular-nums">
                     {group.memberCount} members · {group.sourceDiversity} source{" "}
                     {group.sourceDiversity === 1 ? "class" : "classes"}
                     {group.velocity > 0 && ` · +${group.velocity}/h`}

@@ -32,7 +32,7 @@ export function EvidenceFigures({
       </div>
 
       {amplified && (
-        <p className="board-muted rounded-md border border-dashed px-2.5 py-2 text-[11.5px] leading-relaxed">
+        <p className="text-muted-foreground rounded-md border border-dashed px-2.5 py-2 text-[11.5px] leading-relaxed">
           <span className="font-semibold" style={{ color: "#fbbf24" }}>
             Amplification:{" "}
           </span>
@@ -57,7 +57,7 @@ function Figure({
   emphasis?: boolean;
 }) {
   return (
-    <div className="board-panel-2 board-line rounded-md border p-2.5">
+    <div className="bg-muted border-border rounded-md border p-2.5">
       <p
         className="font-mono text-2xl leading-none font-semibold tabular-nums"
         style={emphasis ? { color: "#5eead4" } : undefined}
@@ -65,7 +65,7 @@ function Figure({
         {value}
       </p>
       <p className="mt-1.5 text-[11px] font-semibold">{label}</p>
-      <p className="board-faint mt-0.5 text-[10px] leading-snug">{hint}</p>
+      <p className="text-muted-foreground/80 mt-0.5 text-[10px] leading-snug">{hint}</p>
     </div>
   );
 }

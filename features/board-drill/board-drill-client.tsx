@@ -4,7 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import { format } from "date-fns";
 import { X } from "lucide-react";
 import type { SignalDetail } from "@/components/board/api-types";
-import { GradeChip, gradeSentence } from "@/components/board/grade";
+import { CredibilityChip, gradeSentence } from "@/components/board/grade";
 import { FeatureError } from "@/components/errors/feature-error";
 import { useTRPC } from "@/trpc/client";
 import { BoardDrillSkeleton } from "./board-drill-skeleton";
@@ -40,9 +40,9 @@ export function BoardDrillClient({
 
   return (
     <div className="flex h-full min-h-0 flex-col">
-      <header className="board-line flex items-start gap-2 border-b px-4 py-3">
+      <header className="border-border flex items-start gap-2 border-b px-4 py-3">
         <div className="min-w-0 flex-1">
-          <p className="board-faint font-mono text-[10px] tracking-[0.12em] uppercase">
+          <p className="text-muted-foreground/80 font-mono text-[10px] tracking-[0.12em] uppercase">
             Signal · {signalId.slice(0, 8)}
           </p>
           <h2 className="mt-0.5 truncate text-sm font-semibold">
@@ -53,7 +53,7 @@ export function BoardDrillClient({
           type="button"
           onClick={onClose}
           aria-label="Close signal detail"
-          className="board-toggle board-line board-muted rounded-md border p-1.5"
+          className="border-border text-muted-foreground rounded-md border p-1.5"
         >
           <X className="size-3.5" aria-hidden />
         </button>
@@ -101,11 +101,11 @@ function DrillBody({ detail }: { detail: SignalDetail }) {
 
       <section className="space-y-2">
         <div className="flex flex-wrap items-center gap-2">
-          <GradeChip grade={detail.grade} tone="solid" />
-          <span className="board-muted text-[11.5px]">{gradeSentence(detail.grade)}</span>
+          <CredibilityChip grade={detail.grade} showCode />
+          <span className="text-muted-foreground text-[11.5px]">{gradeSentence(detail.grade)}</span>
         </div>
         {detail.confirmedBy && (
-          <p className="board-muted text-[11px]">
+          <p className="text-muted-foreground text-[11px]">
             Confirmed by <span className="font-semibold">{detail.confirmedBy}</span> — the only
             way credibility 1 is ever reached.
           </p>
@@ -113,18 +113,18 @@ function DrillBody({ detail }: { detail: SignalDetail }) {
       </section>
 
       <section className="space-y-1.5">
-        <h3 className="board-muted font-mono text-[10px] tracking-[0.12em] uppercase">
+        <h3 className="text-muted-foreground font-mono text-[10px] tracking-[0.12em] uppercase">
           Why it is graded this way
         </h3>
         {detail.reasons.length === 0 ? (
-          <p className="board-faint text-[11.5px]">
+          <p className="text-muted-foreground/80 text-[11.5px]">
             No reasons published yet — this signal has not been graded.
           </p>
         ) : (
           <ol className="space-y-1">
             {detail.reasons.map((reason, index) => (
               <li key={reason} className="flex gap-2 text-[11.5px] leading-relaxed">
-                <span className="board-faint font-mono tabular-nums">{index + 1}.</span>
+                <span className="text-muted-foreground/80 font-mono tabular-nums">{index + 1}.</span>
                 <span>{reason}</span>
               </li>
             ))}
@@ -140,7 +140,7 @@ function DrillBody({ detail }: { detail: SignalDetail }) {
 
       <CollapsedOrigins originGroups={detail.originGroups} />
 
-      <section className="board-panel-2 board-line grid grid-cols-2 gap-x-3 gap-y-2 rounded-md border p-2.5 font-mono text-[10.5px]">
+      <section className="bg-muted border-border grid grid-cols-2 gap-x-3 gap-y-2 rounded-md border p-2.5 font-mono text-[10.5px]">
         <Fact label="Issue type" value={detail.issueType.replace(/_/g, " ")} />
         <Fact label="Location" value={detail.locationCertainty} />
         <Fact label="Dataset" value={detail.datasetId} />
@@ -152,7 +152,7 @@ function DrillBody({ detail }: { detail: SignalDetail }) {
 
       {latestAlertReasons.length > 0 && (
         <section className="space-y-1">
-          <h3 className="board-muted font-mono text-[10px] tracking-[0.12em] uppercase">
+          <h3 className="text-muted-foreground font-mono text-[10px] tracking-[0.12em] uppercase">
             Why it is worth someone&apos;s attention
           </h3>
           {/* Alert-worthiness is computed INDEPENDENTLY of the grade, so an
@@ -175,7 +175,7 @@ function DrillBody({ detail }: { detail: SignalDetail }) {
       )}
 
       <section>
-        <h3 className="board-muted font-mono text-[10px] tracking-[0.12em] uppercase">
+        <h3 className="text-muted-foreground font-mono text-[10px] tracking-[0.12em] uppercase">
           Provenance · {detail.provenance.length}{" "}
           {detail.provenance.length === 1 ? "item" : "items"}
         </h3>
@@ -192,7 +192,7 @@ function DrillBody({ detail }: { detail: SignalDetail }) {
 
       {detail.gradeHistory.length > 0 && (
         <section className="space-y-1.5">
-          <h3 className="board-muted font-mono text-[10px] tracking-[0.12em] uppercase">
+          <h3 className="text-muted-foreground font-mono text-[10px] tracking-[0.12em] uppercase">
             How the assessment moved
           </h3>
           <ol className="space-y-1.5">
@@ -201,13 +201,13 @@ function DrillBody({ detail }: { detail: SignalDetail }) {
                 key={event.at.toISOString()}
                 className="flex items-center gap-2 font-mono text-[10.5px]"
               >
-                <time className="board-faint tabular-nums" dateTime={event.at.toISOString()}>
+                <time className="text-muted-foreground/80 tabular-nums" dateTime={event.at.toISOString()}>
                   {format(event.at, "d MMM HH:mm")}
                 </time>
-                {event.fromGrade && <GradeChip grade={event.fromGrade} />}
-                {event.fromGrade && <span className="board-faint">→</span>}
-                <GradeChip grade={event.toGrade} />
-                <span className="board-faint">
+                {event.fromGrade && <CredibilityChip grade={event.fromGrade} showCode />}
+                {event.fromGrade && <span className="text-muted-foreground/80">→</span>}
+                <CredibilityChip grade={event.toGrade} showCode />
+                <span className="text-muted-foreground/80">
                   {event.independentSources}src / {event.itemCount}it
                 </span>
               </li>
@@ -222,7 +222,7 @@ function DrillBody({ detail }: { detail: SignalDetail }) {
 function Fact({ label, value }: { label: string; value: string }) {
   return (
     <div>
-      <p className="board-faint text-[9.5px] tracking-[0.08em] uppercase">{label}</p>
+      <p className="text-muted-foreground/80 text-[9.5px] tracking-[0.08em] uppercase">{label}</p>
       <p className="mt-0.5 break-words">{value}</p>
     </div>
   );

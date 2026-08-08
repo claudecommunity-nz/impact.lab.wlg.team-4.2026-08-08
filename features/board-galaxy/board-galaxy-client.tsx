@@ -57,7 +57,7 @@ export function BoardGalaxyClient({
         onSelect={onSelect}
       />
 
-      <p className="board-faint pointer-events-none absolute top-3 right-4 z-10 text-right font-mono text-[10px] leading-relaxed">
+      <p className="text-muted-foreground/80 pointer-events-none absolute top-3 right-4 z-10 text-right font-mono text-[10px] leading-relaxed">
         Position = what was said, not where.
         <br />
         {points.data.length - unprojected} of {points.data.length} points projected

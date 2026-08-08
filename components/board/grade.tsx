@@ -1,114 +1,140 @@
 import { INFO_CREDIBILITY_LABELS, type Grade } from "@/db/vocabulary";
+import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 
 /**
- * The one place the board turns an Admiralty grade into a colour and a chip.
+ * The one place the board turns an Admiralty grade into words and a colour.
  *
- * Shared by the map, the galaxy and the drill panel so a signal cannot describe
- * itself in three different colours. `db/vocabulary` is the source of the words
- * (it has no runtime dependency beyond zod, so any layer may import it) — this
- * file only adds the pixels.
+ * Two audiences, one grade. On the map and the cards it reads in plain English
+ * — "could be true", "unclear" — because the first question anyone asks is
+ * whether to believe it, and "C3" answers that only for someone who already
+ * knows the Admiralty system. The letters are not dropped: they stay in the
+ * drill panel, where an operator has chosen to look at the expert layer.
  *
- * The ramp deliberately runs blue → violet → amber → rose → GREY, and grey is
- * the end of it: "truth cannot be judged" is an absence of assessment, not a
- * severity, and colouring it red would tell an operator something we have not
- * earned the right to say. None of these hues is the teal interaction accent —
- * a signal's credibility must never look like something you can click.
- *
- * Credibility 1 ("confirmed by other sources") is unreachable by code and only
- * ever set by a human, so its green appears exactly when a person has signed
- * their name to it (`confirmedBy`).
+ * Colour is drawn from the theme tokens, never hardcoded, so both themes and
+ * any future palette change stay consistent: sage = could be true, amber =
+ * unclear, terracotta = doubtful, muted = cannot be judged. Grey for "truth
+ * cannot be judged" is deliberate — that is an absence of assessment, not a
+ * severity, and colouring it red would claim we know something bad.
  */
-export const CREDIBILITY_COLOURS: Record<number, string> = {
-  1: "#4ade80",
-  2: "#60a5fa",
-  3: "#a78bfa",
-  4: "#fbbf24",
-  5: "#fb7185",
-  6: "#94a3b8",
-};
+export type CredibilityTone = "confirmed" | "plausible" | "unclear" | "doubtful" | "unjudged";
 
-/** Not yet graded is its own state — never the middle of the ramp. */
-export const UNGRADED_COLOUR = "#64748b";
-
-export function credibilityColour(grade: Grade | null): string {
-  if (!grade) return UNGRADED_COLOUR;
-  return CREDIBILITY_COLOURS[grade.infoCredibility] ?? UNGRADED_COLOUR;
+export function credibilityTone(grade: Grade | null): CredibilityTone {
+  if (!grade) return "unjudged";
+  if (grade.infoCredibility === 1) return "confirmed";
+  if (grade.infoCredibility <= 3) return "plausible";
+  if (grade.infoCredibility === 4) return "unclear";
+  if (grade.infoCredibility === 5) return "doubtful";
+  return "unjudged";
 }
 
-/** "C3" — the two axes, unblended, in the smallest space that stays honest. */
+/** What a non-specialist should read off the surface. */
+export const PLAIN_CREDIBILITY: Record<CredibilityTone, string> = {
+  confirmed: "confirmed",
+  plausible: "could be true",
+  unclear: "unclear",
+  doubtful: "doubtful",
+  unjudged: "can't judge yet",
+};
+
+export function plainCredibility(grade: Grade | null): string {
+  return PLAIN_CREDIBILITY[credibilityTone(grade)];
+}
+
+/** A CSS colour for non-React surfaces (MapLibre markers are plain DOM). */
+const TONE_COLOUR: Record<CredibilityTone, string> = {
+  confirmed: "var(--primary)",
+  plausible: "var(--primary)",
+  unclear: "var(--warning)",
+  doubtful: "var(--destructive)",
+  unjudged: "var(--muted-foreground)",
+};
+
+export function credibilityColour(grade: Grade | null): string {
+  return TONE_COLOUR[credibilityTone(grade)];
+}
+
+/** "C3" — the two axes, unblended. Expert layer only. */
 export function gradeCode(grade: Grade | null): string {
   return grade ? `${grade.sourceReliability}${grade.infoCredibility}` : "—";
 }
 
-/** The full sentence. Prefer the API's own label; fall back to our vocabulary. */
+/** The full Admiralty sentence. Prefer the API's own label. */
 export function gradeSentence(grade: Grade | null): string {
   if (!grade) return "not yet graded";
   if (grade.label) return grade.label;
   return INFO_CREDIBILITY_LABELS[grade.infoCredibility] ?? "unknown credibility";
 }
 
+const TONE_CLASS: Record<CredibilityTone, string> = {
+  confirmed: "border-primary/30 bg-primary/10 text-primary",
+  plausible: "border-primary/30 bg-primary/10 text-primary",
+  unclear: "border-warning/40 bg-warning/10 text-warning-foreground dark:text-warning",
+  doubtful: "border-destructive/30 bg-destructive/10 text-destructive",
+  unjudged: "border-border bg-muted text-muted-foreground",
+};
+
 /**
- * The grade as a chip. `tone="solid"` for the map (it sits on a basemap and has
- * to win); `tone="quiet"` inside panels where the surrounding text carries it.
+ * The credibility chip. Plain English by default; `showCode` adds the Admiralty
+ * letters for the drill panel.
  */
-export function GradeChip({
+export function CredibilityChip({
   grade,
-  tone = "quiet",
+  showCode = false,
   className,
 }: {
   grade: Grade | null;
-  tone?: "solid" | "quiet";
+  showCode?: boolean;
   className?: string;
 }) {
-  const colour = credibilityColour(grade);
+  const tone = credibilityTone(grade);
 
   return (
-    <span
-      className={cn(
-        "inline-flex items-center gap-1.5 rounded-full border px-2 py-0.5 font-mono text-[11px] leading-none font-semibold tracking-wider tabular-nums",
-        className,
-      )}
-      style={{
-        color: colour,
-        borderColor: `color-mix(in oklab, ${colour} 45%, transparent)`,
-        background:
-          tone === "solid"
-            ? `color-mix(in oklab, ${colour} 16%, #0b1017)`
-            : `color-mix(in oklab, ${colour} 12%, transparent)`,
-      }}
+    <Badge
+      variant="outline"
+      className={cn("gap-1.5 rounded-full font-medium", TONE_CLASS[tone], className)}
       title={gradeSentence(grade)}
     >
       <span
         aria-hidden
         className="size-1.5 rounded-full"
-        style={{ background: colour, opacity: grade ? 1 : 0.5 }}
+        style={{ background: TONE_COLOUR[tone], opacity: grade ? 1 : 0.6 }}
       />
-      {gradeCode(grade)}
-    </span>
+      {PLAIN_CREDIBILITY[tone]}
+      {showCode && <span className="font-mono text-[10px] opacity-70">{gradeCode(grade)}</span>}
+    </Badge>
   );
 }
 
 /**
- * The legend. Shown on the map because a colour ramp nobody can read is a ramp
- * that invents its own meaning in the viewer's head.
+ * The legend. A colour ramp nobody can read invents its own meaning in the
+ * viewer's head, so the board states what its colours mean in the same plain
+ * words the chips use.
  */
 export function CredibilityLegend({ className }: { className?: string }) {
+  const rows: { tone: CredibilityTone; hint: string }[] = [
+    { tone: "plausible", hint: "more than one independent source" },
+    { tone: "unclear", hint: "only one origin so far" },
+    { tone: "doubtful", hint: "something contradicts it" },
+    { tone: "unjudged", hint: "not enough to say" },
+  ];
+
   return (
-    <div className={cn("flex flex-col gap-1", className)}>
-      <p className="text-muted-foreground/70 font-mono text-[10px] tracking-[0.12em] uppercase">
-        Info credibility
+    <div className={cn("flex flex-col gap-1.5", className)}>
+      <p className="text-muted-foreground text-[10px] font-semibold tracking-[0.12em] uppercase">
+        How much to believe it
       </p>
-      <ul className="flex flex-col gap-0.5">
-        {[2, 3, 4, 5, 6].map((level) => (
-          <li key={level} className="flex items-center gap-2">
+      <ul className="flex flex-col gap-1">
+        {rows.map((row) => (
+          <li key={row.tone} className="flex items-baseline gap-2">
             <span
               aria-hidden
-              className="size-2 rounded-full"
-              style={{ background: CREDIBILITY_COLOURS[level] }}
+              className="size-2 shrink-0 translate-y-[3px] rounded-full"
+              style={{ background: TONE_COLOUR[row.tone] }}
             />
-            <span className="text-muted-foreground font-mono text-[10px]">
-              {level} · {INFO_CREDIBILITY_LABELS[level]}
+            <span className="text-[11px] leading-snug">
+              <span className="font-medium">{PLAIN_CREDIBILITY[row.tone]}</span>
+              <span className="text-muted-foreground"> — {row.hint}</span>
             </span>
           </li>
         ))}

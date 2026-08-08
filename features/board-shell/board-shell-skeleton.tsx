@@ -10,21 +10,21 @@ import { BoardBanner, BoardBrand } from "./components/board-chrome";
  */
 export function BoardShellSkeleton() {
   return (
-    <div className="board-shell dark flex h-dvh max-h-dvh min-h-0 flex-1 flex-col overflow-hidden">
-      <header className="board-panel flex flex-wrap items-center gap-x-4 gap-y-2 border-b px-4 py-2.5">
+    <div className="bg-background text-foreground flex h-dvh max-h-dvh min-h-0 flex-1 flex-col overflow-hidden">
+      <header className="bg-card border-border flex h-[62px] shrink-0 flex-wrap items-center gap-x-4 gap-y-2 border-b px-4">
         <BoardBrand />
         <BoardBanner />
         <div className="flex-1" />
         {/* The view toggle is real chrome, but inert until the board is live. */}
-        <div className="board-line flex overflow-hidden rounded-lg border opacity-50">
-          <span className="board-muted px-3.5 py-1.5 text-[11.5px] font-semibold">Map</span>
-          <span className="board-muted px-3.5 py-1.5 text-[11.5px] font-semibold">Galaxy</span>
+        <div className="border-border flex overflow-hidden rounded-lg border opacity-50">
+          <span className="text-muted-foreground px-3.5 py-1.5 text-[11.5px] font-semibold">Map</span>
+          <span className="text-muted-foreground px-3.5 py-1.5 text-[11.5px] font-semibold">Galaxy</span>
         </div>
       </header>
 
-      <div className="board-viz relative min-h-0 flex-1 p-4">
+      <div className="bg-muted relative min-h-0 flex-1 p-4">
         <Skeleton className="h-full w-full rounded-lg" />
-        <div className="board-panel absolute bottom-6 left-6 rounded-lg border p-3">
+        <div className="bg-card border-border absolute bottom-6 left-6 rounded-lg border p-3">
           <CredibilityLegend />
         </div>
       </div>

@@ -13,7 +13,7 @@ import {
 } from "maplibre-gl";
 import { useEffect, useRef, useState } from "react";
 import type { SignalFeature } from "@/components/board/api-types";
-import { credibilityColour, gradeCode, gradeSentence } from "@/components/board/grade";
+import { credibilityColour, gradeSentence, plainCredibility } from "@/components/board/grade";
 import {
   BASEMAP_ATTRIBUTION,
   WELLINGTON_CENTER,
@@ -31,6 +31,17 @@ const HALO_LAYER_ID = "halo-fill";
 const HALO_COLOUR = "#8da0b5";
 
 const EMPTY_COLLECTION = { type: "FeatureCollection" as const, features: [] };
+
+/**
+ * The colour behind the tiles, per theme. MapLibre paint properties are
+ * evaluated on the GPU and cannot read CSS variables, so these are the one
+ * place the palette has to be restated as literals — kept in step with
+ * --background in globals.css.
+ */
+const BACKDROP: Record<"light" | "dark", string> = {
+  light: "#f7f5f2",
+  dark: "#1c1a18",
+};
 
 /**
  * Turbopack cannot rewrite the `import.meta.url` worker path inside MapLibre's
@@ -138,9 +149,14 @@ export function MapCanvas({
         },
         layers: [
           // Drawn under the tiles on purpose: if CARTO is unreachable — a
-          // conference wifi is not a guarantee — the map degrades to a dark
-          // field with the signals still on it, rather than to white voids.
-          { id: "backdrop", type: "background", paint: { "background-color": "#0b1017" } },
+          // conference wifi is not a guarantee — the map degrades to the page's
+          // own paper colour with the signals still on it, rather than to white
+          // voids or, worse, a black rectangle in a light interface.
+          {
+            id: "backdrop",
+            type: "background",
+            paint: { "background-color": BACKDROP[initialBasemap] },
+          },
           { id: "basemap-tiles", type: "raster", source: BASEMAP_SOURCE_ID },
         ],
       },
@@ -348,7 +364,7 @@ export function MapCanvas({
           zero height — a blank pane with a healthy map object inside it. */}
       <div ref={containerRef} className="h-full w-full" />
       {basemapDown && (
-        <p className="board-panel board-muted absolute top-3 left-3 z-10 rounded-md border px-2.5 py-1.5 font-mono text-[10px]">
+        <p className="bg-card border-border text-muted-foreground absolute top-3 left-3 z-10 rounded-lg border px-2.5 py-1.5 text-[11px] shadow-sm">
           Basemap tiles unreachable — signals and geography are still positioned correctly.
         </p>
       )}
@@ -399,7 +415,7 @@ function paintMarker(record: MarkerRecord, feature: SignalFeature, selected: boo
     [
       name,
       properties.issueType ? `issue type ${properties.issueType.replace(/_/g, " ")}` : null,
-      `grade ${gradeCode(properties.grade)} (${gradeSentence(properties.grade)})`,
+      `${plainCredibility(properties.grade)} — ${gradeSentence(properties.grade)}`,
       `${properties.independentSources} independent ${
         properties.independentSources === 1 ? "source" : "sources"
       } across ${properties.itemCount} ${properties.itemCount === 1 ? "item" : "items"}`,
@@ -414,7 +430,9 @@ function paintMarker(record: MarkerRecord, feature: SignalFeature, selected: boo
   record.dot.classList.toggle("ungraded", properties.grade === null);
   record.dot.style.borderColor = properties.grade === null ? colour : "rgba(11,16,23,.9)";
 
-  record.chip.textContent = gradeCode(properties.grade);
+  // Plain English on the map. The Admiralty letters live in the drill panel,
+  // where somebody has chosen to look at the expert layer.
+  record.chip.textContent = plainCredibility(properties.grade);
   record.chip.style.color = colour;
   record.chip.style.borderColor = `color-mix(in oklab, ${colour} 45%, transparent)`;
 

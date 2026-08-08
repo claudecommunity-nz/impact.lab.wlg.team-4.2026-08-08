@@ -23,8 +23,8 @@ export function UnmappableGutter({
   const items = entries.reduce((total, entry) => total + entry.itemCount, 0);
 
   return (
-    <div className="board-panel pointer-events-auto max-w-[300px] rounded-lg border p-2.5">
-      <p className="board-muted font-mono text-[10px] tracking-[0.12em] uppercase">
+    <div className="bg-card border-border pointer-events-auto max-w-[300px] rounded-lg border p-2.5">
+      <p className="text-muted-foreground font-mono text-[10px] tracking-[0.12em] uppercase">
         No location · {entries.length}{" "}
         {entries.length === 1 ? "signal" : "signals"} · {items}{" "}
         {items === 1 ? "item" : "items"}
@@ -35,7 +35,7 @@ export function UnmappableGutter({
             <button
               type="button"
               onClick={() => onSelect(entry.signalId)}
-              className="board-line board-muted board-toggle rounded-md border px-2 py-1 font-mono text-[10px]"
+              className="border-border text-muted-foreground rounded-md border px-2 py-1 font-mono text-[10px]"
               title="Held, but not placeable on the map — open the evidence"
             >
               {entry.signalId.slice(0, 8)} · {entry.itemCount}

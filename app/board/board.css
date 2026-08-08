@@ -1,71 +1,19 @@
 /**
- * Board chrome tokens — ported from design/mockup.html.
+ * What is left of the board's own CSS.
  *
- * Scoped to `.board-shell` rather than added to app/globals.css on purpose: the
- * board is one route with a committed dark ops-console look, and the rest of the
- * app still follows the user's light/dark preference. The shell also carries the
- * `dark` class so shadcn's own tokens resolve dark for everything inside it.
+ * This file used to carry a whole parallel palette — a dark ops-console theme
+ * with its own panel, line, muted and accent tokens. All of that is gone: the
+ * board is styled from the global shadcn variables like every other route, so
+ * there is exactly one place a colour decision lives.
  *
- * The severity/credibility hues live in components/board/grade.tsx, not here —
- * they are data, and data colours belong next to the code that reads the grade.
- * What IS here is the console itself: panels, lines, and the ONE teal accent
- * that means "this is interactive". Nothing that encodes trust may be teal.
+ * What remains is only what Tailwind classes genuinely cannot reach: elements
+ * MapLibre creates itself, and DOM markers built with createElement rather than
+ * JSX. Every colour below is a theme token, so both themes follow for free.
  */
-.board-shell {
-  --board-bg: #0b1017;
-  --board-panel: #121a26;
-  --board-panel-2: #16202e;
-  --board-line: #223045;
-  --board-text: #e6edf5;
-  --board-muted: #8da0b5;
-  --board-faint: #5c6d82;
-  --board-accent: #5eead4;
-  --board-accent-dim: rgba(94, 234, 212, 0.14);
-
-  background: var(--board-bg);
-  color: var(--board-text);
-}
-
-.board-panel {
-  background: var(--board-panel);
-  border-color: var(--board-line);
-}
-.board-panel-2 {
-  background: var(--board-panel-2);
-}
-.board-line {
-  border-color: var(--board-line);
-}
-.board-muted {
-  color: var(--board-muted);
-}
-.board-faint {
-  color: var(--board-faint);
-}
-.board-accent {
-  color: var(--board-accent);
-}
-
-.board-toggle {
-  cursor: pointer;
-}
-.board-toggle:hover {
-  color: var(--board-accent);
-}
-.board-toggle:focus-visible {
-  outline: 2px solid var(--board-accent);
-  outline-offset: -2px;
-}
-
-/* The viz pane's own backdrop — a faint off-centre glow so an empty map still
-   reads as a lit console rather than a failed render. */
-.board-viz {
-  background: radial-gradient(1200px 600px at 70% 30%, #101a29 0%, var(--board-bg) 70%);
-}
 
 /* ── Map markers ──────────────────────────────────────────────────────────────
-   MapLibre markers are plain DOM, which is what we want: a signal on this map is
-   a focusable button with a real accessible name, not a canvas hit-test. */
+   MapLibre markers are plain DOM, which is what we want: a signal on this map
+   is a focusable button with a real accessible name, not a canvas hit-test. */
 .signal-marker {
   display: flex;
   align-items: center;
@@ -74,94 +22,87 @@
   border: none;
   background: none;
   cursor: pointer;
-  font-family: var(--font-geist-mono), ui-monospace, Menlo, monospace;
-  transform: translateZ(0);
+  font-family: var(--font-plex-mono), ui-monospace, Menlo, monospace;
 }
 .signal-marker .dot {
   width: 12px;
   height: 12px;
   border-radius: 50%;
-  border: 1.5px solid rgba(11, 16, 23, 0.9);
+  border: 2px solid var(--card);
   flex: none;
+  box-shadow: 0 1px 3px rgb(0 0 0 / 0.25);
   transition: box-shadow 0.18s ease;
 }
-/* Ungraded is a hollow ring: absence of a grade must not look like a grade. */
+/* Ungraded is a hollow ring: the absence of a grade must not look like a grade. */
 .signal-marker .dot.ungraded {
-  background: transparent !important;
+  background: var(--card) !important;
   border-style: dashed;
+  border-color: var(--muted-foreground);
 }
 .signal-marker .chip {
   font-size: 10.5px;
-  font-weight: 700;
-  letter-spacing: 0.06em;
+  font-weight: 600;
+  letter-spacing: 0.01em;
   line-height: 1;
-  padding: 3px 6px;
+  padding: 3px 7px;
   border-radius: 999px;
   border: 1px solid;
-  background: rgba(11, 16, 23, 0.82);
+  background: var(--card);
+  color: var(--foreground);
   white-space: nowrap;
+  box-shadow: 0 1px 3px rgb(0 0 0 / 0.12);
 }
 .signal-marker:hover .dot,
 .signal-marker:focus-visible .dot {
-  box-shadow: 0 0 0 7px var(--board-accent-dim);
+  box-shadow: 0 0 0 6px color-mix(in oklab, var(--primary) 22%, transparent);
+}
+.signal-marker[aria-pressed="true"] .dot {
+  box-shadow: 0 0 0 7px color-mix(in oklab, var(--primary) 32%, transparent);
 }
 .signal-marker:focus-visible {
-  outline: 2px solid var(--board-accent);
+  outline: 2px solid var(--ring);
   outline-offset: 3px;
   border-radius: 999px;
 }
-.signal-marker[aria-pressed="true"] .dot {
-  box-shadow: 0 0 0 8px rgba(94, 234, 212, 0.28);
-}
 
-/* Synthetic provenance gets a visible hatch on the marker, not just a word in a
-   panel — a drill demo item must never be mistaken for a real report at a
-   glance. */
+/* Synthetic provenance is flagged on the marker, not only in a panel — a drill
+   item must be impossible to mistake for a real report at a glance. */
 .signal-marker .synthetic-flag {
   font-size: 9px;
-  letter-spacing: 0.08em;
-  color: var(--board-faint);
-  border: 1px dashed var(--board-line);
-  border-radius: 3px;
-  padding: 1px 3px;
-  background: rgba(11, 16, 23, 0.82);
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  color: var(--warning-foreground);
+  background: color-mix(in oklab, var(--warning) 18%, var(--card));
+  border: 1px solid color-mix(in oklab, var(--warning) 45%, transparent);
+  border-radius: 4px;
+  padding: 2px 4px;
 }
 
-/* MapLibre's own chrome, dressed for the console. */
-.board-shell .maplibregl-ctrl-attrib {
-  background: rgba(11, 16, 23, 0.78) !important;
-  color: var(--board-muted);
+/* ── MapLibre's own chrome, wearing the app's tokens ──────────────────────── */
+.board-map .maplibregl-ctrl-attrib {
+  background: color-mix(in oklab, var(--card) 88%, transparent) !important;
+  color: var(--muted-foreground);
   font-size: 10px;
 }
-.board-shell .maplibregl-ctrl-attrib a {
-  color: var(--board-muted);
+.board-map .maplibregl-ctrl-attrib a {
+  color: var(--muted-foreground);
 }
-.board-shell .maplibregl-ctrl-group {
-  background: var(--board-panel);
-  border: 1px solid var(--board-line);
+.board-map .maplibregl-ctrl-group {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: calc(var(--radius) * 0.6);
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgb(0 0 0 / 0.08);
 }
-.board-shell .maplibregl-ctrl-group button + button {
-  border-top: 1px solid var(--board-line);
+.board-map .maplibregl-ctrl-group button + button {
+  border-top: 1px solid var(--border);
 }
-.board-shell .maplibregl-ctrl-group button .maplibregl-ctrl-icon {
-  filter: invert(1) hue-rotate(180deg) brightness(1.4);
-}
-.board-shell .maplibregl-canvas:focus {
-  outline: 2px solid var(--board-accent);
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .signal-marker .dot,
-  .drill-panel {
-    transition: none !important;
-    animation: none !important;
-  }
+.board-map .maplibregl-canvas:focus {
+  outline: 2px solid var(--ring);
 }
 
 /* ── Drill panel ──────────────────────────────────────────────────────────── */
 .drill-panel {
-  background: var(--board-panel);
-  border-left: 1px solid var(--board-line);
   animation: drill-in 0.22s cubic-bezier(0.4, 0, 0.2, 1);
 }
 @keyframes drill-in {
@@ -172,5 +113,13 @@
   to {
     transform: translateX(0);
     opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .signal-marker .dot,
+  .drill-panel {
+    transition: none !important;
+    animation: none !important;
   }
 }

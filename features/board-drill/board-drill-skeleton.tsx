@@ -11,7 +11,7 @@ export function BoardDrillSkeleton() {
       <Skeleton className="h-6 w-40" />
 
       <section className="space-y-1.5">
-        <h3 className="board-muted font-mono text-[10px] tracking-[0.12em] uppercase">
+        <h3 className="text-muted-foreground font-mono text-[10px] tracking-[0.12em] uppercase">
           Why it is graded this way
         </h3>
         <Skeleton className="h-4 w-full" />
@@ -24,7 +24,7 @@ export function BoardDrillSkeleton() {
       </div>
 
       <section className="space-y-2">
-        <h3 className="board-muted font-mono text-[10px] tracking-[0.12em] uppercase">
+        <h3 className="text-muted-foreground font-mono text-[10px] tracking-[0.12em] uppercase">
           Provenance
         </h3>
         {[0, 1, 2].map((row) => (

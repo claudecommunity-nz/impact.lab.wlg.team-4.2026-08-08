@@ -1,6 +1,7 @@
 "use client";
 
 import { useQueries, useQuery } from "@tanstack/react-query";
+import { useTheme } from "next-themes";
 import { useCallback, useMemo, useState } from "react";
 import { CredibilityLegend } from "@/components/board/grade";
 import { FeatureError } from "@/components/errors/feature-error";
@@ -35,6 +36,7 @@ export function BoardMapClient({
   onSelect: (signalId: string) => void;
 }) {
   const trpc = useTRPC();
+  const { resolvedTheme } = useTheme();
 
   const signals = useQuery(
     trpc.signals.geojson.queryOptions({ datasetId }, { refetchInterval: POLL_MS }),
@@ -78,9 +80,9 @@ export function BoardMapClient({
         features={features}
         layers={layers}
         hiddenDatasetIds={hiddenDatasetIds}
-        // The board is a committed dark ops console, so the basemap is too —
-        // it does not follow the app's light/dark preference.
-        basemap="dark"
+        // Follows the app theme: dark tiles under a light interface is the one
+        // combination that reads as broken rather than as a choice.
+        basemap={resolvedTheme === "dark" ? "dark" : "light"}
         selectedSignalId={selectedSignalId}
         onSelect={onSelect}
       />
@@ -95,9 +97,9 @@ export function BoardMapClient({
       )}
 
       <div className="pointer-events-none absolute inset-x-0 bottom-0 z-10 flex items-end justify-between gap-3 p-3 pb-8">
-        <div className="board-panel pointer-events-auto ml-24 rounded-lg border p-2.5">
+        <div className="bg-card border-border pointer-events-auto ml-24 rounded-lg border p-2.5">
           <CredibilityLegend />
-          <p className="board-faint mt-2 max-w-[190px] font-mono text-[9.5px] leading-relaxed">
+          <p className="text-muted-foreground/80 mt-2 max-w-[190px] font-mono text-[9.5px] leading-relaxed">
             Dashed ring = location inferred; the circle is how far the contributing
             reports spread.
           </p>
@@ -108,7 +110,7 @@ export function BoardMapClient({
 
       <p
         aria-live="polite"
-        className="board-faint absolute top-3 right-14 z-10 font-mono text-[10px]"
+        className="text-muted-foreground/80 absolute top-3 right-14 z-10 font-mono text-[10px]"
       >
         {features.length} placed
         {signals.isFetching ? " · refreshing" : ""}
@@ -117,11 +119,11 @@ export function BoardMapClient({
       {/* An empty map and a broken map look identical, so say which this is. */}
       {features.length === 0 && unmappable.length === 0 && (
         <div className="pointer-events-none absolute inset-0 z-10 flex items-center justify-center p-6">
-          <div className="board-panel pointer-events-auto max-w-[340px] rounded-lg border p-4 text-center">
+          <div className="bg-card border-border pointer-events-auto max-w-[340px] rounded-lg border p-4 text-center">
             <p className="text-[12.5px] font-semibold">
               No signals in the “{datasetId}” dataset
             </p>
-            <p className="board-muted mt-1.5 text-[11.5px] leading-relaxed">
+            <p className="text-muted-foreground mt-1.5 text-[11.5px] leading-relaxed">
               Clustering never crosses datasets, so this board is showing exactly one
               namespace. The synthetic demo story lives in{" "}
               <span className="font-mono">demo</span> — load it with{" "}

@@ -19,17 +19,17 @@ export function ProvenanceItem({
   amplifiedOrigin: boolean;
 }) {
   return (
-    <li className="board-line border-t py-3 first:border-t-0">
+    <li className="border-border border-t py-3 first:border-t-0">
       <div className="flex flex-wrap items-center gap-1.5">
-        <span className="board-panel-2 board-line rounded border px-1.5 py-0.5 font-mono text-[10px] font-semibold">
+        <span className="bg-muted border-border rounded border px-1.5 py-0.5 font-mono text-[10px] font-semibold">
           {entry.source}
         </span>
-        <span className="board-faint font-mono text-[10px]">{entry.sourceClass}</span>
-        {entry.author && <span className="board-faint font-mono text-[10px]">{entry.author}</span>}
+        <span className="text-muted-foreground/80 font-mono text-[10px]">{entry.sourceClass}</span>
+        {entry.author && <span className="text-muted-foreground/80 font-mono text-[10px]">{entry.author}</span>}
         <span className="flex-1" />
         <time
           dateTime={entry.occurredAt.toISOString()}
-          className="board-muted font-mono text-[10px] tabular-nums"
+          className="text-muted-foreground font-mono text-[10px] tabular-nums"
           title={`Captured ${format(entry.ingestedAt, "d MMM HH:mm:ss")}`}
         >
           {format(entry.occurredAt, "d MMM HH:mm")}
@@ -50,24 +50,24 @@ export function ProvenanceItem({
           </span>
         )}
         {amplifiedOrigin && (
-          <span className="board-faint board-line rounded border px-1.5 py-0.5 font-mono text-[9.5px] tracking-[0.08em]">
+          <span className="text-muted-foreground/80 border-border rounded border px-1.5 py-0.5 font-mono text-[9.5px] tracking-[0.08em]">
             SAME ORIGIN AS ANOTHER ITEM
           </span>
         )}
         {entry.quotedUrls.length > 0 && (
-          <span className="board-faint board-line rounded border px-1.5 py-0.5 font-mono text-[9.5px]">
+          <span className="text-muted-foreground/80 border-border rounded border px-1.5 py-0.5 font-mono text-[9.5px]">
             quotes {entry.quotedUrls.length}{" "}
             {entry.quotedUrls.length === 1 ? "link" : "links"}
           </span>
         )}
         {entry.lat === null && (
-          <span className="board-faint board-line rounded border px-1.5 py-0.5 font-mono text-[9.5px]">
+          <span className="text-muted-foreground/80 border-border rounded border px-1.5 py-0.5 font-mono text-[9.5px]">
             no coordinates
           </span>
         )}
       </div>
 
-      <p className="board-faint mt-2 font-mono text-[10px] leading-relaxed">
+      <p className="text-muted-foreground/80 mt-2 font-mono text-[10px] leading-relaxed">
         ↳ matched: {entry.membershipReason}
       </p>
     </li>

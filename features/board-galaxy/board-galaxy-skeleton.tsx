@@ -9,8 +9,8 @@ export function BoardGalaxySkeleton() {
   return (
     <div className="absolute inset-0">
       <Skeleton className="absolute inset-0 rounded-none opacity-30" />
-      <div className="board-panel absolute top-3 left-3 w-[250px] rounded-lg border p-2">
-        <p className="board-muted px-1 pb-1.5 font-mono text-[10px] tracking-[0.12em] uppercase">
+      <div className="bg-card border-border absolute top-3 left-3 w-[250px] rounded-lg border p-2">
+        <p className="text-muted-foreground px-1 pb-1.5 font-mono text-[10px] tracking-[0.12em] uppercase">
           Clusters
         </p>
         <div className="space-y-1.5 p-1">
@@ -19,7 +19,7 @@ export function BoardGalaxySkeleton() {
           <Skeleton className="h-4 w-3/5" />
         </div>
       </div>
-      <p className="board-faint absolute top-3 right-4 font-mono text-[10px]">
+      <p className="text-muted-foreground/80 absolute top-3 right-4 font-mono text-[10px]">
         Position = what was said, not where.
       </p>
     </div>

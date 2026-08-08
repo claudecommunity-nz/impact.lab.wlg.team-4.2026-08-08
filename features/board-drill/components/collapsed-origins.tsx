@@ -19,20 +19,20 @@ export function CollapsedOrigins({ originGroups }: { originGroups: SignalDetail[
 
   return (
     <section className="space-y-1.5">
-      <h3 className="board-muted font-mono text-[10px] tracking-[0.12em] uppercase">
+      <h3 className="text-muted-foreground font-mono text-[10px] tracking-[0.12em] uppercase">
         Why these were counted once
       </h3>
       <ul className="space-y-2">
         {collapsed.map((group) => (
           <li
             key={group.originId}
-            className="board-panel-2 board-line rounded-md border px-2.5 py-2"
+            className="bg-muted border-border rounded-md border px-2.5 py-2"
           >
             <p className="font-mono text-[10.5px] font-semibold" style={{ color: "#fbbf24" }}>
               {group.itemIds.length} items → 1 origin
             </p>
             {group.reasons.length === 0 ? (
-              <p className="board-faint mt-1 text-[11px]">No reason recorded.</p>
+              <p className="text-muted-foreground/80 mt-1 text-[11px]">No reason recorded.</p>
             ) : (
               <ul className="mt-1 space-y-0.5">
                 {group.reasons.map((reason) => (

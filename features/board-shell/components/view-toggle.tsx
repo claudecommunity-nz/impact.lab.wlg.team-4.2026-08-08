@@ -1,10 +1,12 @@
 "use client";
 
+import { cn } from "@/lib/utils";
+
 export type BoardView = "map" | "galaxy";
 
 const VIEWS: { id: BoardView; label: string; hint: string }[] = [
-  { id: "map", label: "Map", hint: "Geographic — authoritative for place" },
-  { id: "galaxy", label: "Galaxy", hint: "Semantic — clusters by what was said" },
+  { id: "map", label: "Map", hint: "Where reports are coming from" },
+  { id: "galaxy", label: "Galaxy", hint: "What reports are saying, grouped by meaning" },
 ];
 
 /**
@@ -24,7 +26,7 @@ export function ViewToggle({
     <div
       role="radiogroup"
       aria-label="Visualisation"
-      className="board-line flex overflow-hidden rounded-lg border"
+      className="bg-muted border-border flex items-center gap-0.5 rounded-full border p-0.5"
     >
       {VIEWS.map((option) => {
         const active = option.id === view;
@@ -36,12 +38,12 @@ export function ViewToggle({
             aria-checked={active}
             title={option.hint}
             onClick={() => onChange(option.id)}
-            className={
+            className={cn(
+              "focus-visible:ring-ring rounded-full px-3.5 py-1.5 text-[12.5px] font-semibold transition-colors focus-visible:ring-2 focus-visible:outline-none",
               active
-                ? "board-toggle board-accent px-3.5 py-1.5 text-[11.5px] font-semibold"
-                : "board-toggle board-panel board-muted px-3.5 py-1.5 text-[11.5px] font-semibold"
-            }
-            style={active ? { background: "var(--board-accent-dim)" } : undefined}
+                ? "bg-card text-foreground shadow-sm"
+                : "text-muted-foreground hover:text-foreground",
+            )}
           >
             {option.label}
           </button>
