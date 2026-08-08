@@ -85,19 +85,6 @@ function DrillBody({ detail }: { detail: SignalDetail }) {
 
   return (
     <div className="min-h-0 flex-1 space-y-4 overflow-y-auto px-4 py-4">
-      {detail.syntheticContributor && (
-        <p
-          className="rounded-md border px-2.5 py-2 font-mono text-[10.5px] leading-relaxed"
-          style={{
-            color: "#fbbf24",
-            borderColor: "rgba(251,191,36,.35)",
-            background: "rgba(251,191,36,.08)",
-          }}
-        >
-          SYNTHETIC CONTENT — at least one item behind this signal was authored for a demo
-          or a drill.
-        </p>
-      )}
 
       <section className="space-y-2">
         <div className="flex flex-wrap items-center gap-2">

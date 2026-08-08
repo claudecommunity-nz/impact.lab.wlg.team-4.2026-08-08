@@ -41,14 +41,6 @@ export function ProvenanceItem({
       </blockquote>
 
       <div className="mt-2 flex flex-wrap items-center gap-1.5">
-        {entry.synthetic && (
-          <span
-            className="rounded border border-dashed px-1.5 py-0.5 font-mono text-[9.5px] tracking-[0.08em]"
-            style={{ color: "#fbbf24", borderColor: "rgba(251,191,36,.4)" }}
-          >
-            SYNTHETIC — authored for a demo or drill
-          </span>
-        )}
         {amplifiedOrigin && (
           <span className="text-muted-foreground/80 border-border rounded border px-1.5 py-0.5 font-mono text-[9.5px] tracking-[0.08em]">
             SAME ORIGIN AS ANOTHER ITEM

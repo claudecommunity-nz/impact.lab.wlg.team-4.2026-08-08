@@ -26,6 +26,10 @@ export function BoardScrubber({
   onChange: (asAt: number | null) => void;
 }) {
   const [playing, setPlaying] = useState(false);
+  // Local drag position so the thumb tracks the pointer instantly while the
+  // actual query is debounced — one request per settle, not one per pixel.
+  const [drag, setDrag] = useState<number | null>(null);
+  const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const valueRef = useRef(value);
   valueRef.current = value;
 
@@ -75,11 +79,16 @@ export function BoardScrubber({
         min={domainStart}
         max={now}
         step={Math.max(Math.round(span / 200), 1000)}
-        value={value ?? now}
+        value={drag ?? value ?? now}
         onChange={(e) => {
           setPlaying(false);
           const v = Number(e.target.value);
-          onChange(now - v < span / 200 ? null : v);
+          setDrag(v);
+          if (debounceRef.current) clearTimeout(debounceRef.current);
+          debounceRef.current = setTimeout(() => {
+            setDrag(null);
+            onChange(now - v < span / 200 ? null : v);
+          }, 180);
         }}
       />
       <span

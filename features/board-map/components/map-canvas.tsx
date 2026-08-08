@@ -524,7 +524,6 @@ function paintMarker(
         properties.independentSources === 1 ? "source" : "sources"
       } across ${properties.itemCount} ${properties.itemCount === 1 ? "item" : "items"}`,
       `location ${properties.locationCertainty}`,
-      properties.syntheticContributor ? "includes synthetic demo content" : null,
     ]
       .filter(Boolean)
       .join(", "),
@@ -548,9 +547,7 @@ function paintMarker(
   // same dozen on hover is a map you can read.
   record.chipText.textContent = `${localityOf(properties.label)} · ${properties.itemCount}`;
   record.chipDot.style.background = colour;
-  record.flag.hidden = !properties.syntheticContributor;
-
-  record.flag.hidden = !properties.syntheticContributor;
+  record.flag.hidden = true; // one feed, treated the same — no SYN badging (Jacob)
 }
 
 /**

@@ -1,6 +1,6 @@
 "use client";
 
-import { useQueries, useQuery } from "@tanstack/react-query";
+import { keepPreviousData, useQueries, useQuery } from "@tanstack/react-query";
 import { useTheme } from "next-themes";
 import { useCallback, useMemo, useRef, useState } from "react";
 import { CredibilityLegend } from "@/components/board/grade";
@@ -47,7 +47,13 @@ export function BoardMapClient({
   const signals = useQuery(
     trpc.signals.geojson.queryOptions(
       asAt === null ? { datasetId } : { datasetId, asAt: new Date(asAt) },
-      { refetchInterval: asAt === null ? POLL_MS : false },
+      {
+        refetchInterval: asAt === null ? POLL_MS : false,
+        // Scrubbing changes the query key on every step; without this the map
+        // flashes empty between instants. Keep the last picture until the next
+        // one arrives — dots then MOVE rather than blink.
+        placeholderData: keepPreviousData,
+      },
     ),
   );
 
