@@ -53,6 +53,10 @@ export function BoardMapClient({
     [layerResults],
   );
 
+  // Council layers arrive one at a time and the legend says how many are still
+  // coming, so an operator can tell "no ponding here" from "ponding not loaded".
+  const pendingCount = layerResults.filter((result) => result.isLoading).length;
+
   const failedDatasetIds = useMemo(
     () => MAP_LAYER_IDS.filter((_, index) => layerResults[index].isError),
     [layerResults],
@@ -87,12 +91,13 @@ export function BoardMapClient({
         onSelect={onSelect}
       />
 
-      {layers.length > 0 && (
+      {(layers.length > 0 || pendingCount > 0) && (
         <MapLegend
           layers={layers}
           hiddenDatasetIds={hiddenDatasetIds}
           onToggleDataset={toggleDataset}
           failedDatasetIds={failedDatasetIds}
+          pendingCount={pendingCount}
         />
       )}
 
