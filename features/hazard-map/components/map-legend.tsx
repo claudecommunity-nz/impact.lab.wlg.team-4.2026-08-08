@@ -92,6 +92,27 @@ export function MapLegend({
                   {layer.featureCollection.features.length}
                 </span>
               </Button>
+              {/* A shaded layer is only readable if the shades are named, so
+                  the classes get one compact row rather than a row each. */}
+              {paint.graded && visible && (
+                <div className="text-muted-foreground flex items-center gap-1.5 px-1.5 pb-1 pl-8 text-[11px]">
+                  <span>Zone</span>
+                  {paint.graded.stops.map((stop) => (
+                    <span key={stop.label} className="flex items-center gap-1" title={stop.title}>
+                      <span
+                        className="size-2.5 rounded-[2px] border"
+                        style={{ backgroundColor: stop.colour, borderColor: paint.outline }}
+                        aria-hidden
+                      />
+                      {stop.label}
+                    </span>
+                  ))}
+                  <span className="sr-only">
+                    {paint.graded.stops.map((s) => s.title).join(", ")}
+                  </span>
+                </div>
+              )}
+
               {layer.truncated && (
                 <p className="text-destructive px-1.5 pb-1 pl-8 text-[11px]">
                   Showing a subset of this layer.
