@@ -6,6 +6,7 @@ import { ErrorBoundary } from "@/components/errors/error-boundary";
 import { FeatureError } from "@/components/errors/feature-error";
 import { BoardDrillClient } from "@/features/board-drill/board-drill-client";
 import { BoardGalaxySkeleton } from "@/features/board-galaxy/board-galaxy-skeleton";
+import { BoardLanesClient } from "@/features/board-lanes/board-lanes-client";
 import { BoardMapClient } from "@/features/board-map/board-map-client";
 import { cn } from "@/lib/utils";
 import { BOARD_DATASET } from "./board-dataset";
@@ -63,6 +64,12 @@ export function BoardShellClient() {
         <div className="flex-1" />
         <ViewToggle view={view} onChange={changeView} />
       </header>
+
+      {/* Above the map, and only above the map: the lanes rank what the map is
+          showing, and in Trends the same ranking is the whole view. */}
+      {view === "map" && (
+        <BoardLanesClient selectedSignalId={selectedSignalId} onSelect={select} />
+      )}
 
       <div className="relative flex min-h-0 flex-1">
         <div className="board-map bg-muted relative min-h-0 flex-1">
