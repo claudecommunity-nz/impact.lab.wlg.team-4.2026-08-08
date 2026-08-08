@@ -1,0 +1,239 @@
+{
+ "note": "Extreme rainfall days (>=25mm at a Wellington gauge), 2025-08-08 to 2026-08-08. Sources: GW Hilltop rainfall gauges (Berhampore at Nursery, Akatarawa River at Cemetery) cross-referenced against Hutt River at Taita Gorge flow peaks. MetService CAP has no public archive.",
+ "events": [
+  {
+   "date": "2025-09-05",
+   "rain_mm": {
+    "Berhampore at Nursery": 16.8,
+    "Akatarawa River at Cemetery": 34.0
+   },
+   "river_peak_m3s": null,
+   "corroborated_by_river": false
+  },
+  {
+   "date": "2025-09-22",
+   "rain_mm": {
+    "Berhampore at Nursery": 55.6,
+    "Akatarawa River at Cemetery": 47.6
+   },
+   "river_peak_m3s": 322,
+   "corroborated_by_river": true
+  },
+  {
+   "date": "2025-09-23",
+   "rain_mm": {
+    "Berhampore at Nursery": 25.2,
+    "Akatarawa River at Cemetery": 35.8
+   },
+   "river_peak_m3s": null,
+   "corroborated_by_river": false
+  },
+  {
+   "date": "2025-10-11",
+   "rain_mm": {
+    "Berhampore at Nursery": 1.0,
+    "Akatarawa River at Cemetery": 58.0
+   },
+   "river_peak_m3s": 463,
+   "corroborated_by_river": true
+  },
+  {
+   "date": "2025-10-23",
+   "rain_mm": {
+    "Berhampore at Nursery": 4.6,
+    "Akatarawa River at Cemetery": 31.2
+   },
+   "river_peak_m3s": 225,
+   "corroborated_by_river": true
+  },
+  {
+   "date": "2025-10-27",
+   "rain_mm": {
+    "Berhampore at Nursery": 14.2,
+    "Akatarawa River at Cemetery": 40.4
+   },
+   "river_peak_m3s": 255,
+   "corroborated_by_river": true
+  },
+  {
+   "date": "2025-11-27",
+   "rain_mm": {
+    "Berhampore at Nursery": 6.4,
+    "Akatarawa River at Cemetery": 42.4
+   },
+   "river_peak_m3s": 206,
+   "corroborated_by_river": true
+  },
+  {
+   "date": "2025-12-03",
+   "rain_mm": {
+    "Berhampore at Nursery": 35.4,
+    "Akatarawa River at Cemetery": 21.2
+   },
+   "river_peak_m3s": null,
+   "corroborated_by_river": false
+  },
+  {
+   "date": "2025-12-16",
+   "rain_mm": {
+    "Berhampore at Nursery": 21.6,
+    "Akatarawa River at Cemetery": 32.6
+   },
+   "river_peak_m3s": null,
+   "corroborated_by_river": false
+  },
+  {
+   "date": "2025-12-26",
+   "rain_mm": {
+    "Berhampore at Nursery": 24.8,
+    "Akatarawa River at Cemetery": 28.4
+   },
+   "river_peak_m3s": null,
+   "corroborated_by_river": false
+  },
+  {
+   "date": "2026-01-15",
+   "rain_mm": {
+    "Berhampore at Nursery": 29.0,
+    "Akatarawa River at Cemetery": 56.2
+   },
+   "river_peak_m3s": 159,
+   "corroborated_by_river": true
+  },
+  {
+   "date": "2026-01-27",
+   "rain_mm": {
+    "Berhampore at Nursery": 43.6,
+    "Akatarawa River at Cemetery": 8.2
+   },
+   "river_peak_m3s": null,
+   "corroborated_by_river": false
+  },
+  {
+   "date": "2026-02-03",
+   "rain_mm": {
+    "Berhampore at Nursery": 64.8,
+    "Akatarawa River at Cemetery": 34.8
+   },
+   "river_peak_m3s": null,
+   "corroborated_by_river": false
+  },
+  {
+   "date": "2026-02-16",
+   "rain_mm": {
+    "Berhampore at Nursery": 23.6,
+    "Akatarawa River at Cemetery": 43.4
+   },
+   "river_peak_m3s": 257,
+   "corroborated_by_river": true
+  },
+  {
+   "date": "2026-04-12",
+   "rain_mm": {
+    "Berhampore at Nursery": 35.2,
+    "Akatarawa River at Cemetery": 17.4
+   },
+   "river_peak_m3s": null,
+   "corroborated_by_river": false
+  },
+  {
+   "date": "2026-04-18",
+   "rain_mm": {
+    "Berhampore at Nursery": 30.4,
+    "Akatarawa River at Cemetery": 120.6
+   },
+   "river_peak_m3s": 475,
+   "corroborated_by_river": true
+  },
+  {
+   "date": "2026-04-20",
+   "rain_mm": {
+    "Berhampore at Nursery": 134.0,
+    "Akatarawa River at Cemetery": 51.2
+   },
+   "river_peak_m3s": null,
+   "corroborated_by_river": false
+  },
+  {
+   "date": "2026-05-08",
+   "rain_mm": {
+    "Berhampore at Nursery": 29.8,
+    "Akatarawa River at Cemetery": 41.2
+   },
+   "river_peak_m3s": null,
+   "corroborated_by_river": false
+  },
+  {
+   "date": "2026-06-05",
+   "rain_mm": {
+    "Berhampore at Nursery": 56.0,
+    "Akatarawa River at Cemetery": 70.0
+   },
+   "river_peak_m3s": 330,
+   "corroborated_by_river": true
+  },
+  {
+   "date": "2026-06-06",
+   "rain_mm": {
+    "Berhampore at Nursery": 7.0,
+    "Akatarawa River at Cemetery": 25.2
+   },
+   "river_peak_m3s": null,
+   "corroborated_by_river": false
+  },
+  {
+   "date": "2026-06-15",
+   "rain_mm": {
+    "Berhampore at Nursery": 33.0,
+    "Akatarawa River at Cemetery": 45.8
+   },
+   "river_peak_m3s": 192,
+   "corroborated_by_river": true
+  },
+  {
+   "date": "2026-06-21",
+   "rain_mm": {
+    "Berhampore at Nursery": 24.8,
+    "Akatarawa River at Cemetery": 34.4
+   },
+   "river_peak_m3s": 269,
+   "corroborated_by_river": true
+  },
+  {
+   "date": "2026-06-25",
+   "rain_mm": {
+    "Berhampore at Nursery": 33.2,
+    "Akatarawa River at Cemetery": 13.6
+   },
+   "river_peak_m3s": null,
+   "corroborated_by_river": false
+  },
+  {
+   "date": "2026-06-26",
+   "rain_mm": {
+    "Berhampore at Nursery": 10.2,
+    "Akatarawa River at Cemetery": 34.2
+   },
+   "river_peak_m3s": 346,
+   "corroborated_by_river": true
+  },
+  {
+   "date": "2026-07-07",
+   "rain_mm": {
+    "Berhampore at Nursery": 7.8,
+    "Akatarawa River at Cemetery": 26.0
+   },
+   "river_peak_m3s": null,
+   "corroborated_by_river": false
+  },
+  {
+   "date": "2026-07-08",
+   "rain_mm": {
+    "Berhampore at Nursery": 14.4,
+    "Akatarawa River at Cemetery": 44.6
+   },
+   "river_peak_m3s": null,
+   "corroborated_by_river": false
+  }
+ ]
+}
