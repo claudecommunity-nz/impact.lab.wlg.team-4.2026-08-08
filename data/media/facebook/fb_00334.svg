@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="600" height="800" viewBox="0 0 600 800">
+<rect width="600" height="800" fill="#2f6f4f"/>
+<rect x="14" y="14" width="572" height="772" fill="none" stroke="#fff"
+      stroke-opacity=".35" stroke-width="3" stroke-dasharray="10 8"/>
+<text x="300" y="344" fill="#fff" font-family="monospace" font-size="15"
+      text-anchor="middle" fill-opacity=".8">IMAGE PLACEHOLDER</text>
+<text x="300" y="380" fill="#fff" font-family="monospace" font-size="21"
+      text-anchor="middle">downed tree</text>
+<text x="300" y="412" fill="#fff" font-family="monospace" font-size="16"
+      text-anchor="middle" fill-opacity=".85">location not given · 2025-11-06</text>
+<text x="300" y="456" fill="#fff" font-family="monospace" font-size="22"
+      text-anchor="middle" font-weight="bold">AUTHENTIC</text>
+<text x="300" y="716" fill="#fff" fill-opacity=".85" font-family="monospace" font-size="13" text-anchor="middle">Taken at the place and time claimed. EXIF</text><text x="300" y="736" fill="#fff" fill-opacity=".85" font-family="monospace" font-size="13" text-anchor="middle">intact.</text>
+<text x="300" y="772" fill="#fff" font-family="monospace" font-size="14"
+      text-anchor="middle" font-weight="bold">SIMULATED — NOT A REAL PHOTO</text>
+</svg>

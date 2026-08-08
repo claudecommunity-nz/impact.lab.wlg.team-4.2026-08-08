@@ -11,7 +11,6 @@ import type { MapLayer } from "@/use-cases/gis/map-layer-schema";
 import { formatRelativeTime } from "@/utilities/format-relative-time";
 import { MAP_LAYER_IDS } from "./map-layers";
 import { MapLegend } from "./components/map-legend";
-import { HazardMapSkeleton } from "./hazard-map-skeleton";
 
 // MapLibre reads `window` on import, so the canvas never renders on the server.
 // The layer DATA still server-prefetches and hydrates — only the canvas waits.
@@ -19,7 +18,16 @@ const MapCanvas = dynamic(() => import("./components/map-canvas").then((m) => m.
   ssr: false,
 });
 
-/** The only file in the feature that touches hooks. */
+/**
+ * The only file in the feature that touches hooks.
+ *
+ * Deliberately does NOT wait for every layer before rendering, which is the
+ * usual isLoading-to-skeleton branch. These five layers come from three Council
+ * servers and the slowest takes about seven seconds; blocking on it meant seven
+ * seconds of no map at all, including the basemap that was ready immediately.
+ * The map is drawn as soon as the page is, layers appear as they arrive, and
+ * the legend says how many are still coming.
+ */
 export function HazardMapClient() {
   const trpc = useTRPC();
   const { resolvedTheme } = useTheme();
@@ -54,10 +62,12 @@ export function HazardMapClient() {
     });
   }, []);
 
-  if (results.some((r) => r.isLoading)) return <HazardMapSkeleton />;
-  if (layers.length === 0) return <FeatureError name="the hazard map" />;
+  const pendingCount = results.filter((r) => r.isLoading).length;
 
-  const fetchedAt = layers[0].fetchedAt;
+  // Only a total failure is a feature error. Anything else draws — see below.
+  if (pendingCount === 0 && layers.length === 0) return <FeatureError name="the hazard map" />;
+
+  const fetchedAt = layers[0]?.fetchedAt;
 
   return (
     <div className="mx-auto flex w-full max-w-6xl flex-col gap-4 p-6">
@@ -69,7 +79,14 @@ export function HazardMapClient() {
           </p>
         </div>
         <Badge variant="secondary" className="shrink-0">
-          Updated <time dateTime={fetchedAt.toISOString()}>{formatRelativeTime(fetchedAt)}</time>
+          {fetchedAt ? (
+            <>
+              Updated{" "}
+              <time dateTime={fetchedAt.toISOString()}>{formatRelativeTime(fetchedAt)}</time>
+            </>
+          ) : (
+            "Loading…"
+          )}
         </Badge>
       </header>
 
@@ -79,6 +96,7 @@ export function HazardMapClient() {
           hiddenDatasetIds={hiddenDatasetIds}
           onToggleDataset={toggleDataset}
           failedDatasetIds={failedDatasetIds}
+          pendingCount={pendingCount}
         />
         <MapCanvas
           layers={layers}
