@@ -290,7 +290,16 @@
     "comments": 5,
     "shares": 1
    },
-   "simulated": true
+   "simulated": true,
+   "media": [
+    {
+     "type": "image",
+     "file": "../media/facebook/fb_00275.svg",
+     "verdict": "unclear",
+     "verdict_note": "Genuine but too dark / blurred to verify anything from.",
+     "exif_present": false
+    }
+   ]
   },
   {
    "id": "fb_00310",
@@ -317,7 +326,16 @@
     "comments": 7,
     "shares": 3
    },
-   "simulated": true
+   "simulated": true,
+   "media": [
+    {
+     "type": "image",
+     "file": "../media/facebook/fb_00310.svg",
+     "verdict": "recycled",
+     "verdict_note": "Real photo of a real event \u2014 but a DIFFERENT, earlier one.",
+     "exif_present": false
+    }
+   ]
   },
   {
    "id": "fb_00320",
@@ -346,7 +364,16 @@
     "comments": 5,
     "shares": 6
    },
-   "simulated": true
+   "simulated": true,
+   "media": [
+    {
+     "type": "image",
+     "file": "../media/facebook/fb_00320.svg",
+     "verdict": "authentic",
+     "verdict_note": "Taken at the place and time claimed. EXIF intact.",
+     "exif_present": true
+    }
+   ]
   },
   {
    "id": "fb_00339",
@@ -431,7 +458,16 @@
     "comments": 6,
     "shares": 2
    },
-   "simulated": true
+   "simulated": true,
+   "media": [
+    {
+     "type": "image",
+     "file": "../media/facebook/fb_00321.svg",
+     "verdict": "recycled",
+     "verdict_note": "Real photo of a real event \u2014 but a DIFFERENT, earlier one.",
+     "exif_present": false
+    }
+   ]
   },
   {
    "id": "fb_00180",
@@ -491,7 +527,16 @@
     "comments": 15,
     "shares": 5
    },
-   "simulated": true
+   "simulated": true,
+   "media": [
+    {
+     "type": "image",
+     "file": "../media/facebook/fb_00311.svg",
+     "verdict": "authentic",
+     "verdict_note": "Taken at the place and time claimed. EXIF intact.",
+     "exif_present": true
+    }
+   ]
   },
   {
    "id": "fb_00103",
@@ -659,7 +704,16 @@
     "comments": 4,
     "shares": 0
    },
-   "simulated": true
+   "simulated": true,
+   "media": [
+    {
+     "type": "image",
+     "file": "../media/facebook/fb_00276.svg",
+     "verdict": "authentic",
+     "verdict_note": "Taken at the place and time claimed. EXIF intact.",
+     "exif_present": true
+    }
+   ]
   },
   {
    "id": "fb_00322",
@@ -686,7 +740,16 @@
     "comments": 1,
     "shares": 0
    },
-   "simulated": true
+   "simulated": true,
+   "media": [
+    {
+     "type": "image",
+     "file": "../media/facebook/fb_00322.svg",
+     "verdict": "screenshot",
+     "verdict_note": "A photo of another post. Not an independent witness.",
+     "exif_present": false
+    }
+   ]
   },
   {
    "id": "fb_00340",
@@ -802,7 +865,16 @@
     "comments": 5,
     "shares": 2
    },
-   "simulated": true
+   "simulated": true,
+   "media": [
+    {
+     "type": "image",
+     "file": "../media/facebook/fb_00312.svg",
+     "verdict": "wrong_place",
+     "verdict_note": "Genuine footage, filmed somewhere else entirely.",
+     "exif_present": false
+    }
+   ]
   },
   {
    "id": "fb_00323",
@@ -831,7 +903,16 @@
     "comments": 5,
     "shares": 4
    },
-   "simulated": true
+   "simulated": true,
+   "media": [
+    {
+     "type": "image",
+     "file": "../media/facebook/fb_00323.svg",
+     "verdict": "authentic",
+     "verdict_note": "Taken at the place and time claimed. EXIF intact.",
+     "exif_present": true
+    }
+   ]
   },
   {
    "id": "fb_00105",
@@ -1083,7 +1164,16 @@
     "comments": 7,
     "shares": 2
    },
-   "simulated": true
+   "simulated": true,
+   "media": [
+    {
+     "type": "image",
+     "file": "../media/facebook/fb_00277.svg",
+     "verdict": "recycled",
+     "verdict_note": "Real photo of a real event \u2014 but a DIFFERENT, earlier one.",
+     "exif_present": false
+    }
+   ]
   },
   {
    "id": "fb_00313",
@@ -1110,7 +1200,16 @@
     "comments": 9,
     "shares": 2
    },
-   "simulated": true
+   "simulated": true,
+   "media": [
+    {
+     "type": "image",
+     "file": "../media/facebook/fb_00313.svg",
+     "verdict": "recycled",
+     "verdict_note": "Real photo of a real event \u2014 but a DIFFERENT, earlier one.",
+     "exif_present": false
+    }
+   ]
   },
   {
    "id": "fb_00324",
@@ -1139,7 +1238,16 @@
     "comments": 12,
     "shares": 4
    },
-   "simulated": true
+   "simulated": true,
+   "media": [
+    {
+     "type": "image",
+     "file": "../media/facebook/fb_00324.svg",
+     "verdict": "authentic",
+     "verdict_note": "Taken at the place and time claimed. EXIF intact.",
+     "exif_present": true
+    }
+   ]
   },
   {
    "id": "fb_00341",
@@ -1394,7 +1502,16 @@
     "comments": 4,
     "shares": 4
    },
-   "simulated": true
+   "simulated": true,
+   "media": [
+    {
+     "type": "image",
+     "file": "../media/facebook/fb_00325.svg",
+     "verdict": "unclear",
+     "verdict_note": "Genuine but too dark / blurred to verify anything from.",
+     "exif_present": false
+    }
+   ]
   },
   {
    "id": "fb_00333",
@@ -1421,7 +1538,16 @@
     "comments": 3,
     "shares": 1
    },
-   "simulated": true
+   "simulated": true,
+   "media": [
+    {
+     "type": "image",
+     "file": "../media/facebook/fb_00333.svg",
+     "verdict": "authentic",
+     "verdict_note": "Taken at the place and time claimed. EXIF intact.",
+     "exif_present": true
+    }
+   ]
   },
   {
    "id": "fb_00378",
@@ -1448,7 +1574,16 @@
     "comments": 0,
     "shares": 0
    },
-   "simulated": true
+   "simulated": true,
+   "media": [
+    {
+     "type": "image",
+     "file": "../media/facebook/fb_00378.svg",
+     "verdict": "wrong_place",
+     "verdict_note": "Genuine footage, filmed somewhere else entirely.",
+     "exif_present": false
+    }
+   ]
   },
   {
    "id": "fb_00379",
@@ -1583,7 +1718,16 @@
     "comments": 11,
     "shares": 1
    },
-   "simulated": true
+   "simulated": true,
+   "media": [
+    {
+     "type": "image",
+     "file": "../media/facebook/fb_00334.svg",
+     "verdict": "authentic",
+     "verdict_note": "Taken at the place and time claimed. EXIF intact.",
+     "exif_present": true
+    }
+   ]
   },
   {
    "id": "fb_00044",
@@ -1693,7 +1837,16 @@
     "comments": 5,
     "shares": 5
    },
-   "simulated": true
+   "simulated": true,
+   "media": [
+    {
+     "type": "image",
+     "file": "../media/facebook/fb_00335.svg",
+     "verdict": "unclear",
+     "verdict_note": "Genuine but too dark / blurred to verify anything from.",
+     "exif_present": false
+    }
+   ]
   },
   {
    "id": "fb_00045",
@@ -1801,7 +1954,16 @@
     "comments": 4,
     "shares": 4
    },
-   "simulated": true
+   "simulated": true,
+   "media": [
+    {
+     "type": "image",
+     "file": "../media/facebook/fb_00326.svg",
+     "verdict": "authentic",
+     "verdict_note": "Taken at the place and time claimed. EXIF intact.",
+     "exif_present": true
+    }
+   ]
   },
   {
    "id": "fb_00079",
@@ -1857,7 +2019,16 @@
     "comments": 33,
     "shares": 8
    },
-   "simulated": true
+   "simulated": true,
+   "media": [
+    {
+     "type": "image",
+     "file": "../media/facebook/fb_00336.svg",
+     "verdict": "authentic",
+     "verdict_note": "Taken at the place and time claimed. EXIF intact.",
+     "exif_present": true
+    }
+   ]
   },
   {
    "id": "fb_00046",
@@ -1970,7 +2141,16 @@
     "comments": 6,
     "shares": 6
    },
-   "simulated": true
+   "simulated": true,
+   "media": [
+    {
+     "type": "image",
+     "file": "../media/facebook/fb_00337.svg",
+     "verdict": "authentic",
+     "verdict_note": "Taken at the place and time claimed. EXIF intact.",
+     "exif_present": true
+    }
+   ]
   },
   {
    "id": "fb_00047",
@@ -2253,7 +2433,16 @@
     "comments": 21,
     "shares": 7
    },
-   "simulated": true
+   "simulated": true,
+   "media": [
+    {
+     "type": "image",
+     "file": "../media/facebook/fb_00327.svg",
+     "verdict": "screenshot",
+     "verdict_note": "A photo of another post. Not an independent witness.",
+     "exif_present": false
+    }
+   ]
   },
   {
    "id": "fb_00338",
@@ -2280,7 +2469,16 @@
     "comments": 14,
     "shares": 1
    },
-   "simulated": true
+   "simulated": true,
+   "media": [
+    {
+     "type": "image",
+     "file": "../media/facebook/fb_00338.svg",
+     "verdict": "authentic",
+     "verdict_note": "Taken at the place and time claimed. EXIF intact.",
+     "exif_present": true
+    }
+   ]
   },
   {
    "id": "fb_00017",
@@ -2589,7 +2787,16 @@
     "comments": 11,
     "shares": 1
    },
-   "simulated": true
+   "simulated": true,
+   "media": [
+    {
+     "type": "image",
+     "file": "../media/facebook/fb_00269.svg",
+     "verdict": "authentic",
+     "verdict_note": "Taken at the place and time claimed. EXIF intact.",
+     "exif_present": true
+    }
+   ]
   },
   {
    "id": "fb_00306",
@@ -2702,7 +2909,16 @@
     "comments": 1,
     "shares": 1
    },
-   "simulated": true
+   "simulated": true,
+   "media": [
+    {
+     "type": "image",
+     "file": "../media/facebook/fb_00362.svg",
+     "verdict": "unclear",
+     "verdict_note": "Genuine but too dark / blurred to verify anything from.",
+     "exif_present": false
+    }
+   ]
   },
   {
    "id": "fb_00018",
@@ -2790,7 +3006,16 @@
     "comments": 13,
     "shares": 3
    },
-   "simulated": true
+   "simulated": true,
+   "media": [
+    {
+     "type": "image",
+     "file": "../media/facebook/fb_00270.svg",
+     "verdict": "screenshot",
+     "verdict_note": "A photo of another post. Not an independent witness.",
+     "exif_present": false
+    }
+   ]
   },
   {
    "id": "fb_00315",
@@ -2844,7 +3069,16 @@
     "comments": 2,
     "shares": 0
    },
-   "simulated": true
+   "simulated": true,
+   "media": [
+    {
+     "type": "image",
+     "file": "../media/facebook/fb_00363.svg",
+     "verdict": "authentic",
+     "verdict_note": "Taken at the place and time claimed. EXIF intact.",
+     "exif_present": true
+    }
+   ]
   },
   {
    "id": "fb_00358",
@@ -3012,7 +3246,16 @@
     "comments": 7,
     "shares": 2
    },
-   "simulated": true
+   "simulated": true,
+   "media": [
+    {
+     "type": "image",
+     "file": "../media/facebook/fb_00271.svg",
+     "verdict": "recycled",
+     "verdict_note": "Real photo of a real event \u2014 but a DIFFERENT, earlier one.",
+     "exif_present": false
+    }
+   ]
   },
   {
    "id": "fb_00316",
@@ -3072,7 +3315,16 @@
     "comments": 20,
     "shares": 3
    },
-   "simulated": true
+   "simulated": true,
+   "media": [
+    {
+     "type": "image",
+     "file": "../media/facebook/fb_00364.svg",
+     "verdict": "wrong_place",
+     "verdict_note": "Genuine footage, filmed somewhere else entirely.",
+     "exif_present": false
+    }
+   ]
   },
   {
    "id": "fb_00020",
@@ -3211,7 +3463,16 @@
     "comments": 1,
     "shares": 0
    },
-   "simulated": true
+   "simulated": true,
+   "media": [
+    {
+     "type": "image",
+     "file": "../media/facebook/fb_00272.svg",
+     "verdict": "wrong_place",
+     "verdict_note": "Genuine footage, filmed somewhere else entirely.",
+     "exif_present": false
+    }
+   ]
   },
   {
    "id": "fb_00317",
@@ -3265,7 +3526,16 @@
     "comments": 3,
     "shares": 6
    },
-   "simulated": true
+   "simulated": true,
+   "media": [
+    {
+     "type": "image",
+     "file": "../media/facebook/fb_00365.svg",
+     "verdict": "recycled",
+     "verdict_note": "Real photo of a real event \u2014 but a DIFFERENT, earlier one.",
+     "exif_present": false
+    }
+   ]
   },
   {
    "id": "fb_00189",
@@ -3433,7 +3703,16 @@
     "comments": 29,
     "shares": 3
    },
-   "simulated": true
+   "simulated": true,
+   "media": [
+    {
+     "type": "image",
+     "file": "../media/facebook/fb_00273.svg",
+     "verdict": "authentic",
+     "verdict_note": "Taken at the place and time claimed. EXIF intact.",
+     "exif_present": true
+    }
+   ]
   },
   {
    "id": "fb_00318",
@@ -3491,7 +3770,16 @@
     "comments": 27,
     "shares": 5
    },
-   "simulated": true
+   "simulated": true,
+   "media": [
+    {
+     "type": "image",
+     "file": "../media/facebook/fb_00366.svg",
+     "verdict": "unclear",
+     "verdict_note": "Genuine but too dark / blurred to verify anything from.",
+     "exif_present": false
+    }
+   ]
   },
   {
    "id": "fb_00023",
@@ -3742,7 +4030,16 @@
     "comments": 23,
     "shares": 9
    },
-   "simulated": true
+   "simulated": true,
+   "media": [
+    {
+     "type": "image",
+     "file": "../media/facebook/fb_00274.svg",
+     "verdict": "screenshot",
+     "verdict_note": "A photo of another post. Not an independent witness.",
+     "exif_present": false
+    }
+   ]
   },
   {
    "id": "fb_00309",
@@ -3854,7 +4151,16 @@
     "comments": 6,
     "shares": 0
    },
-   "simulated": true
+   "simulated": true,
+   "media": [
+    {
+     "type": "image",
+     "file": "../media/facebook/fb_00367.svg",
+     "verdict": "unclear",
+     "verdict_note": "Genuine but too dark / blurred to verify anything from.",
+     "exif_present": false
+    }
+   ]
   },
   {
    "id": "fb_00000",
@@ -4221,7 +4527,16 @@
     "comments": 4,
     "shares": 2
    },
-   "simulated": true
+   "simulated": true,
+   "media": [
+    {
+     "type": "image",
+     "file": "../media/facebook/fb_00346.svg",
+     "verdict": "unclear",
+     "verdict_note": "Genuine but too dark / blurred to verify anything from.",
+     "exif_present": false
+    }
+   ]
   },
   {
    "id": "fb_00349",
@@ -4362,7 +4677,16 @@
     "comments": 1,
     "shares": 0
    },
-   "simulated": true
+   "simulated": true,
+   "media": [
+    {
+     "type": "image",
+     "file": "../media/facebook/fb_00382.svg",
+     "verdict": "recycled",
+     "verdict_note": "Real photo of a real event \u2014 but a DIFFERENT, earlier one.",
+     "exif_present": false
+    }
+   ]
   },
   {
    "id": "fb_00383",
@@ -4391,7 +4715,16 @@
     "comments": 0,
     "shares": 0
    },
-   "simulated": true
+   "simulated": true,
+   "media": [
+    {
+     "type": "image",
+     "file": "../media/facebook/fb_00383.svg",
+     "verdict": "authentic",
+     "verdict_note": "Taken at the place and time claimed. EXIF intact.",
+     "exif_present": true
+    }
+   ]
   },
   {
    "id": "fb_00384",
@@ -5427,7 +5760,16 @@
     "comments": 3,
     "shares": 2
    },
-   "simulated": true
+   "simulated": true,
+   "media": [
+    {
+     "type": "image",
+     "file": "../media/facebook/fb_00347.svg",
+     "verdict": "wrong_place",
+     "verdict_note": "Genuine footage, filmed somewhere else entirely.",
+     "exif_present": false
+    }
+   ]
   },
   {
    "id": "fb_00351",
@@ -6234,7 +6576,16 @@
     "comments": 5,
     "shares": 0
    },
-   "simulated": true
+   "simulated": true,
+   "media": [
+    {
+     "type": "image",
+     "file": "../media/facebook/fb_00348.svg",
+     "verdict": "authentic",
+     "verdict_note": "Taken at the place and time claimed. EXIF intact.",
+     "exif_present": true
+    }
+   ]
   },
   {
    "id": "fb_00353",
@@ -7659,7 +8010,16 @@
     "comments": 7,
     "shares": 0
    },
-   "simulated": true
+   "simulated": true,
+   "media": [
+    {
+     "type": "video",
+     "file": "../media/facebook/fb_00278.svg",
+     "verdict": "wrong_place",
+     "verdict_note": "Genuine footage, filmed somewhere else entirely.",
+     "exif_present": false
+    }
+   ]
   },
   {
    "id": "fb_00303",
@@ -7717,7 +8077,16 @@
     "comments": 5,
     "shares": 6
    },
-   "simulated": true
+   "simulated": true,
+   "media": [
+    {
+     "type": "image",
+     "file": "../media/facebook/fb_00354.svg",
+     "verdict": "authentic",
+     "verdict_note": "Taken at the place and time claimed. EXIF intact.",
+     "exif_present": true
+    }
+   ]
   },
   {
    "id": "fb_00401",
@@ -7776,7 +8145,16 @@
     "comments": 13,
     "shares": 3
    },
-   "simulated": true
+   "simulated": true,
+   "media": [
+    {
+     "type": "image",
+     "file": "../media/facebook/fb_00402.svg",
+     "verdict": "recycled",
+     "verdict_note": "Real photo of a real event \u2014 but a DIFFERENT, earlier one.",
+     "exif_present": false
+    }
+   ]
   },
   {
    "id": "fb_00403",
@@ -7946,7 +8324,16 @@
     "comments": 12,
     "shares": 4
    },
-   "simulated": true
+   "simulated": true,
+   "media": [
+    {
+     "type": "image",
+     "file": "../media/facebook/fb_00408.svg",
+     "verdict": "authentic",
+     "verdict_note": "Taken at the place and time claimed. EXIF intact.",
+     "exif_present": true
+    }
+   ]
   },
   {
    "id": "fb_00409",
@@ -8342,7 +8729,16 @@
     "comments": 2,
     "shares": 1
    },
-   "simulated": true
+   "simulated": true,
+   "media": [
+    {
+     "type": "image",
+     "file": "../media/facebook/fb_00279.svg",
+     "verdict": "unclear",
+     "verdict_note": "Genuine but too dark / blurred to verify anything from.",
+     "exif_present": false
+    }
+   ]
   },
   {
    "id": "fb_00058",
@@ -8539,7 +8935,16 @@
     "comments": 4,
     "shares": 0
    },
-   "simulated": true
+   "simulated": true,
+   "media": [
+    {
+     "type": "image",
+     "file": "../media/facebook/fb_00355.svg",
+     "verdict": "unclear",
+     "verdict_note": "Genuine but too dark / blurred to verify anything from.",
+     "exif_present": false
+    }
+   ]
   },
   {
    "id": "fb_00059",
@@ -8734,7 +9139,16 @@
     "comments": 0,
     "shares": 0
    },
-   "simulated": true
+   "simulated": true,
+   "media": [
+    {
+     "type": "video",
+     "file": "../media/facebook/fb_00280.svg",
+     "verdict": "wrong_place",
+     "verdict_note": "Genuine footage, filmed somewhere else entirely.",
+     "exif_present": false
+    }
+   ]
   },
   {
    "id": "fb_00267",
@@ -9103,7 +9517,16 @@
     "comments": 28,
     "shares": 2
    },
-   "simulated": true
+   "simulated": true,
+   "media": [
+    {
+     "type": "image",
+     "file": "../media/facebook/fb_00281.svg",
+     "verdict": "screenshot",
+     "verdict_note": "A photo of another post. Not an independent witness.",
+     "exif_present": false
+    }
+   ]
   },
   {
    "id": "fb_00305",
@@ -9161,7 +9584,16 @@
     "comments": 22,
     "shares": 1
    },
-   "simulated": true
+   "simulated": true,
+   "media": [
+    {
+     "type": "image",
+     "file": "../media/facebook/fb_00356.svg",
+     "verdict": "authentic",
+     "verdict_note": "Taken at the place and time claimed. EXIF intact.",
+     "exif_present": true
+    }
+   ]
   },
   {
    "id": "fb_00115",
@@ -10471,7 +10903,16 @@
     "comments": 10,
     "shares": 0
    },
-   "simulated": true
+   "simulated": true,
+   "media": [
+    {
+     "type": "image",
+     "file": "../media/facebook/fb_00282.svg",
+     "verdict": "screenshot",
+     "verdict_note": "A photo of another post. Not an independent witness.",
+     "exif_present": false
+    }
+   ]
   },
   {
    "id": "fb_00297",
@@ -10498,7 +10939,16 @@
     "comments": 3,
     "shares": 7
    },
-   "simulated": true
+   "simulated": true,
+   "media": [
+    {
+     "type": "image",
+     "file": "../media/facebook/fb_00297.svg",
+     "verdict": "unclear",
+     "verdict_note": "Genuine but too dark / blurred to verify anything from.",
+     "exif_present": false
+    }
+   ]
   },
   {
    "id": "fb_00413",
@@ -10776,7 +11226,16 @@
     "comments": 9,
     "shares": 5
    },
-   "simulated": true
+   "simulated": true,
+   "media": [
+    {
+     "type": "image",
+     "file": "../media/facebook/fb_00422.svg",
+     "verdict": "authentic",
+     "verdict_note": "Taken at the place and time claimed. EXIF intact.",
+     "exif_present": true
+    }
+   ]
   },
   {
    "id": "fb_00037",
@@ -10859,7 +11318,16 @@
     "comments": 9,
     "shares": 1
    },
-   "simulated": true
+   "simulated": true,
+   "media": [
+    {
+     "type": "image",
+     "file": "../media/facebook/fb_00298.svg",
+     "verdict": "screenshot",
+     "verdict_note": "A photo of another post. Not an independent witness.",
+     "exif_present": false
+    }
+   ]
   },
   {
    "id": "fb_00130",
@@ -10971,7 +11439,16 @@
     "comments": 4,
     "shares": 2
    },
-   "simulated": true
+   "simulated": true,
+   "media": [
+    {
+     "type": "image",
+     "file": "../media/facebook/fb_00283.svg",
+     "verdict": "unclear",
+     "verdict_note": "Genuine but too dark / blurred to verify anything from.",
+     "exif_present": false
+    }
+   ]
   },
   {
    "id": "fb_00038",
@@ -11054,7 +11531,16 @@
     "comments": 6,
     "shares": 2
    },
-   "simulated": true
+   "simulated": true,
+   "media": [
+    {
+     "type": "image",
+     "file": "../media/facebook/fb_00299.svg",
+     "verdict": "authentic",
+     "verdict_note": "Taken at the place and time claimed. EXIF intact.",
+     "exif_present": true
+    }
+   ]
   },
   {
    "id": "fb_00146",
@@ -11277,7 +11763,16 @@
     "comments": 11,
     "shares": 1
    },
-   "simulated": true
+   "simulated": true,
+   "media": [
+    {
+     "type": "image",
+     "file": "../media/facebook/fb_00300.svg",
+     "verdict": "wrong_place",
+     "verdict_note": "Genuine footage, filmed somewhere else entirely.",
+     "exif_present": false
+    }
+   ]
   },
   {
    "id": "fb_00131",
@@ -11387,7 +11882,16 @@
     "comments": 3,
     "shares": 0
    },
-   "simulated": true
+   "simulated": true,
+   "media": [
+    {
+     "type": "image",
+     "file": "../media/facebook/fb_00284.svg",
+     "verdict": "unclear",
+     "verdict_note": "Genuine but too dark / blurred to verify anything from.",
+     "exif_present": false
+    }
+   ]
   },
   {
    "id": "fb_00040",
@@ -11472,7 +11976,16 @@
     "comments": 7,
     "shares": 0
    },
-   "simulated": true
+   "simulated": true,
+   "media": [
+    {
+     "type": "image",
+     "file": "../media/facebook/fb_00301.svg",
+     "verdict": "unclear",
+     "verdict_note": "Genuine but too dark / blurred to verify anything from.",
+     "exif_present": false
+    }
+   ]
   },
   {
    "id": "fb_00041",
@@ -11841,7 +12354,16 @@
     "comments": 39,
     "shares": 14
    },
-   "simulated": true
+   "simulated": true,
+   "media": [
+    {
+     "type": "image",
+     "file": "../media/facebook/fb_00285.svg",
+     "verdict": "wrong_place",
+     "verdict_note": "Genuine footage, filmed somewhere else entirely.",
+     "exif_present": false
+    }
+   ]
   },
   {
    "id": "fb_00302",
@@ -11868,7 +12390,16 @@
     "comments": 25,
     "shares": 9
    },
-   "simulated": true
+   "simulated": true,
+   "media": [
+    {
+     "type": "image",
+     "file": "../media/facebook/fb_00302.svg",
+     "verdict": "authentic",
+     "verdict_note": "Taken at the place and time claimed. EXIF intact.",
+     "exif_present": true
+    }
+   ]
   }
  ],
  "warning": "SIMULATED posts. Label as simulated wherever displayed. Group and page names are fictional."

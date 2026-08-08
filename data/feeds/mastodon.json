@@ -84,7 +84,12 @@
     "signal": "none",
     "is_locatable": false,
     "ambiguous_names": null
-   }
+   },
+   "media_local": [
+    "../media/mastodon/ms_00117_0.jpg",
+    "../media/mastodon/ms_00117_1.jpg",
+    "../media/mastodon/ms_00117_2.jpg"
+   ]
   },
   {
    "id": "ms_00083",
@@ -213,7 +218,10 @@
     "signal": "none",
     "is_locatable": false,
     "ambiguous_names": null
-   }
+   },
+   "media_local": [
+    "../media/mastodon/ms_00115_0.jpg"
+   ]
   },
   {
    "id": "ms_00114",
@@ -240,7 +248,10 @@
     "signal": "none",
     "is_locatable": false,
     "ambiguous_names": null
-   }
+   },
+   "media_local": [
+    "../media/mastodon/ms_00114_0.png"
+   ]
   },
   {
    "id": "ms_00388",
@@ -267,7 +278,10 @@
     "signal": "none",
     "is_locatable": false,
     "ambiguous_names": null
-   }
+   },
+   "media_local": [
+    "../media/mastodon/ms_00388_0.jpg"
+   ]
   },
   {
    "id": "ms_00387",
@@ -456,7 +470,10 @@
     "signal": "text_mention",
     "is_locatable": true,
     "ambiguous_names": null
-   }
+   },
+   "media_local": [
+    "../media/mastodon/ms_00111_0.bin"
+   ]
   },
   {
    "id": "ms_00110",
@@ -485,7 +502,10 @@
     "signal": "text_mention",
     "is_locatable": true,
     "ambiguous_names": null
-   }
+   },
+   "media_local": [
+    "../media/mastodon/ms_00110_0.bin"
+   ]
   },
   {
    "id": "ms_00109",
@@ -514,7 +534,10 @@
     "signal": "text_mention",
     "is_locatable": true,
     "ambiguous_names": null
-   }
+   },
+   "media_local": [
+    "../media/mastodon/ms_00109_0.bin"
+   ]
   },
   {
    "id": "ms_00108",
@@ -543,7 +566,10 @@
     "signal": "text_mention",
     "is_locatable": true,
     "ambiguous_names": null
-   }
+   },
+   "media_local": [
+    "../media/mastodon/ms_00108_0.bin"
+   ]
   },
   {
    "id": "ms_00107",
@@ -572,7 +598,10 @@
     "signal": "text_mention",
     "is_locatable": true,
     "ambiguous_names": null
-   }
+   },
+   "media_local": [
+    "../media/mastodon/ms_00107_0.bin"
+   ]
   },
   {
    "id": "ms_00106",
@@ -601,7 +630,10 @@
     "signal": "text_mention",
     "is_locatable": true,
     "ambiguous_names": null
-   }
+   },
+   "media_local": [
+    "../media/mastodon/ms_00106_0.bin"
+   ]
   },
   {
    "id": "ms_00105",
@@ -630,7 +662,10 @@
     "signal": "text_mention",
     "is_locatable": true,
     "ambiguous_names": null
-   }
+   },
+   "media_local": [
+    "../media/mastodon/ms_00105_0.jpeg"
+   ]
   },
   {
    "id": "ms_00081",
@@ -657,7 +692,10 @@
     "signal": "none",
     "is_locatable": false,
     "ambiguous_names": null
-   }
+   },
+   "media_local": [
+    "../media/mastodon/ms_00081_0.bin"
+   ]
   },
   {
    "id": "ms_00385",
@@ -736,7 +774,10 @@
     "signal": "text_mention",
     "is_locatable": true,
     "ambiguous_names": null
-   }
+   },
+   "media_local": [
+    "../media/mastodon/ms_00104_0.bin"
+   ]
   },
   {
    "id": "ms_00103",
@@ -765,7 +806,10 @@
     "signal": "text_mention",
     "is_locatable": true,
     "ambiguous_names": null
-   }
+   },
+   "media_local": [
+    "../media/mastodon/ms_00103_0.bin"
+   ]
   },
   {
    "id": "ms_00102",
@@ -795,7 +839,11 @@
     "signal": "text_mention",
     "is_locatable": true,
     "ambiguous_names": null
-   }
+   },
+   "media_local": [
+    "../media/mastodon/ms_00102_0.jpeg",
+    "../media/mastodon/ms_00102_1.jpeg"
+   ]
   },
   {
    "id": "ms_00101",
@@ -824,7 +872,10 @@
     "signal": "text_mention",
     "is_locatable": true,
     "ambiguous_names": null
-   }
+   },
+   "media_local": [
+    "../media/mastodon/ms_00101_0.jpeg"
+   ]
   },
   {
    "id": "ms_00383",
@@ -936,7 +987,13 @@
     "signal": "text_mention",
     "is_locatable": true,
     "ambiguous_names": null
-   }
+   },
+   "media_local": [
+    "../media/mastodon/ms_00158_0.jpg",
+    "../media/mastodon/ms_00158_1.jpg",
+    "../media/mastodon/ms_00158_2.bin",
+    "../media/mastodon/ms_00158_3.bin"
+   ]
   },
   {
    "id": "ms_00157",
@@ -968,7 +1025,13 @@
     "signal": "text_mention",
     "is_locatable": true,
     "ambiguous_names": null
-   }
+   },
+   "media_local": [
+    "../media/mastodon/ms_00157_0.bin",
+    "../media/mastodon/ms_00157_1.bin",
+    "../media/mastodon/ms_00157_2.bin",
+    "../media/mastodon/ms_00157_3.bin"
+   ]
   },
   {
    "id": "ms_00156",
@@ -1080,7 +1143,13 @@
     "signal": "text_mention",
     "is_locatable": true,
     "ambiguous_names": null
-   }
+   },
+   "media_local": [
+    "../media/mastodon/ms_00154_0.bin",
+    "../media/mastodon/ms_00154_1.bin",
+    "../media/mastodon/ms_00154_2.bin",
+    "../media/mastodon/ms_00154_3.bin"
+   ]
   },
   {
    "id": "ms_00308",
@@ -1113,7 +1182,13 @@
     "signal": "text_mention",
     "is_locatable": true,
     "ambiguous_names": null
-   }
+   },
+   "media_local": [
+    "../media/mastodon/ms_00308_0.bin",
+    "../media/mastodon/ms_00308_1.bin",
+    "../media/mastodon/ms_00308_2.bin",
+    "../media/mastodon/ms_00308_3.bin"
+   ]
   },
   {
    "id": "ms_00099",
@@ -1168,7 +1243,10 @@
     "signal": "text_mention",
     "is_locatable": true,
     "ambiguous_names": null
-   }
+   },
+   "media_local": [
+    "../media/mastodon/ms_00153_0.bin"
+   ]
   },
   {
    "id": "ms_00152",
@@ -1199,7 +1277,12 @@
     "signal": "text_mention",
     "is_locatable": true,
     "ambiguous_names": null
-   }
+   },
+   "media_local": [
+    "../media/mastodon/ms_00152_0.bin",
+    "../media/mastodon/ms_00152_1.bin",
+    "../media/mastodon/ms_00152_2.bin"
+   ]
   },
   {
    "id": "ms_00381",
@@ -1253,7 +1336,10 @@
     "signal": "text_mention",
     "is_locatable": true,
     "ambiguous_names": null
-   }
+   },
+   "media_local": [
+    "../media/mastodon/ms_00151_0.bin"
+   ]
   },
   {
    "id": "ms_00150",
@@ -1285,7 +1371,12 @@
     "signal": "text_mention",
     "is_locatable": true,
     "ambiguous_names": null
-   }
+   },
+   "media_local": [
+    "../media/mastodon/ms_00150_0.bin",
+    "../media/mastodon/ms_00150_1.bin",
+    "../media/mastodon/ms_00150_2.bin"
+   ]
   },
   {
    "id": "ms_00380",
@@ -1440,7 +1531,11 @@
     "signal": "text_mention",
     "is_locatable": true,
     "ambiguous_names": null
-   }
+   },
+   "media_local": [
+    "../media/mastodon/ms_00149_0.bin",
+    "../media/mastodon/ms_00149_1.bin"
+   ]
   },
   {
    "id": "ms_00375",
@@ -1542,7 +1637,10 @@
     "signal": "none",
     "is_locatable": false,
     "ambiguous_names": null
-   }
+   },
+   "media_local": [
+    "../media/mastodon/ms_00097_0.bin"
+   ]
   },
   {
    "id": "ms_00373",
@@ -1647,7 +1745,11 @@
     "signal": "text_mention",
     "is_locatable": true,
     "ambiguous_names": null
-   }
+   },
+   "media_local": [
+    "../media/mastodon/ms_00307_0.jpg",
+    "../media/mastodon/ms_00307_1.jpg"
+   ]
   },
   {
    "id": "ms_00148",
@@ -1701,7 +1803,10 @@
     "signal": "none",
     "is_locatable": false,
     "ambiguous_names": null
-   }
+   },
+   "media_local": [
+    "../media/mastodon/ms_00370_0.mp4"
+   ]
   },
   {
    "id": "ms_00096",
@@ -1782,7 +1887,10 @@
     "signal": "none",
     "is_locatable": false,
     "ambiguous_names": null
-   }
+   },
+   "media_local": [
+    "../media/mastodon/ms_00368_0.bin"
+   ]
   },
   {
    "id": "ms_00147",
@@ -1841,7 +1949,12 @@
     "signal": "none",
     "is_locatable": false,
     "ambiguous_names": null
-   }
+   },
+   "media_local": [
+    "../media/mastodon/ms_00390_0.bin",
+    "../media/mastodon/ms_00390_1.bin",
+    "../media/mastodon/ms_00390_2.bin"
+   ]
   },
   {
    "id": "ms_00146",
@@ -2165,7 +2278,10 @@
     "signal": "text_mention",
     "is_locatable": true,
     "ambiguous_names": null
-   }
+   },
+   "media_local": [
+    "../media/mastodon/ms_00093_0.jpeg"
+   ]
   },
   {
    "id": "ms_00141",
@@ -2337,7 +2453,10 @@
     "signal": "none",
     "is_locatable": false,
     "ambiguous_names": null
-   }
+   },
+   "media_local": [
+    "../media/mastodon/ms_00364_0.bin"
+   ]
   },
   {
    "id": "ms_00363",
@@ -2389,7 +2508,10 @@
     "signal": "none",
     "is_locatable": false,
     "ambiguous_names": null
-   }
+   },
+   "media_local": [
+    "../media/mastodon/ms_00362_0.png"
+   ]
   },
   {
    "id": "ms_00089",
@@ -2696,7 +2818,11 @@
     "signal": "none",
     "is_locatable": false,
     "ambiguous_names": null
-   }
+   },
+   "media_local": [
+    "../media/mastodon/ms_00359_0.png",
+    "../media/mastodon/ms_00359_1.png"
+   ]
   },
   {
    "id": "ms_00133",
@@ -3172,7 +3298,10 @@
     "signal": "none",
     "is_locatable": false,
     "ambiguous_names": null
-   }
+   },
+   "media_local": [
+    "../media/mastodon/ms_00268_0.jpg"
+   ]
   },
   {
    "id": "ms_00267",
@@ -3587,7 +3716,10 @@
     "signal": "none",
     "is_locatable": false,
     "ambiguous_names": null
-   }
+   },
+   "media_local": [
+    "../media/mastodon/ms_00256_0.jpg"
+   ]
   },
   {
    "id": "ms_00255",
@@ -3791,7 +3923,10 @@
     "signal": "none",
     "is_locatable": false,
     "ambiguous_names": null
-   }
+   },
+   "media_local": [
+    "../media/mastodon/ms_00355_0.bin"
+   ]
   },
   {
    "id": "ms_00249",
@@ -3923,7 +4058,10 @@
     "signal": "none",
     "is_locatable": false,
     "ambiguous_names": null
-   }
+   },
+   "media_local": [
+    "../media/mastodon/ms_00348_0.bin"
+   ]
   },
   {
    "id": "ms_00248",
@@ -4000,7 +4138,10 @@
     "signal": "none",
     "is_locatable": false,
     "ambiguous_names": null
-   }
+   },
+   "media_local": [
+    "../media/mastodon/ms_00346_0.jpg"
+   ]
   },
   {
    "id": "ms_00247",
@@ -4052,7 +4193,10 @@
     "signal": "none",
     "is_locatable": false,
     "ambiguous_names": null
-   }
+   },
+   "media_local": [
+    "../media/mastodon/ms_00345_0.bin"
+   ]
   },
   {
    "id": "ms_00246",
@@ -4104,7 +4248,10 @@
     "signal": "none",
     "is_locatable": false,
     "ambiguous_names": null
-   }
+   },
+   "media_local": [
+    "../media/mastodon/ms_00344_0.bin"
+   ]
   },
   {
    "id": "ms_00123",
@@ -4133,7 +4280,10 @@
     "signal": "text_mention",
     "is_locatable": true,
     "ambiguous_names": null
-   }
+   },
+   "media_local": [
+    "../media/mastodon/ms_00123_0.jpg"
+   ]
   },
   {
    "id": "ms_00343",
@@ -4185,7 +4335,10 @@
     "signal": "none",
     "is_locatable": false,
     "ambiguous_names": null
-   }
+   },
+   "media_local": [
+    "../media/mastodon/ms_00342_0.bin"
+   ]
   },
   {
    "id": "ms_00341",
@@ -4212,7 +4365,10 @@
     "signal": "none",
     "is_locatable": false,
     "ambiguous_names": null
-   }
+   },
+   "media_local": [
+    "../media/mastodon/ms_00341_0.jpg"
+   ]
   },
   {
    "id": "ms_00340",
@@ -4239,7 +4395,10 @@
     "signal": "none",
     "is_locatable": false,
     "ambiguous_names": null
-   }
+   },
+   "media_local": [
+    "../media/mastodon/ms_00340_0.jpg"
+   ]
   },
   {
    "id": "ms_00339",
@@ -4266,7 +4425,10 @@
     "signal": "none",
     "is_locatable": false,
     "ambiguous_names": null
-   }
+   },
+   "media_local": [
+    "../media/mastodon/ms_00339_0.png"
+   ]
   },
   {
    "id": "ms_00338",
@@ -4293,7 +4455,10 @@
     "signal": "none",
     "is_locatable": false,
     "ambiguous_names": null
-   }
+   },
+   "media_local": [
+    "../media/mastodon/ms_00338_0.jpg"
+   ]
   },
   {
    "id": "ms_00122",
@@ -4402,7 +4567,10 @@
     "signal": "none",
     "is_locatable": false,
     "ambiguous_names": null
-   }
+   },
+   "media_local": [
+    "../media/mastodon/ms_00336_0.jpg"
+   ]
   },
   {
    "id": "ms_00245",
@@ -4429,7 +4597,10 @@
     "signal": "none",
     "is_locatable": false,
     "ambiguous_names": null
-   }
+   },
+   "media_local": [
+    "../media/mastodon/ms_00245_0.jpg"
+   ]
   },
   {
    "id": "ms_00335",
@@ -4506,7 +4677,10 @@
     "signal": "none",
     "is_locatable": false,
     "ambiguous_names": null
-   }
+   },
+   "media_local": [
+    "../media/mastodon/ms_00334_0.png"
+   ]
   },
   {
    "id": "ms_00333",
@@ -4533,7 +4707,10 @@
     "signal": "none",
     "is_locatable": false,
     "ambiguous_names": null
-   }
+   },
+   "media_local": [
+    "../media/mastodon/ms_00333_0.jpg"
+   ]
   },
   {
    "id": "ms_00332",
@@ -4560,7 +4737,10 @@
     "signal": "none",
     "is_locatable": false,
     "ambiguous_names": null
-   }
+   },
+   "media_local": [
+    "../media/mastodon/ms_00332_0.bin"
+   ]
   },
   {
    "id": "ms_00353",
@@ -4666,7 +4846,10 @@
     "signal": "none",
     "is_locatable": false,
     "ambiguous_names": null
-   }
+   },
+   "media_local": [
+    "../media/mastodon/ms_00329_0.png"
+   ]
   },
   {
    "id": "ms_00328",
@@ -4693,7 +4876,10 @@
     "signal": "none",
     "is_locatable": false,
     "ambiguous_names": null
-   }
+   },
+   "media_local": [
+    "../media/mastodon/ms_00328_0.png"
+   ]
   },
   {
    "id": "ms_00303",
@@ -4723,7 +4909,10 @@
     "signal": "text_mention",
     "is_locatable": true,
     "ambiguous_names": null
-   }
+   },
+   "media_local": [
+    "../media/mastodon/ms_00303_0.jpeg"
+   ]
   },
   {
    "id": "ms_00327",
@@ -4966,7 +5155,13 @@
     "signal": "text_mention",
     "is_locatable": true,
     "ambiguous_names": null
-   }
+   },
+   "media_local": [
+    "../media/mastodon/ms_00297_0.jpg",
+    "../media/mastodon/ms_00297_1.jpg",
+    "../media/mastodon/ms_00297_2.jpg",
+    "../media/mastodon/ms_00297_3.jpg"
+   ]
   },
   {
    "id": "ms_00296",
@@ -5074,7 +5269,10 @@
     "signal": "none",
     "is_locatable": false,
     "ambiguous_names": null
-   }
+   },
+   "media_local": [
+    "../media/mastodon/ms_00326_0.jpg"
+   ]
   },
   {
    "id": "ms_00293",
@@ -5103,7 +5301,10 @@
     "signal": "text_mention",
     "is_locatable": true,
     "ambiguous_names": null
-   }
+   },
+   "media_local": [
+    "../media/mastodon/ms_00293_0.jpeg"
+   ]
   },
   {
    "id": "ms_00292",
@@ -5132,7 +5333,10 @@
     "signal": "text_mention",
     "is_locatable": true,
     "ambiguous_names": null
-   }
+   },
+   "media_local": [
+    "../media/mastodon/ms_00292_0.jpg"
+   ]
   },
   {
    "id": "ms_00350",
@@ -5159,7 +5363,10 @@
     "signal": "none",
     "is_locatable": false,
     "ambiguous_names": null
-   }
+   },
+   "media_local": [
+    "../media/mastodon/ms_00350_0.bin"
+   ]
   },
   {
    "id": "ms_00291",
@@ -5188,7 +5395,10 @@
     "signal": "text_mention",
     "is_locatable": true,
     "ambiguous_names": null
-   }
+   },
+   "media_local": [
+    "../media/mastodon/ms_00291_0.jpeg"
+   ]
   },
   {
    "id": "ms_00120",
@@ -5323,7 +5533,10 @@
     "signal": "text_mention",
     "is_locatable": true,
     "ambiguous_names": null
-   }
+   },
+   "media_local": [
+    "../media/mastodon/ms_00289_0.jpg"
+   ]
   },
   {
    "id": "ms_00324",
@@ -5404,7 +5617,10 @@
     "signal": "text_mention",
     "is_locatable": true,
     "ambiguous_names": null
-   }
+   },
+   "media_local": [
+    "../media/mastodon/ms_00287_0.jpg"
+   ]
   },
   {
    "id": "ms_00286",
@@ -5460,7 +5676,10 @@
     "signal": "none",
     "is_locatable": false,
     "ambiguous_names": null
-   }
+   },
+   "media_local": [
+    "../media/mastodon/ms_00323_0.jpeg"
+   ]
   },
   {
    "id": "ms_00285",
@@ -5489,7 +5708,10 @@
     "signal": "text_mention",
     "is_locatable": true,
     "ambiguous_names": null
-   }
+   },
+   "media_local": [
+    "../media/mastodon/ms_00285_0.jpeg"
+   ]
   },
   {
    "id": "ms_00284",
@@ -5543,7 +5765,10 @@
     "signal": "none",
     "is_locatable": false,
     "ambiguous_names": null
-   }
+   },
+   "media_local": [
+    "../media/mastodon/ms_00322_0.bin"
+   ]
   },
   {
    "id": "ms_00321",
@@ -5570,7 +5795,10 @@
     "signal": "none",
     "is_locatable": false,
     "ambiguous_names": null
-   }
+   },
+   "media_local": [
+    "../media/mastodon/ms_00321_0.bin"
+   ]
   },
   {
    "id": "ms_00283",
@@ -5624,7 +5852,10 @@
     "signal": "none",
     "is_locatable": false,
     "ambiguous_names": null
-   }
+   },
+   "media_local": [
+    "../media/mastodon/ms_00320_0.bin"
+   ]
   },
   {
    "id": "ms_00282",
@@ -5705,7 +5936,10 @@
     "signal": "text_mention",
     "is_locatable": true,
     "ambiguous_names": null
-   }
+   },
+   "media_local": [
+    "../media/mastodon/ms_00281_0.jpg"
+   ]
   },
   {
    "id": "ms_00242",
@@ -5787,7 +6021,13 @@
     "signal": "none",
     "is_locatable": false,
     "ambiguous_names": null
-   }
+   },
+   "media_local": [
+    "../media/mastodon/ms_00237_0.jpg",
+    "../media/mastodon/ms_00237_1.jpg",
+    "../media/mastodon/ms_00237_2.jpg",
+    "../media/mastodon/ms_00237_3.jpg"
+   ]
   },
   {
    "id": "ms_00236",
@@ -5817,7 +6057,13 @@
     "signal": "none",
     "is_locatable": false,
     "ambiguous_names": null
-   }
+   },
+   "media_local": [
+    "../media/mastodon/ms_00236_0.jpg",
+    "../media/mastodon/ms_00236_1.jpg",
+    "../media/mastodon/ms_00236_2.jpg",
+    "../media/mastodon/ms_00236_3.jpg"
+   ]
   },
   {
    "id": "ms_00319",
@@ -5869,7 +6115,10 @@
     "signal": "none",
     "is_locatable": false,
     "ambiguous_names": null
-   }
+   },
+   "media_local": [
+    "../media/mastodon/ms_00318_0.jpg"
+   ]
   },
   {
    "id": "ms_00317",
@@ -5921,7 +6170,10 @@
     "signal": "none",
     "is_locatable": false,
     "ambiguous_names": null
-   }
+   },
+   "media_local": [
+    "../media/mastodon/ms_00316_0.jpg"
+   ]
   },
   {
    "id": "ms_00315",
@@ -5998,7 +6250,10 @@
     "signal": "none",
     "is_locatable": false,
     "ambiguous_names": null
-   }
+   },
+   "media_local": [
+    "../media/mastodon/ms_00313_0.mp4"
+   ]
   },
   {
    "id": "ms_00312",
@@ -6025,7 +6280,10 @@
     "signal": "none",
     "is_locatable": false,
     "ambiguous_names": null
-   }
+   },
+   "media_local": [
+    "../media/mastodon/ms_00312_0.jpg"
+   ]
   },
   {
    "id": "ms_00311",
@@ -6285,7 +6543,13 @@
     "signal": "none",
     "is_locatable": false,
     "ambiguous_names": null
-   }
+   },
+   "media_local": [
+    "../media/mastodon/ms_00229_0.jpg",
+    "../media/mastodon/ms_00229_1.jpg",
+    "../media/mastodon/ms_00229_2.jpg",
+    "../media/mastodon/ms_00229_3.jpg"
+   ]
   },
   {
    "id": "ms_00228",
@@ -6446,7 +6710,13 @@
     "signal": "none",
     "is_locatable": false,
     "ambiguous_names": null
-   }
+   },
+   "media_local": [
+    "../media/mastodon/ms_00226_0.jpg",
+    "../media/mastodon/ms_00226_1.jpg",
+    "../media/mastodon/ms_00226_2.jpg",
+    "../media/mastodon/ms_00226_3.jpg"
+   ]
   },
   {
    "id": "ms_00241",
@@ -6554,7 +6824,10 @@
     "signal": "none",
     "is_locatable": false,
     "ambiguous_names": null
-   }
+   },
+   "media_local": [
+    "../media/mastodon/ms_00224_0.png"
+   ]
   },
   {
    "id": "ms_00036",
@@ -6610,7 +6883,10 @@
     "signal": "text_mention",
     "is_locatable": true,
     "ambiguous_names": null
-   }
+   },
+   "media_local": [
+    "../media/mastodon/ms_00035_0.jpg"
+   ]
   },
   {
    "id": "ms_00223",
@@ -6901,7 +7177,10 @@
     "signal": "none",
     "is_locatable": false,
     "ambiguous_names": null
-   }
+   },
+   "media_local": [
+    "../media/mastodon/ms_00027_0.jpeg"
+   ]
   },
   {
    "id": "ms_00310",
@@ -6928,7 +7207,10 @@
     "signal": "none",
     "is_locatable": false,
     "ambiguous_names": null
-   }
+   },
+   "media_local": [
+    "../media/mastodon/ms_00310_0.png"
+   ]
   },
   {
    "id": "ms_00309",
@@ -7086,7 +7368,12 @@
     "signal": "none",
     "is_locatable": false,
     "ambiguous_names": null
-   }
+   },
+   "media_local": [
+    "../media/mastodon/ms_00218_0.jpg",
+    "../media/mastodon/ms_00218_1.jpg",
+    "../media/mastodon/ms_00218_2.jpg"
+   ]
   },
   {
    "id": "ms_00025",
@@ -7292,7 +7579,10 @@
     "signal": "none",
     "is_locatable": false,
     "ambiguous_names": null
-   }
+   },
+   "media_local": [
+    "../media/mastodon/ms_00078_0.png"
+   ]
   },
   {
    "id": "ms_00077",
@@ -7396,7 +7686,10 @@
     "signal": "text_mention",
     "is_locatable": true,
     "ambiguous_names": null
-   }
+   },
+   "media_local": [
+    "../media/mastodon/ms_00023_0.jpeg"
+   ]
   },
   {
    "id": "ms_00074",
@@ -7550,7 +7843,10 @@
     "signal": "text_mention",
     "is_locatable": true,
     "ambiguous_names": null
-   }
+   },
+   "media_local": [
+    "../media/mastodon/ms_00022_0.jpg"
+   ]
   },
   {
    "id": "ms_00021",
@@ -7579,7 +7875,10 @@
     "signal": "text_mention",
     "is_locatable": true,
     "ambiguous_names": null
-   }
+   },
+   "media_local": [
+    "../media/mastodon/ms_00021_0.jpg"
+   ]
   },
   {
    "id": "ms_00020",
@@ -7744,7 +8043,13 @@
     "signal": "none",
     "is_locatable": false,
     "ambiguous_names": null
-   }
+   },
+   "media_local": [
+    "../media/mastodon/ms_00216_0.jpg",
+    "../media/mastodon/ms_00216_1.jpg",
+    "../media/mastodon/ms_00216_2.jpg",
+    "../media/mastodon/ms_00216_3.png"
+   ]
   },
   {
    "id": "ms_00016",
@@ -7798,7 +8103,10 @@
     "signal": "none",
     "is_locatable": false,
     "ambiguous_names": null
-   }
+   },
+   "media_local": [
+    "../media/mastodon/ms_00215_0.jpg"
+   ]
   },
   {
    "id": "ms_00214",
@@ -7850,7 +8158,10 @@
     "signal": "none",
     "is_locatable": false,
     "ambiguous_names": null
-   }
+   },
+   "media_local": [
+    "../media/mastodon/ms_00213_0.jpg"
+   ]
   },
   {
    "id": "ms_00212",
@@ -7877,7 +8188,10 @@
     "signal": "none",
     "is_locatable": false,
     "ambiguous_names": null
-   }
+   },
+   "media_local": [
+    "../media/mastodon/ms_00212_0.jpg"
+   ]
   },
   {
    "id": "ms_00068",
@@ -7984,7 +8298,13 @@
     "signal": "none",
     "is_locatable": false,
     "ambiguous_names": null
-   }
+   },
+   "media_local": [
+    "../media/mastodon/ms_00211_0.jpg",
+    "../media/mastodon/ms_00211_1.jpg",
+    "../media/mastodon/ms_00211_2.jpg",
+    "../media/mastodon/ms_00211_3.jpg"
+   ]
   },
   {
    "id": "ms_00210",
@@ -8014,7 +8334,13 @@
     "signal": "none",
     "is_locatable": false,
     "ambiguous_names": null
-   }
+   },
+   "media_local": [
+    "../media/mastodon/ms_00210_0.jpg",
+    "../media/mastodon/ms_00210_1.jpg",
+    "../media/mastodon/ms_00210_2.png",
+    "../media/mastodon/ms_00210_3.jpg"
+   ]
   },
   {
    "id": "ms_00014",
@@ -8043,7 +8369,10 @@
     "signal": "text_mention",
     "is_locatable": true,
     "ambiguous_names": null
-   }
+   },
+   "media_local": [
+    "../media/mastodon/ms_00014_0.jpeg"
+   ]
   },
   {
    "id": "ms_00066",
@@ -8457,7 +8786,10 @@
     "ambiguous_names": [
      "Northland"
     ]
-   }
+   },
+   "media_local": [
+    "../media/mastodon/ms_00012_0.jpg"
+   ]
   },
   {
    "id": "ms_00054",
@@ -8611,7 +8943,10 @@
     "signal": "none",
     "is_locatable": false,
     "ambiguous_names": null
-   }
+   },
+   "media_local": [
+    "../media/mastodon/ms_00207_0.jpg"
+   ]
   },
   {
    "id": "ms_00049",
@@ -8663,7 +8998,10 @@
     "signal": "none",
     "is_locatable": false,
     "ambiguous_names": null
-   }
+   },
+   "media_local": [
+    "../media/mastodon/ms_00206_0.jpeg"
+   ]
   },
   {
    "id": "ms_00011",
@@ -8954,7 +9292,10 @@
     "signal": "none",
     "is_locatable": false,
     "ambiguous_names": null
-   }
+   },
+   "media_local": [
+    "../media/mastodon/ms_00203_0.jpg"
+   ]
   },
   {
    "id": "ms_00047",
@@ -9083,7 +9424,10 @@
     "signal": "text_mention",
     "is_locatable": true,
     "ambiguous_names": null
-   }
+   },
+   "media_local": [
+    "../media/mastodon/ms_00004_0.jpeg"
+   ]
   },
   {
    "id": "ms_00003",
@@ -9140,7 +9484,13 @@
     "signal": "none",
     "is_locatable": false,
     "ambiguous_names": null
-   }
+   },
+   "media_local": [
+    "../media/mastodon/ms_00201_0.jpg",
+    "../media/mastodon/ms_00201_1.jpg",
+    "../media/mastodon/ms_00201_2.jpg",
+    "../media/mastodon/ms_00201_3.jpg"
+   ]
   },
   {
    "id": "ms_00198",
@@ -9192,7 +9542,10 @@
     "signal": "none",
     "is_locatable": false,
     "ambiguous_names": null
-   }
+   },
+   "media_local": [
+    "../media/mastodon/ms_00197_0.jpg"
+   ]
   },
   {
    "id": "ms_00196",
@@ -9269,7 +9622,10 @@
     "signal": "none",
     "is_locatable": false,
     "ambiguous_names": null
-   }
+   },
+   "media_local": [
+    "../media/mastodon/ms_00195_0.png"
+   ]
   },
   {
    "id": "ms_00002",
@@ -9298,7 +9654,10 @@
     "signal": "text_mention",
     "is_locatable": true,
     "ambiguous_names": null
-   }
+   },
+   "media_local": [
+    "../media/mastodon/ms_00002_0.jpg"
+   ]
   },
   {
    "id": "ms_00194",
@@ -9325,7 +9684,10 @@
     "signal": "none",
     "is_locatable": false,
     "ambiguous_names": null
-   }
+   },
+   "media_local": [
+    "../media/mastodon/ms_00194_0.jpg"
+   ]
   },
   {
    "id": "ms_00193",
@@ -9454,7 +9816,10 @@
     "signal": "none",
     "is_locatable": false,
     "ambiguous_names": null
-   }
+   },
+   "media_local": [
+    "../media/mastodon/ms_00191_0.jpeg"
+   ]
   },
   {
    "id": "ms_00190",
@@ -9481,7 +9846,10 @@
     "signal": "none",
     "is_locatable": false,
     "ambiguous_names": null
-   }
+   },
+   "media_local": [
+    "../media/mastodon/ms_00190_0.png"
+   ]
   },
   {
    "id": "ms_00189",
@@ -9508,7 +9876,10 @@
     "signal": "none",
     "is_locatable": false,
     "ambiguous_names": null
-   }
+   },
+   "media_local": [
+    "../media/mastodon/ms_00189_0.jpeg"
+   ]
   },
   {
    "id": "ms_00188",
@@ -9535,7 +9906,10 @@
     "signal": "none",
     "is_locatable": false,
     "ambiguous_names": null
-   }
+   },
+   "media_local": [
+    "../media/mastodon/ms_00188_0.png"
+   ]
   },
   {
    "id": "ms_00187",
@@ -9562,7 +9936,10 @@
     "signal": "none",
     "is_locatable": false,
     "ambiguous_names": null
-   }
+   },
+   "media_local": [
+    "../media/mastodon/ms_00187_0.jpeg"
+   ]
   },
   {
    "id": "ms_00186",
@@ -9589,7 +9966,10 @@
     "signal": "none",
     "is_locatable": false,
     "ambiguous_names": null
-   }
+   },
+   "media_local": [
+    "../media/mastodon/ms_00186_0.png"
+   ]
   },
   {
    "id": "ms_00185",
@@ -9616,7 +9996,10 @@
     "signal": "none",
     "is_locatable": false,
     "ambiguous_names": null
-   }
+   },
+   "media_local": [
+    "../media/mastodon/ms_00185_0.jpeg"
+   ]
   },
   {
    "id": "ms_00184",
@@ -9643,7 +10026,10 @@
     "signal": "none",
     "is_locatable": false,
     "ambiguous_names": null
-   }
+   },
+   "media_local": [
+    "../media/mastodon/ms_00184_0.png"
+   ]
   },
   {
    "id": "ms_00183",
@@ -9670,7 +10056,10 @@
     "signal": "none",
     "is_locatable": false,
     "ambiguous_names": null
-   }
+   },
+   "media_local": [
+    "../media/mastodon/ms_00183_0.jpg"
+   ]
   },
   {
    "id": "ms_00182",
@@ -9697,7 +10086,10 @@
     "signal": "none",
     "is_locatable": false,
     "ambiguous_names": null
-   }
+   },
+   "media_local": [
+    "../media/mastodon/ms_00182_0.png"
+   ]
   },
   {
    "id": "ms_00041",
@@ -9774,7 +10166,10 @@
     "signal": "none",
     "is_locatable": false,
     "ambiguous_names": null
-   }
+   },
+   "media_local": [
+    "../media/mastodon/ms_00180_0.jpeg"
+   ]
   },
   {
    "id": "ms_00179",
@@ -9801,7 +10196,10 @@
     "signal": "none",
     "is_locatable": false,
     "ambiguous_names": null
-   }
+   },
+   "media_local": [
+    "../media/mastodon/ms_00179_0.jpeg"
+   ]
   },
   {
    "id": "ms_00178",
@@ -9828,7 +10226,10 @@
     "signal": "none",
     "is_locatable": false,
     "ambiguous_names": null
-   }
+   },
+   "media_local": [
+    "../media/mastodon/ms_00178_0.png"
+   ]
   },
   {
    "id": "ms_00200",
@@ -9856,7 +10257,11 @@
     "signal": "none",
     "is_locatable": false,
     "ambiguous_names": null
-   }
+   },
+   "media_local": [
+    "../media/mastodon/ms_00200_0.png",
+    "../media/mastodon/ms_00200_1.png"
+   ]
   },
   {
    "id": "ms_00177",
@@ -9883,7 +10288,10 @@
     "signal": "none",
     "is_locatable": false,
     "ambiguous_names": null
-   }
+   },
+   "media_local": [
+    "../media/mastodon/ms_00177_0.png"
+   ]
   },
   {
    "id": "ms_00176",
@@ -9910,7 +10318,10 @@
     "signal": "none",
     "is_locatable": false,
     "ambiguous_names": null
-   }
+   },
+   "media_local": [
+    "../media/mastodon/ms_00176_0.png"
+   ]
   },
   {
    "id": "ms_00175",
@@ -9937,7 +10348,10 @@
     "signal": "none",
     "is_locatable": false,
     "ambiguous_names": null
-   }
+   },
+   "media_local": [
+    "../media/mastodon/ms_00175_0.jpg"
+   ]
   },
   {
    "id": "ms_00174",
@@ -10041,7 +10455,10 @@
     "signal": "none",
     "is_locatable": false,
     "ambiguous_names": null
-   }
+   },
+   "media_local": [
+    "../media/mastodon/ms_00173_0.jpeg"
+   ]
   },
   {
    "id": "ms_00172",
@@ -10068,7 +10485,10 @@
     "signal": "none",
     "is_locatable": false,
     "ambiguous_names": null
-   }
+   },
+   "media_local": [
+    "../media/mastodon/ms_00172_0.jpeg"
+   ]
   },
   {
    "id": "ms_00171",
@@ -10120,7 +10540,10 @@
     "signal": "none",
     "is_locatable": false,
     "ambiguous_names": null
-   }
+   },
+   "media_local": [
+    "../media/mastodon/ms_00170_0.png"
+   ]
   },
   {
    "id": "ms_00199",
@@ -10172,7 +10595,10 @@
     "signal": "none",
     "is_locatable": false,
     "ambiguous_names": null
-   }
+   },
+   "media_local": [
+    "../media/mastodon/ms_00169_0.jpg"
+   ]
   },
   {
    "id": "ms_00168",
@@ -10199,7 +10625,10 @@
     "signal": "none",
     "is_locatable": false,
     "ambiguous_names": null
-   }
+   },
+   "media_local": [
+    "../media/mastodon/ms_00168_0.jpeg"
+   ]
   },
   {
    "id": "ms_00167",
@@ -10226,7 +10655,10 @@
     "signal": "none",
     "is_locatable": false,
     "ambiguous_names": null
-   }
+   },
+   "media_local": [
+    "../media/mastodon/ms_00167_0.jpg"
+   ]
   },
   {
    "id": "ms_00000",
@@ -10257,7 +10689,10 @@
     "signal": "text_mention",
     "is_locatable": true,
     "ambiguous_names": null
-   }
+   },
+   "media_local": [
+    "../media/mastodon/ms_00000_0.jpeg"
+   ]
   },
   {
    "id": "ms_00166",
@@ -10284,7 +10719,10 @@
     "signal": "none",
     "is_locatable": false,
     "ambiguous_names": null
-   }
+   },
+   "media_local": [
+    "../media/mastodon/ms_00166_0.jpeg"
+   ]
   },
   {
    "id": "ms_00165",
@@ -10336,7 +10774,10 @@
     "signal": "none",
     "is_locatable": false,
     "ambiguous_names": null
-   }
+   },
+   "media_local": [
+    "../media/mastodon/ms_00164_0.png"
+   ]
   },
   {
    "id": "ms_00163",
@@ -10363,7 +10804,10 @@
     "signal": "none",
     "is_locatable": false,
     "ambiguous_names": null
-   }
+   },
+   "media_local": [
+    "../media/mastodon/ms_00163_0.png"
+   ]
   },
   {
    "id": "ms_00162",
@@ -10390,7 +10834,10 @@
     "signal": "none",
     "is_locatable": false,
     "ambiguous_names": null
-   }
+   },
+   "media_local": [
+    "../media/mastodon/ms_00162_0.png"
+   ]
   },
   {
    "id": "ms_00161",
@@ -10417,7 +10864,10 @@
     "signal": "none",
     "is_locatable": false,
     "ambiguous_names": null
-   }
+   },
+   "media_local": [
+    "../media/mastodon/ms_00161_0.png"
+   ]
   },
   {
    "id": "ms_00160",
@@ -10444,7 +10894,10 @@
     "signal": "none",
     "is_locatable": false,
     "ambiguous_names": null
-   }
+   },
+   "media_local": [
+    "../media/mastodon/ms_00160_0.png"
+   ]
   },
   {
    "id": "ms_00159",
@@ -10471,7 +10924,10 @@
     "signal": "none",
     "is_locatable": false,
     "ambiguous_names": null
-   }
+   },
+   "media_local": [
+    "../media/mastodon/ms_00159_0.jpeg"
+   ]
   }
  ]
 }
