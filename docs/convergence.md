@@ -99,6 +99,45 @@ optional stretch), image hashing, blind-spot overlay + inspector UI (UX teammate
 builds on the published reads), Supabase cutover (connection-string swap later),
 recovery phase, auth.
 
+## Phase B landed — what the seam turned into
+
+Both pure modules are built and wired; `npm run proof:grading` (54 assertions,
+no db, no clock) and `npm run verify` (66 end to end) both pass. Three places
+where the implementation is narrower or wider than the sketch above, recorded
+because each was a judgement call rather than a detail:
+
+1. **The A-source override applies only where corroboration is the binding
+   weakness** — i.e. it lifts credibility 4 to 3, and deliberately does NOT lift
+   5 or 6. AC19.1 says "at least credibility 3 regardless of ORIGIN COUNT", and
+   origin count is the only weakness it should answer: an official source does
+   not make a contradiction go away (AC21 wants that flagged, not hidden) and it
+   cannot tell us where something is. When the floor is withheld, the reasons
+   say so explicitly rather than staying silent.
+
+2. **`ClusterFacts` gained three additive fields** — `bestSourceId` (so the
+   reliability sentence can name the evidence), `issueType` (which chooses the
+   decay half-life), and `timeCertainty: stated | assumed | unknown`. Only
+   `unknown` grades 6; `assumed` — the collector sent no timestamp and ingest
+   defaulted it — is a weakness printed in the reasons, not an unjudgeable
+   cluster, because we do still know when we learned of it.
+   `contradictingOrigins` is in the contract and proven, and passes 0 today:
+   nothing writes `contradicts` edges yet, and inventing a number would be worse
+   than reporting the one we can defend.
+
+3. **The hazard cross-check is `no_applicable_layer`, honestly, on every
+   cluster.** No river-gauge lookup is wired. This is why nothing in the system
+   currently reaches credibility 2 — that rule requires a CONSISTENT
+   authoritative cross-check — and `verify` asserts exactly that. The
+   difference between "we checked and nothing disagreed" and "nothing has
+   checked this" is the difference this module exists to keep visible.
+
+Near-duplicate detection carries one addition worth knowing about: the embedding
+path (cosine ≥ 0.95) also requires ≥ 0.5 token overlap. A shared meaning is not
+a shared origin — two witnesses on opposite corners of one flooded intersection
+score ~0.97 and must stay two observations, or the module erases exactly the
+corroboration it exists to find. Heavy wording overlap (Jaccard ≥ 0.85) still
+collapses on its own, so an unembedded item is handled the same way.
+
 ## Existing substrate the PRD builds on (already validated)
 
 Intake + adapters + drop-folder (INTEGRATION.md), gated cosine clustering with
