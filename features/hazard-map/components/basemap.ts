@@ -14,7 +14,9 @@ export const BASEMAP_ATTRIBUTION =
 const SUBDOMAINS = ["a", "b", "c", "d"];
 
 export function basemapTiles(theme: "light" | "dark"): string[] {
-  const variant = theme === "dark" ? "dark_all" : "voyager";
+  // Positron (light_all): a near-neutral paper ground. Voyager's greens and
+  // blues compete with the signal bubbles drawn on top of it.
+  const variant = theme === "dark" ? "dark_all" : "light_all";
   return SUBDOMAINS.map(
     (s) => `https://${s}.basemaps.cartocdn.com/rastertiles/${variant}/{z}/{x}/{y}.png`,
   );

@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { IBM_Plex_Mono, Manrope } from "next/font/google";
 import "./globals.css";
 import { Providers } from "./providers";
-import { ThemeToggle } from "@/components/theme-toggle";
 import { cn } from "@/lib/utils";
 
 /**
@@ -38,22 +37,12 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       <body className="min-h-full flex flex-col">
         <Providers>
           {/*
-            Inside Providers because it reads next-themes; app chrome, so every
-            route gets it.
-
-            The bar reserves vertical space rather than floating over the page:
-            a viewport-fixed control sits above page headers, which are centred
-            containers, so below ~1440px it lands on top of whatever they put at
-            their right edge. Clearing a strip is the only placement that holds
-            at every width. Pointer events are off on the strip and back on for
-            the toggle, so the empty space stays click-through.
+            One look, deliberately. There is no theme switch and no system
+            preference: the warm-paper palette IS the product's appearance, and
+            a second variant is a second set of colour decisions to keep true
+            for no benefit an operator asked for.
           */}
-          <div className="pointer-events-none fixed inset-x-0 top-0 z-50 flex justify-end p-3">
-            <div className="pointer-events-auto">
-              <ThemeToggle />
-            </div>
-          </div>
-          <div className="flex flex-1 flex-col pt-16">{children}</div>
+          <div className="flex flex-1 flex-col">{children}</div>
         </Providers>
       </body>
     </html>

@@ -13,7 +13,13 @@ import {
 } from "maplibre-gl";
 import { useEffect, useRef, useState } from "react";
 import type { SignalFeature } from "@/components/board/api-types";
-import { credibilityColour, gradeSentence, plainCredibility } from "@/components/board/grade";
+import {
+  credibilityColour,
+  gradeSentence,
+  humanizeLabel,
+  localityOf,
+  plainCredibility,
+} from "@/components/board/grade";
 import {
   BASEMAP_ATTRIBUTION,
   WELLINGTON_CENTER,
@@ -28,7 +34,39 @@ const BASEMAP_SOURCE_ID = "basemap";
 const HALO_LAYER_ID = "halo-fill";
 
 /** Uncertainty is about WHERE, not about how credible — so the halo is one neutral hue. */
-const HALO_COLOUR = "#8da0b5";
+const HALO_COLOUR = "#8e877f";
+
+/**
+ * Hazard geography is CONTEXT, not content.
+ *
+ * These layers are Council polygons covering most of the city; drawn at the
+ * strength /map uses they win on sheer area and the signals disappear into
+ * them. An operator is here to read the reports, so the geography sits back to
+ * roughly a tenth of its natural weight — present enough to place a signal in a
+ * ponding basin or a tsunami zone, quiet enough that the dots are what the eye
+ * lands on.
+ */
+const HAZARD_FILL_OPACITY = 0.12;
+
+/**
+ * Marker size carries report count — "bigger dot = more reports" from the
+ * design brief. Colour is NOT reused for this: colour already means
+ * credibility, and one channel cannot honestly carry two meanings.
+ */
+const DOT_MIN_PX = 11;
+const DOT_MAX_PX = 34;
+
+/**
+ * How many reports a cluster needs before it earns a name on the map.
+ *
+ * A live feed is mostly singletons — one person, one post, one address. Giving
+ * every one of them a pill turns the city into a wall of overlapping labels and
+ * buries the handful of clusters that several people independently reported,
+ * which is the entire point of the board. Singletons stay as dots, at full
+ * colour and fully clickable, with their name on the marker's accessible name
+ * and in the drill panel.
+ */
+const LABEL_FROM_ITEMS = 2;
 
 const EMPTY_COLLECTION = { type: "FeatureCollection" as const, features: [] };
 
@@ -63,6 +101,7 @@ type MarkerRecord = {
   element: HTMLButtonElement;
   dot: HTMLSpanElement;
   chip: HTMLSpanElement;
+  chipTone: HTMLSpanElement;
   flag: HTMLSpanElement;
 };
 
@@ -243,7 +282,7 @@ export function MapCanvas({
             id,
             type: "fill",
             source: sourceId,
-            paint: { "fill-color": paint.fill, "fill-opacity": paint.opacity * 0.5 },
+            paint: { "fill-color": paint.fill, "fill-opacity": HAZARD_FILL_OPACITY },
           },
           beneathSignals,
         );
@@ -252,7 +291,7 @@ export function MapCanvas({
             id: `${id}-outline`,
             type: "line",
             source: sourceId,
-            paint: { "line-color": paint.outline, "line-width": 1, "line-opacity": 0.7 },
+            paint: { "line-color": paint.outline, "line-width": 0.6, "line-opacity": 0.35 },
           },
           beneathSignals,
         );
@@ -264,9 +303,9 @@ export function MapCanvas({
             source: sourceId,
             layout: { "line-cap": "round", "line-join": "round" },
             paint: {
-              "line-width": ["interpolate", ["linear"], ["zoom"], 10, 1.5, 15, 4],
+              "line-width": ["interpolate", ["linear"], ["zoom"], 10, 0.8, 15, 2],
               "line-color": paint.fill,
-              "line-opacity": paint.opacity * 0.8,
+              "line-opacity": 0.3,
             },
           },
           beneathSignals,
@@ -278,11 +317,11 @@ export function MapCanvas({
             type: "circle",
             source: sourceId,
             paint: {
-              "circle-radius": ["interpolate", ["linear"], ["zoom"], 10, 3, 15, 6],
+              "circle-radius": ["interpolate", ["linear"], ["zoom"], 10, 2, 15, 4],
               "circle-color": paint.fill,
-              "circle-opacity": paint.opacity * 0.85,
+              "circle-opacity": 0.32,
               "circle-stroke-color": paint.outline,
-              "circle-stroke-width": 1,
+              "circle-stroke-width": 0.5,
             },
           },
           beneathSignals,
@@ -310,6 +349,7 @@ export function MapCanvas({
     if (!map) return;
 
     const seen = new Set<string>();
+    const busiest = features.reduce((most, f) => Math.max(most, f.properties.itemCount), 1);
 
     for (const feature of features) {
       const id = feature.properties.signalId;
@@ -324,7 +364,7 @@ export function MapCanvas({
         record.marker.setLngLat(feature.geometry.coordinates);
       }
 
-      paintMarker(record, feature, id === selectedSignalId);
+      paintMarker(record, feature, id === selectedSignalId, busiest);
     }
 
     for (const [id, record] of markersRef.current) {
@@ -385,6 +425,10 @@ function createMarkerRecord(onClick: () => void): MarkerRecord {
   const chip = document.createElement("span");
   chip.className = "chip";
 
+  const chipTone = document.createElement("span");
+  chipTone.className = "chip-tone";
+  chip.append(chipTone);
+
   const flag = document.createElement("span");
   flag.className = "synthetic-flag";
   flag.textContent = "SYN";
@@ -400,16 +444,27 @@ function createMarkerRecord(onClick: () => void): MarkerRecord {
   // pulls it back by half a dot so the DOT sits on the point, not the chip.
   const marker = new Marker({ element, anchor: "left", offset: [-6, 0] });
 
-  return { marker, element, dot, chip, flag };
+  return { marker, element, dot, chip, chipTone, flag };
 }
 
-function paintMarker(record: MarkerRecord, feature: SignalFeature, selected: boolean) {
+function paintMarker(
+  record: MarkerRecord,
+  feature: SignalFeature,
+  selected: boolean,
+  busiest: number,
+) {
   const properties = feature.properties;
   const colour = credibilityColour(properties.grade);
-  const name = properties.label ?? "Unnamed signal";
+  const name = humanizeLabel(properties.label);
+
+  // Square-rooted: area reads as quantity more honestly than radius does, so a
+  // cluster of 36 does not become nine times the dot of a cluster of 4.
+  const share = Math.sqrt(properties.itemCount / Math.max(busiest, 1));
+  const size = Math.round(DOT_MIN_PX + (DOT_MAX_PX - DOT_MIN_PX) * share);
 
   record.element.setAttribute("aria-pressed", selected ? "true" : "false");
-  record.element.style.zIndex = selected ? "5" : "3";
+  // Busier clusters sit above quieter ones so a singleton never covers a story.
+  record.element.style.zIndex = selected ? "9" : String(3 + Math.min(properties.itemCount, 5));
   record.element.setAttribute(
     "aria-label",
     [
@@ -427,14 +482,26 @@ function paintMarker(record: MarkerRecord, feature: SignalFeature, selected: boo
   );
 
   record.dot.style.background = colour;
+  record.dot.style.width = `${size}px`;
+  record.dot.style.height = `${size}px`;
   record.dot.classList.toggle("ungraded", properties.grade === null);
-  record.dot.style.borderColor = properties.grade === null ? colour : "rgba(11,16,23,.9)";
+  // A soft glow in the signal's own colour, so a busy cluster reads as a mass
+  // rather than a larger circle, and a white ring so it separates from paper.
+  record.dot.style.boxShadow = `0 0 0 2px var(--card), 0 0 ${Math.round(
+    size * 0.7,
+  )}px color-mix(in oklab, ${colour} 45%, transparent)`;
 
-  // Plain English on the map. The Admiralty letters live in the drill panel,
-  // where somebody has chosen to look at the expert layer.
-  record.chip.textContent = plainCredibility(properties.grade);
-  record.chip.style.color = colour;
-  record.chip.style.borderColor = `color-mix(in oklab, ${colour} 45%, transparent)`;
+  // Plain English on the map, with the evidence count beside the place. The
+  // Admiralty letters live in the drill panel, where somebody has chosen the
+  // expert layer.
+  const worthNaming = properties.itemCount >= LABEL_FROM_ITEMS;
+  record.chip.hidden = !worthNaming;
+  if (worthNaming) {
+    record.chip.textContent = `${localityOf(properties.label)} · ${properties.itemCount}`;
+    record.chip.append(record.chipTone);
+    record.chipTone.textContent = plainCredibility(properties.grade);
+    record.chipTone.style.color = colour;
+  }
 
   record.flag.hidden = !properties.syntheticContributor;
 }

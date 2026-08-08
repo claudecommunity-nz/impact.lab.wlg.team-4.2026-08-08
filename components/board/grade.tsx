@@ -142,3 +142,43 @@ export function CredibilityLegend({ className }: { className?: string }) {
     </div>
   );
 }
+
+/**
+ * snake_case is a database detail. It should never reach a judge, an operator,
+ * or anyone else who did not write the schema.
+ */
+export function humanize(value: string): string {
+  const spaced = value.replace(/_/g, " ").trim();
+  return spaced.charAt(0).toUpperCase() + spaced.slice(1);
+}
+
+/**
+ * Cluster labels arrive as "dam_failure — Karori Road". Humanise the hazard
+ * half and leave the place name exactly as the pipeline wrote it.
+ */
+export function humanizeLabel(label: string | null): string {
+  if (!label) return "Unnamed signal";
+  return humanize(label);
+}
+
+/**
+ * A pill-sized name for the map.
+ *
+ * Labels arrive in two shapes: our pipeline's "flooding — Aro Valley", and
+ * reverse-geocoded addresses from collectors ("Magnolia Grove, Maungaraki,
+ * Lower Hutt, Wellington, 5010"). Both have to fit in a pill an operator reads
+ * at a glance while scanning a city, so this takes the place half, then the
+ * most specific part of an address, and caps what is left. The full label is
+ * still on the marker's accessible name and in the drill panel.
+ */
+const MAX_PILL_CHARS = 24;
+
+export function localityOf(label: string | null): string {
+  if (!label) return "Unnamed";
+
+  const [, afterHazard] = label.split(/\s+—\s+/);
+  const place = (afterHazard ?? label).split(",")[0].trim();
+  const named = humanize(place);
+
+  return named.length > MAX_PILL_CHARS ? `${named.slice(0, MAX_PILL_CHARS - 1)}…` : named;
+}

@@ -4,7 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import { format } from "date-fns";
 import { X } from "lucide-react";
 import type { SignalDetail } from "@/components/board/api-types";
-import { CredibilityChip, gradeSentence } from "@/components/board/grade";
+import { CredibilityChip, gradeSentence, humanize, humanizeLabel } from "@/components/board/grade";
 import { FeatureError } from "@/components/errors/feature-error";
 import { useTRPC } from "@/trpc/client";
 import { BoardDrillSkeleton } from "./board-drill-skeleton";
@@ -46,7 +46,7 @@ export function BoardDrillClient({
             Signal · {signalId.slice(0, 8)}
           </p>
           <h2 className="mt-0.5 truncate text-sm font-semibold">
-            {detail.data?.label ?? "Unnamed signal"}
+            {humanizeLabel(detail.data?.label ?? null)}
           </h2>
         </div>
         <button
@@ -141,7 +141,7 @@ function DrillBody({ detail }: { detail: SignalDetail }) {
       <CollapsedOrigins originGroups={detail.originGroups} />
 
       <section className="bg-muted border-border grid grid-cols-2 gap-x-3 gap-y-2 rounded-md border p-2.5 font-mono text-[10.5px]">
-        <Fact label="Issue type" value={detail.issueType.replace(/_/g, " ")} />
+        <Fact label="Issue type" value={humanize(detail.issueType)} />
         <Fact label="Location" value={detail.locationCertainty} />
         <Fact label="Dataset" value={detail.datasetId} />
         <Fact label="Source classes" value={detail.sourceClasses.join(", ") || "—"} />

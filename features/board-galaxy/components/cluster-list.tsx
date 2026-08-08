@@ -1,6 +1,7 @@
 "use client";
 
 import type { GalaxyGroup } from "@/components/board/api-types";
+import { humanizeLabel } from "@/components/board/grade";
 import { groupColour } from "./galaxy-palette";
 
 /**
@@ -46,7 +47,7 @@ export function ClusterList({
                 />
                 <span className="min-w-0 flex-1">
                   <span className="block truncate text-[11.5px] font-semibold">
-                    {group.label ?? `Cluster ${group.id.slice(0, 8)}`}
+                    {group.label ? humanizeLabel(group.label) : `Cluster ${group.id.slice(0, 8)}`}
                   </span>
                   <span className="text-muted-foreground/80 block font-mono text-[10px] tabular-nums">
                     {group.memberCount} members · {group.sourceDiversity} source{" "}
