@@ -25,13 +25,16 @@ import {
   WELLINGTON_CENTER,
   WELLINGTON_MAX_BOUNDS,
   WELLINGTON_ZOOM,
+  basemapLabelTiles,
   basemapTiles,
 } from "@/features/hazard-map/components/basemap";
 import { paintFor } from "@/features/hazard-map/components/layer-paint";
 import type { MapLayer } from "@/use-cases/gis/map-layer-schema";
 
 const BASEMAP_SOURCE_ID = "basemap";
+const LABELS_SOURCE_ID = "basemap-labels";
 const HALO_LAYER_ID = "halo-fill";
+const LABELS_LAYER_ID = "basemap-labels";
 
 /** Uncertainty is about WHERE, not about how credible — so the halo is one neutral hue. */
 const HALO_COLOUR = "#8e877f";
@@ -185,6 +188,15 @@ export function MapCanvas({
             tileSize: 256,
             attribution: BASEMAP_ATTRIBUTION,
           },
+          // Place names ship separately from the ground so overlays can go
+          // between them. Ours do not: the labels stay on top, because an
+          // operator naming a suburb out loud matters more than a hazard
+          // polygon's edge being unbroken.
+          [LABELS_SOURCE_ID]: {
+            type: "raster",
+            tiles: basemapLabelTiles(initialBasemap),
+            tileSize: 256,
+          },
         },
         layers: [
           // Drawn under the tiles on purpose: if CARTO is unreachable — a
@@ -197,6 +209,12 @@ export function MapCanvas({
             paint: { "background-color": BACKDROP[initialBasemap] },
           },
           { id: "basemap-tiles", type: "raster", source: BASEMAP_SOURCE_ID },
+          {
+            id: "basemap-labels",
+            type: "raster",
+            source: LABELS_SOURCE_ID,
+            paint: { "raster-opacity": 0.9 },
+          },
         ],
       },
       center: WELLINGTON_CENTER,
@@ -208,6 +226,16 @@ export function MapCanvas({
     map.addControl(new AttributionControl({ compact: true }), "bottom-right");
     map.addControl(new NavigationControl({ showCompass: false }), "top-right");
     map.addControl(new ScaleControl({ unit: "metric" }), "bottom-left");
+
+    // A stubbed tile CDN answers 200 with a tiny placeholder, so MapLibre never
+    // raises an error and the map just looks empty. Sample one tile and judge it
+    // by size — under a kilobyte is not a map.
+    void fetch(basemapTiles(initialBasemap)[0].replace("{z}/{y}/{x}", "12/2530/4028"))
+      .then((response) => response.blob())
+      .then((blob) => {
+        if (blob.size < 1024) setBasemapDown(true);
+      })
+      .catch(() => setBasemapDown(true));
 
     map.on("error", (event) => {
       // `sourceId` is present on tile-load failures but not on the base
@@ -253,6 +281,9 @@ export function MapCanvas({
   // Theme swap: same map, different tiles.
   useEffect(() => {
     mapInstance?.getSource<RasterTileSource>(BASEMAP_SOURCE_ID)?.setTiles(basemapTiles(basemap));
+    mapInstance
+      ?.getSource<RasterTileSource>(LABELS_SOURCE_ID)
+      ?.setTiles(basemapLabelTiles(basemap));
   }, [mapInstance, basemap]);
 
   // Council hazard geography, drawn beneath the signals.
@@ -274,7 +305,11 @@ export function MapCanvas({
       mapInstance.addSource(sourceId, { type: "geojson", data });
       const paint = paintFor(layer.datasetId);
       const id = `hazard-layer-${layer.datasetId}`;
-      const beneathSignals = mapInstance.getLayer(HALO_LAYER_ID) ? HALO_LAYER_ID : undefined;
+      const beneathSignals = mapInstance.getLayer(LABELS_LAYER_ID)
+        ? LABELS_LAYER_ID
+        : mapInstance.getLayer(HALO_LAYER_ID)
+          ? HALO_LAYER_ID
+          : undefined;
 
       if (layer.geometryKind === "polygon") {
         mapInstance.addLayer(
@@ -405,7 +440,7 @@ export function MapCanvas({
       <div ref={containerRef} className="h-full w-full" />
       {basemapDown && (
         <p className="bg-card border-border text-muted-foreground absolute top-3 left-3 z-10 rounded-lg border px-2.5 py-1.5 text-[11px] shadow-sm">
-          Basemap tiles unreachable — signals and geography are still positioned correctly.
+          Map tiles are being blocked on this network — every signal below is still positioned correctly.
         </p>
       )}
     </div>

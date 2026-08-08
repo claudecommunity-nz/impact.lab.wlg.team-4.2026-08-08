@@ -182,3 +182,28 @@ export function localityOf(label: string | null): string {
 
   return named.length > MAX_PILL_CHARS ? `${named.slice(0, MAX_PILL_CHARS - 1)}…` : named;
 }
+
+/**
+ * A label short enough to sit under a bubble without colliding with its
+ * neighbours.
+ *
+ * Reverse-geocoded labels arrive as "Unclassified — Queens Drive, Hutt Central,
+ * Lower Hutt, Wellington, 5010". Almost all of that is noise at a glance: the
+ * street and the suburb identify it, the postcode never does. "unclassified"
+ * says nothing either, so those lead with the place alone.
+ */
+export function bubbleLabel(label: string | null): string {
+  if (!label) return "Unnamed";
+
+  const [first, rest] = label.split(/\s+—\s+/);
+  const hazard = rest ? first : null;
+  const place = (rest ?? first)
+    .split(",")
+    .slice(0, 2)
+    .map((part) => part.trim())
+    .filter(Boolean)
+    .join(", ");
+
+  if (!hazard || hazard.toLowerCase() === "unclassified") return humanize(place);
+  return `${humanize(hazard)} — ${place.split(",")[0]}`;
+}
