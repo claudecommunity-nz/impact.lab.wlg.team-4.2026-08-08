@@ -12,19 +12,28 @@ trustworthiness cannot cite a figure it has not checked.
 npm run dev                                       # one only — Next allows one per project
 ```
 
-Then, **in this order**:
+Then **THE CANONICAL REBUILD**, in this order. It is the only blessed sequence;
+anything else is improvisation on the one thing we cannot re-derive live.
 
 ```bash
-# 1. the source registry — WITHOUT THIS EVERY CLUSTER GRADES F
-curl -s -X POST -H 'content-type: application/json' -d '{"json":{}}' \
-  http://localhost:3000/api/trpc/sources.seed
-
-# 2. the authored story, INTO THE FEED THE BOARD READS
-#    --dataset=live is not optional: demo:plumb still defaults to `demo`,
-#    and the board no longer reads `demo`, so without the flag you get a
-#    correctly-working system showing an empty map.
-npm run demo:plumb -- --http --dataset=live
+npm run seed:reset                  # wipe everything, re-seed the source registry
+npm run signals:load                # the real collected signals (data/signals/latest.json)
+npm run demo:plumb -- --http        # the authored story, with its capture clock
+node scripts/drain-and-peek.mjs     # embed → cluster → name → project, then print
 ```
+
+`seed:reset` re-seeds the registry itself, so there is no separate seed step —
+and if the dev server is down it fails loudly rather than leaving you an empty
+registry, which would grade every cluster F and look exactly like a working
+board making a defensible judgement.
+
+> ## The iron rule
+>
+> **Do not run `npm run verify` after the canonical rebuild.** It truncates every
+> table. It is the proof, not the demo, and running it has cost this team its
+> board state three times today — once silently, wiping 130 collected real
+> signals that nobody noticed were gone until a re-load reported "created 130,
+> deduped 0". Prove it BEFORE you rebuild, never after.
 
 Open **`http://localhost:3000/board`** and leave it there. There is no dataset
 parameter any more and no Live/Demo switch — **one board, one feed**. A stale
@@ -38,12 +47,12 @@ well before you are called up.
 
 Check before you speak:
 
-- the map shows **14 pins**, none of them stacked at 0,0;
-- the biggest pin, **flooding — Aro Street**, reads **30 / 36**;
-- pins carrying authored content show a **SYN** badge.
+- the map shows **74 pins**, none of them stacked at 0,0;
+- **flooding — Aro Valley** reads **9 / 16** and carries a **SYN** badge;
+- most pins have **no** SYN badge — only 14 of the 74 carry authored content.
 
-If any of those is wrong, re-run step 2. If the board is empty, the database was
-truncated — run step 1 then step 2 again.
+If any of those is wrong, run the canonical rebuild again. It is idempotent and
+takes about two minutes.
 
 > **Do not run `npm run verify` after plumbing.** It truncates every table. It is
 > the proof, not the demo, and it wipes the demo dataset.
@@ -57,7 +66,7 @@ rides every provenance entry, and the badge is on the pin.
 
 ## The script
 
-The spoken lines below run to 523 words — about four minutes flat at a
+The spoken lines below run to 552 words — about four minutes flat at a
 comfortable pace, which leaves no room for adjectives and just enough for the
 numbers.
 Timings are cumulative. If you are behind at 3:00, drop the Galaxy beat: it is
@@ -68,24 +77,23 @@ the only one that is not load-bearing.
 > Council is blind for the first zero to three hours of an incident — when the
 > biggest decisions get made. A duty officer told us *"we don't use social media
 > at all… we don't trust social media"*, then described checking it anyway and
-> thinking *"I'm seeing five reports versus one."*
->
-> Counting corroboration by hand, with no way to defend it. That is the gap.
+> thinking *"I'm seeing five reports versus one."* Counting corroboration by
+> hand, with no way to defend it. That is the gap.
 
 ### 0:20 — the board (30s)
 
 *Point at the map.*
 
-> Sixty-four public items — posts, community reports, newsrooms, official feeds,
-> instrument readings — became **fourteen candidate events**. Nothing is
-> presented as verified: every pin carries a grade and its reasons, and anything
-> authored for this demo is badged SYN.
+> A hundred and sixty-nine public items — posts, fault reports, newsrooms,
+> official feeds, instrument readings — became **seventy-four candidate
+> events**. Nothing is presented as verified: every pin carries a grade and its
+> reasons, and anything authored for this demo is badged SYN. Most are not.
 
 ### 0:50 — the core: witnesses, not documents (60s)
 
-*Click the Aro Street pin — the biggest one. Let the drill panel open.*
+*Click **flooding — Aro Valley**. Let the drill panel open.*
 
-> This one has **thirty-six items** behind it. It has **thirty witnesses**.
+> This one has **sixteen items** behind it. It has **nine witnesses**.
 >
 > Seven of those items are a single observation. One person posted that Aro
 > Street was under water; others quoted their link or re-posted the wording, and
@@ -99,26 +107,28 @@ row off the screen, word for word:*
 > *"quotes social.example.nz/aro_local/status/1188455 — a repost is not a
 > second witness."*
 
-> If we printed thirty-six we would be reporting an echo as evidence — and
-> "thirty-six independent reports" is exactly the sentence that makes somebody
-> send a truck.
+> If we printed sixteen we would be reporting an echo as evidence — and "sixteen
+> independent reports" is exactly the sentence that makes somebody send a truck.
+>
+> And this is not a trick that only works on our own writing: the biggest
+> cluster on this board is thirty-five real collected posts, and five of those
+> are one observation too.
 
 ### 1:50 — who is speaking (35s)
 
 *Point at the grade: A3.*
 
-> Reliability comes from a registry. Seventeen sources feed this cluster. Fire
-> and Emergency's media feed is registered A — the agency speaking about its own
-> callouts. A **radio log** in the same cluster deliberately is not: that is
-> somebody listening to emergency traffic and relaying what they think they
-> heard.
+> Reliability comes from a registry. Fire and Emergency's media feed is
+> registered A — the agency speaking about its own callouts. A **radio log**
+> deliberately is not: that is somebody listening to emergency traffic and
+> relaying what they think they heard. Same event, different standing.
 >
 > And because one official source in a crowd would read as a clean bill of
 > health, the reason says so:
 
 *Read verbatim:*
 
-> *"this axis reports the best source, not the crowd — 12 of the 17 contributing
+> *"this axis reports the best source, not the crowd — 5 of the 7 contributing
 > sources are unregistered and grade F on their own."*
 
 ### 2:25 — the weak signal is still on the map (35s)
@@ -126,17 +136,17 @@ row off the screen, word for word:*
 *Click a single-pin cluster. **Vogeltown power outage** is the one to use — its
 alert carries the uncorroborated line word for word.*
 
-> Ten of the fourteen are a single source. This grades **F4 — reliability
+> Fifty of the seventy-four are a single source. This grades **F4 — reliability
 > cannot be judged, doubtful**. It is still on the map, and it still alerted.
 >
 *Point at the two facts sitting together: the grade chip reads F4, and
 **Alert-worthy: yes**.*
 
 > Those two are computed separately, and that is the design. In hour zero there
-> are no independent origins yet, so the first report of anything grades badly —
+> are no independent origins yet, so the first report of anything grades badly,
 > and a grade threshold would go silent in exactly the hour Council is most
 > blind. So we ask a different question: is there somewhere to send someone, and
-> is anything authoritative saying it did not happen?
+> is anything saying it did not happen?
 
 *Then **WHY IT IS WORTH SOMEONE'S ATTENTION**, and read the amber line:*
 
@@ -149,8 +159,8 @@ alert carries the uncorroborated line word for word.*
 
 *Switch the view toggle to Galaxy.*
 
-> The same fourteen events, arranged by what was said rather than where — for
-> spotting that two things reported in different suburbs are one problem.
+> The same events, arranged by what was said rather than where — for spotting
+> that two things reported in different suburbs are one problem.
 
 *Switch back to Map before you finish.*
 
@@ -159,7 +169,7 @@ alert carries the uncorroborated line word for word.*
 > Two grades here are unreachable, both deliberately.
 >
 > **Credibility 2**, "probably true", needs an authoritative layer to agree. We
-> have not wired the river gauges, so nothing reaches it — and every reason says
+> have not wired the river gauges, so nothing reaches it — every reason says
 > *"no applicable layer — nothing has confirmed or denied this"* rather than
 > implying agreement.
 >
@@ -182,10 +192,10 @@ alert carries the uncorroborated line word for word.*
 | What | Do this |
 |---|---|
 | Galaxy view stutters or renders black | Stay on Map. Say "the geographic view is the one that matters operationally" and move on. It is a 3D canvas; it is not the argument. |
-| A pin will not open | Click a different one. Aro Street is the only *scripted* pin — Karori Road (4/4) also opens on a rich multi-source cluster. |
+| A pin will not open | Click a different one. Aro Valley is the only *scripted* pin — Kelburn AWS (4/4) and Karori Road (3/3) both open on rich multi-source clusters. |
 | Board is empty | The database was truncated. `npm run demo:plumb -- --http` takes about 20 seconds. Keep talking about the problem statement while it runs. |
 | Grades all read F | The registry was not seeded. Run the `sources.seed` curl above, then re-plumb. |
-| Asked "is any of this real?" | Yes — real collected signals and authored demo items share the feed. Open any pin: `synthetic` is on every provenance entry and SYN is on the pin. In the Aro Street cluster, 23 of its 36 items are authored. |
+| Asked "is any of this real?" | Most of it. 60 of the 74 pins carry no authored content at all. Open any pin: `synthetic` is on every provenance entry and SYN is on the pin. Aro Valley is authored end to end; the 35-item Queens Drive cluster is almost entirely real. |
 | Asked to prove it | `npm run proof:grading` — 56 assertions, no database, under a second. `npm run verify` — 66 end to end, but it truncates, so only after the demo. |
 
 ---
@@ -198,9 +208,10 @@ limitations visible, and a system that hides its own would fail its own test.
 - **The feed is part real, part authored, and the board says which.** Real
   collected signals and items written for this demo sit in one feed, because
   that is what an operator's day looks like. Every authored item carries
-  `synthetic` on every provenance entry and puts a **SYN** badge on its pin —
-  23 of the 36 items behind Aro Street are authored. Say this before anyone
-  asks: we are demonstrating the reasoning, not claiming a live incident.
+  `synthetic` on every provenance entry and puts a **SYN** badge on its pin.
+  Only **14 of the 74** pins carry any authored content; the Aro Valley cluster
+  is authored end to end. Say this before anyone asks: the storm is a
+  demonstration, the collection and the reasoning are not.
 - **The storm itself did not happen.** Wellington is not flooding this
   afternoon. The reasoning is real; the weather is not.
 - **Embeddings are a lexical stub** unless `AI_GATEWAY_API_KEY` is set. Grouping

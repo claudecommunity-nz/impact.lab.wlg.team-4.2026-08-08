@@ -10,6 +10,7 @@
     "start": "next start",
     "lint": "eslint",
     "db:push": "drizzle-kit push",
+    "seed:reset": "node scripts/seed-reset.mjs",
     "signals:collect": "tsx --require ./scripts/allow-server-only.cjs scripts/collect-signals.ts",
     "typecheck": "tsc --noEmit",
     "demo:plumb": "node scripts/demo-plumb.mjs",
