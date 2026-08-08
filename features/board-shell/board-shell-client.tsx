@@ -96,6 +96,7 @@ export function BoardShellClient({ datasetId }: { datasetId: string }) {
               <ErrorBoundary fallback={<FeatureError name="the galaxy" />}>
                 <BoardGalaxyClient
                   active={view === "galaxy"}
+                  datasetId={datasetId}
                   selectedSignalId={selectedSignalId}
                   onSelect={select}
                 />

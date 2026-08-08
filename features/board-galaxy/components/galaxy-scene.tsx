@@ -1,14 +1,30 @@
 "use client";
 
 import { OrbitControls } from "@react-three/drei";
-import { Canvas, type ThreeEvent } from "@react-three/fiber";
-import { useLayoutEffect, useMemo, useRef } from "react";
-import { Color, InstancedMesh, Object3D } from "three";
+import { Canvas, useThree, type ThreeEvent } from "@react-three/fiber";
+import { useEffect, useLayoutEffect, useMemo, useRef } from "react";
+import { Color, InstancedMesh, Object3D, type PerspectiveCamera } from "three";
 import type { GalaxyGroup, GalaxyPoint } from "@/components/board/api-types";
 import { groupColour } from "./galaxy-palette";
 
 /** How far the normalised cloud reaches from the origin, in scene units. */
 const CLOUD_EXTENT = 8;
+
+/**
+ * Module constants, NOT inline literals.
+ *
+ * `<Canvas dpr={[1, 2]}>` hands R3F a brand-new array on every render, and this
+ * component re-renders on every three-second poll. That churn tore the renderer
+ * down and rebuilt it repeatedly — fifty `THREE.Clock` deprecation warnings in
+ * five minutes was the tell — and a canvas that is being recreated never gets
+ * far enough to draw a frame, so it sits at its initial black clear with no
+ * error anywhere. Imperative subsystems need referentially stable props.
+ *
+ * `camera` is gone for the same reason: CameraRig positions the default camera,
+ * which is the only place the framing should be decided anyway.
+ */
+const DPR: [number, number] = [1, 2];
+const BACKGROUND: [string] = ["#0b1017"];
 
 type PlacedPoint = { signalId: string; groupId: string | null; x: number; y: number; z: number };
 type PlacedGroup = { group: GalaxyGroup; x: number; y: number; z: number; radius: number };
@@ -29,14 +45,11 @@ type PlacedGroup = { group: GalaxyGroup; x: number; y: number; z: number; radius
  * dense cluster that does not exist. The count is reported instead.
  */
 export function GalaxyScene({
-  active,
   points,
   groups,
   selectedSignalId,
   onSelect,
 }: {
-  /** Drives the render loop: a hidden scene must not burn a GPU frame budget. */
-  active: boolean;
   points: GalaxyPoint[];
   groups: GalaxyGroup[];
   selectedSignalId: string | null;
@@ -45,18 +58,16 @@ export function GalaxyScene({
   const scene = useMemo(() => layout(points, groups), [points, groups]);
 
   return (
-    <Canvas
-      camera={{ position: [12, 9, 14], fov: 50 }}
-      dpr={[1, 2]}
-      frameloop={active ? "always" : "never"}
-    >
-      <color attach="background" args={["#0b1017"]} />
+    <Canvas dpr={DPR} frameloop="always">
+      <color attach="background" args={BACKGROUND} />
       {/* Lit brightly and flatly on purpose: this is a data display, not a
           scene. Dramatic falloff makes the far half of the cloud unreadable,
           and a point an operator cannot see is a signal they do not have. */}
       <ambientLight intensity={2.4} />
       <directionalLight position={[10, 14, 12]} intensity={2.2} />
       <directionalLight position={[-12, -8, -10]} intensity={1.1} color="#5eead4" />
+
+      <CameraRig radius={scene.radius} />
 
       <PointCloud points={scene.points} />
 
@@ -70,14 +81,54 @@ export function GalaxyScene({
       ))}
 
       <OrbitControls
+        makeDefault
+        target={[0, 0, 0]}
         enablePan
         enableDamping
         dampingFactor={0.08}
-        minDistance={4}
-        maxDistance={60}
+        minDistance={2}
+        maxDistance={scene.radius * 12 + 20}
       />
     </Canvas>
   );
+}
+
+/**
+ * Aims the camera at the cloud, and frames it.
+ *
+ * This is not a nicety. A fresh three.js camera has IDENTITY rotation: give it
+ * a position and it still stares down -Z, so a scene sitting at the origin can
+ * be entirely behind it — a correctly rendering canvas showing nothing but its
+ * own background colour, with no error anywhere. That is exactly what happened
+ * here, and a 4-unit test cube at the origin was invisible until this existed.
+ *
+ * Distance is derived from the cloud's own extent rather than hardcoded, so the
+ * view stays framed whether the PCA basis puts the points in a unit ball or a
+ * thousand units across.
+ */
+function CameraRig({ radius }: { radius: number }) {
+  const camera = useThree((state) => state.camera) as PerspectiveCamera;
+
+  useEffect(() => {
+    // A single non-finite coordinate anywhere upstream would reach the camera
+    // as a NaN position, and a NaN camera renders NOTHING — no geometry, not
+    // even the scene's background colour, and no error. Refuse the update and
+    // keep the last good framing instead.
+    if (!Number.isFinite(radius) || radius <= 0) return;
+
+    const distance = Math.max(radius * 2.6, 6);
+    /* eslint-disable react-hooks/immutability -- A three.js camera is a mutable
+       scene-graph object, not React state; driving it by assignment is how R3F
+       is meant to be used. There is no immutable equivalent to reach for. */
+    camera.position.set(distance * 0.55, distance * 0.42, distance * 0.72);
+    camera.near = Math.max(distance / 200, 0.05);
+    camera.far = distance * 20;
+    camera.lookAt(0, 0, 0);
+    camera.updateProjectionMatrix();
+    /* eslint-enable react-hooks/immutability */
+  }, [camera, radius]);
+
+  return null;
 }
 
 function PointCloud({ points }: { points: PlacedPoint[] }) {
@@ -154,15 +205,18 @@ function GroupBubble({
 function layout(
   points: GalaxyPoint[],
   groups: GalaxyGroup[],
-): { points: PlacedPoint[]; groups: PlacedGroup[] } {
+): { points: PlacedPoint[]; groups: PlacedGroup[]; radius: number } {
   const projected = points.filter(
     (point): point is GalaxyPoint & { x: number; y: number; z: number } =>
-      point.x !== null && point.y !== null && point.z !== null,
+      Number.isFinite(point.x) && Number.isFinite(point.y) && Number.isFinite(point.z),
   );
 
   const centres = groups.filter(
     (group): group is GalaxyGroup & { center: { x: number; y: number; z: number } } =>
-      group.center !== null,
+      group.center !== null &&
+      Number.isFinite(group.center.x) &&
+      Number.isFinite(group.center.y) &&
+      Number.isFinite(group.center.z),
   );
 
   const coordinates = [
@@ -170,7 +224,7 @@ function layout(
     ...centres.map((group) => [group.center.x, group.center.y, group.center.z] as const),
   ];
 
-  if (coordinates.length === 0) return { points: [], groups: [] };
+  if (coordinates.length === 0) return { points: [], groups: [], radius: CLOUD_EXTENT };
 
   const mean = [0, 1, 2].map(
     (axis) => coordinates.reduce((sum, value) => sum + value[axis], 0) / coordinates.length,
@@ -191,18 +245,24 @@ function layout(
 
   const largest = Math.max(...groups.map((group) => group.size), 1);
 
+  const placedGroups = centres.map((group) => ({
+    group,
+    ...place(group.center.x, group.center.y, group.center.z),
+    // Square-rooted so a cluster of 40 does not swallow the scene next to a
+    // cluster of 4 — area reads as mass more honestly than radius does.
+    radius: 0.5 + 2.2 * Math.sqrt(group.size / largest),
+  }));
+
   return {
+    radius: placedGroups.reduce(
+      (furthest, g) => Math.max(furthest, Math.hypot(g.x, g.y, g.z) + g.radius),
+      CLOUD_EXTENT,
+    ),
+    groups: placedGroups,
     points: projected.map((point) => ({
       signalId: point.signalId,
       groupId: point.groupId,
       ...place(point.x, point.y, point.z),
-    })),
-    groups: centres.map((group) => ({
-      group,
-      ...place(group.center.x, group.center.y, group.center.z),
-      // Square-rooted so a cluster of 40 does not swallow the scene next to a
-      // cluster of 4 — area reads as mass more honestly than radius does.
-      radius: 0.5 + 2.2 * Math.sqrt(group.size / largest),
     })),
   };
 }
