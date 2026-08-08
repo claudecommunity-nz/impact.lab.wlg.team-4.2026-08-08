@@ -16,13 +16,17 @@ export const getSignalsInWindowUseCase = createUseCase(
       from: z.date(),
       to: z.date(),
       limit: z.number().int().positive(),
+      /** Absent = every namespace. A dataset-scoped board must always pass it. */
+      datasetId: z.string().min(1).optional(),
     }),
     outputSchema: z.array(SignalSchema),
   },
-  async ({ success, queryClient }, { from, to, limit }) => {
+  async ({ success, queryClient }, { from, to, limit, datasetId }) => {
     const rows = await queryClient.fetchQuery({
-      queryKey: ["signals", "inWindow", from.toISOString(), to.toISOString(), limit],
-      queryFn: () => getSignalsInWindowRepo({ db, from, to, limit }),
+      // datasetId is part of the key: two boards on one page must not share a
+      // cache entry that was filled for the other one's namespace.
+      queryKey: ["signals", "inWindow", from.toISOString(), to.toISOString(), limit, datasetId ?? null],
+      queryFn: () => getSignalsInWindowRepo({ db, from, to, limit, datasetId }),
     });
     return success(rows);
   },

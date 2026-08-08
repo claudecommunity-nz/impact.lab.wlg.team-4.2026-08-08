@@ -44,10 +44,12 @@ export const getPointsUseCase = createUseCase(
       /** Absent = everything we hold. See utilities/window.ts for the anchor. */
       windowMins: z.number().int().positive().optional(),
       limit: z.number().int().positive().max(POINTS_LIMIT).optional(),
+      /** Absent = every namespace. A dataset-scoped board must always pass it. */
+      datasetId: z.string().min(1).optional(),
     }),
     outputSchema: z.array(PointSchema),
   },
-  async ({ success, error }, { windowMins, limit, log }) => {
+  async ({ success, error }, { windowMins, limit, datasetId, log }) => {
     const latest = await getLatestOccurredAtUseCase({ log });
     if (latest.error) return error(latest.error);
 
@@ -57,6 +59,7 @@ export const getPointsUseCase = createUseCase(
       from: window.from,
       to: window.to,
       limit: limit ?? POINTS_LIMIT,
+      datasetId,
       log,
     });
     if (signals.error) return error(signals.error);

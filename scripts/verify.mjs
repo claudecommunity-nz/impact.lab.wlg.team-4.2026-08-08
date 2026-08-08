@@ -31,6 +31,14 @@ const ROOT = process.cwd();
 const BASE_URL = process.env.VERIFY_BASE_URL ?? "http://localhost:3000";
 const FIXTURES = path.join(ROOT, "scripts", "fixtures.json");
 
+/**
+ * Where this harness puts its OWN probe items. Reserved and never `live`: the
+ * probes exist to test dedupe and dataset isolation, and leaving them in the
+ * operational namespace means the next person to open the board sees two test
+ * artifacts drawn as emergency signals.
+ */
+const VERIFY_PROBE_DATASET = "verify-probe";
+
 /** The window used for the windowed-read check. Fixtures span about 2h48m. */
 const NARROW_WINDOW_MINS = 60;
 
@@ -291,6 +299,11 @@ async function main() {
     const withId = {
       external_id: "verify-ext-1",
       source: "verify-collector",
+      // This harness's OWN namespace. Its probes are test artifacts, and a test
+      // artifact must never be left sitting in `live` where a board will draw
+      // it as an emergency signal (PRD story 4). The fixtures above still land
+      // in `live` with no dataset_id, so "absent means live" stays covered.
+      dataset_id: VERIFY_PROBE_DATASET,
       source_class: "media",
       text: "Slip closes Ngaio Gorge Road southbound",
       occurred_at: "2026-08-08T08:00:00Z",
@@ -304,6 +317,11 @@ async function main() {
       text: "Slip closes Ngaio Gorge Road southbound — contractors on site",
       occurred_at: "2026-08-08T08:40:00Z",
     });
+    check(
+      idFirst.datasetId === VERIFY_PROBE_DATASET,
+      "the harness's own probes stay in their own dataset, never in `live`",
+      idFirst.datasetId,
+    );
     check(
       idFirst.created === true && idAgain.created === false && idAgain.id === idFirst.id,
       "external_id is identity: a re-worded, re-timed re-poll is still ONE item",
@@ -548,11 +566,13 @@ async function main() {
     // survive it; a lone uncorroborated report grades 4 and does not.
     const credible = await query("signals.geojson", { minCredibility: 3 });
     const strict = await query("signals.geojson", { minCredibility: 2 });
+    const shouldClear = fc.features.filter(
+      (f) => f.properties.grade !== null && f.properties.grade.infoCredibility <= 3,
+    ).length;
     check(
-      credible.features.length > 0 &&
-        credible.features.length < fc.features.length &&
+      credible.features.length === shouldClear &&
         credible.features.every((f) => f.properties.grade.infoCredibility <= 3),
-      "minCredibility keeps the corroborated clusters and drops the rest (AC30.2)",
+      "minCredibility returns exactly the clusters at or above that credibility (AC30.2)",
       `${credible.features.length}/${fc.features.length} clear 3 · ${strict.features.length} clear 2`,
     );
     check(

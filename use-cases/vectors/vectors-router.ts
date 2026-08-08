@@ -39,6 +39,7 @@ export const vectorsRouter = router({
       z.object({
         windowMins: z.number().int().positive().optional(),
         limit: z.number().int().positive().max(POINTS_LIMIT).optional(),
+        datasetId: z.string().min(1).optional(),
       }),
     )
     .output(z.array(PointSchema))
@@ -49,6 +50,7 @@ export const vectorsRouter = router({
       z.object({
         windowMins: z.number().int().positive().optional(),
         limit: z.number().int().positive().max(GROUPS_LIMIT).optional(),
+        datasetId: z.string().min(1).optional(),
       }),
     )
     .output(z.array(GroupViewSchema))

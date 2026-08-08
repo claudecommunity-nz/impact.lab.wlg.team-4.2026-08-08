@@ -70,10 +70,12 @@ export const getGroupsViewUseCase = createUseCase(
     inputSchema: z.object({
       windowMins: z.number().int().positive().optional(),
       limit: z.number().int().positive().max(GROUPS_LIMIT).optional(),
+      /** Absent = every namespace. A dataset-scoped board must always pass it. */
+      datasetId: z.string().min(1).optional(),
     }),
     outputSchema: z.array(GroupViewSchema),
   },
-  async ({ success, error }, { windowMins, limit, log }) => {
+  async ({ success, error }, { windowMins, limit, datasetId, log }) => {
     const latest = await getLatestOccurredAtUseCase({ log });
     if (latest.error) return error(latest.error);
 
@@ -84,6 +86,7 @@ export const getGroupsViewUseCase = createUseCase(
       from: window.from,
       to: window.to,
       limit: limit ?? GROUPS_LIMIT,
+      datasetId,
       log,
     });
     if (groups.error) return error(groups.error);
