@@ -212,8 +212,26 @@ async function main() {
       "every grade arrives with its reasons — never a bare verdict",
     );
     check(
-      folded.every((s) => s.reasons.some((r) => r.startsWith("stub:"))),
-      "the PLACEHOLDER grader says so, in the reasons, on every single response",
+      folded.every((s) => s.grade?.sourceReliability === "F"),
+      "every fixture source is absent from the registry, so every cluster grades F (AC15.1)",
+      [...new Set(folded.map((s) => s.grade?.sourceReliability))].join(","),
+    );
+    check(
+      folded.every((s) => s.independentSources <= s.itemCount && s.independentSources > 0),
+      "independentSources is counted, is never zero, and never exceeds itemCount",
+      folded.map((s) => `${s.independentSources}/${s.itemCount}`).slice(0, 8).join(" "),
+    );
+    check(
+      folded.some((s) => s.alertWorthy === true),
+      "early single-source reports raise alerts rather than being silenced by their grade (AC27)",
+      `${folded.filter((s) => s.alertWorthy).length}/${folded.length} alert-worthy`,
+    );
+    check(
+      folded
+        .filter((s) => s.alertWorthy)
+        .every((s) => s.alertReasons.some((r) => r.startsWith("WEAK EVIDENCE"))),
+      "…and each one states the weakness of its evidence in plain language (AC27.3)",
+      folded.find((s) => s.alertWorthy)?.alertReasons.find((r) => r.startsWith("WEAK EVIDENCE")) ?? "",
     );
     check(
       folded.every((s) => s.foldWarnings.length === 0),
@@ -519,11 +537,27 @@ async function main() {
       `${inside.features.length} in Wellington, ${elsewhere.features.length} in the Gulf of Guinea`,
     );
 
+    // The credibility floor, exercised against grades the rule table actually
+    // produced: corroborated clusters (2+ independent origins) reach 3 and
+    // survive it; a lone uncorroborated report grades 4 and does not.
     const credible = await query("signals.geojson", { minCredibility: 3 });
+    const strict = await query("signals.geojson", { minCredibility: 2 });
     check(
-      credible.features.length === 0,
-      "minCredibility excludes anything less credible — the F4 placeholder grades do not clear 3 (AC30.2)",
-      `${credible.features.length} survived`,
+      credible.features.length > 0 &&
+        credible.features.length < fc.features.length &&
+        credible.features.every((f) => f.properties.grade.infoCredibility <= 3),
+      "minCredibility keeps the corroborated clusters and drops the rest (AC30.2)",
+      `${credible.features.length}/${fc.features.length} clear 3 · ${strict.features.length} clear 2`,
+    );
+    check(
+      strict.features.length === 0,
+      "…and NOTHING reaches credibility 2 without an authoritative cross-check agreeing",
+      `${strict.features.length} survived`,
+    );
+    check(
+      fc.features.every((f) => f.properties.independentSources <= f.properties.itemCount),
+      "independent origins never exceed the documents they were counted from (AC8.3)",
+      fc.features.map((f) => `${f.properties.independentSources}/${f.properties.itemCount}`).join(" "),
     );
 
     // The drill-down, under the PRD's name.
@@ -554,8 +588,19 @@ async function main() {
     check(
       detail.originGroups.length > 0 &&
         detail.originGroups.reduce((sum, g) => sum + g.itemIds.length, 0) === detail.itemCount,
-      "items are grouped by origin, and every item belongs to exactly one group (AC7.2)",
+      "items are grouped by origin, and every item belongs to exactly one group (AC8.2)",
       `${detail.originGroups.length} origins`,
+    );
+    check(
+      detail.independentSources === detail.originGroups.length,
+      "independentSources IS the number of distinct origins, not a separate number (AC8.3)",
+      `${detail.independentSources} vs ${detail.originGroups.length} groups`,
+    );
+    check(
+      detail.provenance.every((p) =>
+        detail.originGroups.some((g) => g.originId === p.originId && g.itemIds.includes(p.itemId)),
+      ),
+      "…and every provenance entry's originId resolves to the group it is listed in",
     );
     check(
       detail.gradeHistory.length > 0 &&
@@ -575,9 +620,33 @@ async function main() {
 
     const alerts = await query("signals.alerts", { since: "1970-01-01T00:00:00.000Z" });
     check(
-      Array.isArray(alerts) && alerts.length === 0,
-      "signals.alerts answers, and answers HONESTLY: the placeholder grader has fired nothing",
+      alerts.length > 0 && alerts.every((a) => a.alertReasons.length > 0),
+      "signals.alerts returns real alerts, each carrying why it was raised (AC29.2)",
       `${alerts.length} alerts`,
+    );
+    check(
+      alerts.every((a) => a.location !== null && typeof a.issueType === "string" && a.grade !== null),
+      "every alert carries what it is, where it is, and how well evidenced (AC29.2)",
+      [...new Set(alerts.map((a) => a.issueType))].join(","),
+    );
+    check(
+      alerts.every((a, i) => i === 0 || new Date(alerts[i - 1].at) >= new Date(a.at)),
+      "alerts come back most recent first (AC29.3)",
+    );
+    check(
+      alerts.every((a) => a.datasetId === "live"),
+      "…and the live feed carries no alert from a fixture dataset (AC4.1)",
+      [...new Set(alerts.map((a) => a.datasetId))].join(","),
+    );
+
+    // AC28.2: alerts are TRANSITIONS. Re-grading unchanged evidence must be silent.
+    const cursor = new Date(Date.now() + 1000).toISOString();
+    await mutate("signals.ingest", first);
+    const afterDuplicate = await query("signals.alerts", { since: cursor });
+    check(
+      afterDuplicate.length === 0,
+      "re-sending an item that changes nothing emits NO alert — alerts are transitions, not states (AC28.2)",
+      `${afterDuplicate.length} alerts after a duplicate`,
     );
 
     // ── 6. windows ────────────────────────────────────────────────────────────

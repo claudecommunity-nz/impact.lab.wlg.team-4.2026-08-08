@@ -209,9 +209,6 @@ export type Grade = z.infer<typeof GradeSchema>;
 /** groups.reasons / grade_events.reasons — ordered, most decisive first. */
 export const ReasonsSchema = z.array(z.string());
 
-/** The reason the phase-A placeholder grader writes, so nobody mistakes it for the rule table. */
-export const GRADING_STUB_REASON = "stub: grading module pending";
-
 /** projection_models.model — kind-specific fitted parameters (e.g. PCA basis). */
 export const ProjectionModelPayloadSchema = z.record(z.string(), z.unknown());
 export type ProjectionModelPayload = z.infer<typeof ProjectionModelPayloadSchema>;

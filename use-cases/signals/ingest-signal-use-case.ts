@@ -61,7 +61,12 @@ export const IngestSignalResultSchema = z.object({
   reasons: z.array(z.string()),
   /** Computed independently of the grade — a weak early signal still alerts. */
   alertWorthy: z.boolean(),
-  /** Distinct origins in the cluster. Placeholder until fingerprinting lands. */
+  /** Why it is worth attention, and what is weak about the evidence (AC27.3). */
+  alertReasons: z.array(z.string()),
+  /**
+   * Distinct ORIGINS in the cluster, counted by origin fingerprinting — three
+   * reposts of one photograph are one. Never the item count.
+   */
   independentSources: z.number().int(),
   /** Items in the cluster — always reported separately from independentSources. */
   itemCount: z.number().int(),
@@ -262,6 +267,7 @@ export const ingestSignalUseCase = createUseCase(
       grade: fold.grade,
       reasons: fold.reasons,
       alertWorthy: fold.alertWorthy,
+      alertReasons: fold.alertReasons,
       independentSources: fold.independentSources,
       itemCount: fold.itemCount,
       datasetId: stored.datasetId,
@@ -293,6 +299,7 @@ async function foldItem(args: {
   grade: z.infer<typeof GradeSchema> | null;
   reasons: string[];
   alertWorthy: boolean;
+  alertReasons: string[];
   independentSources: number;
   itemCount: number;
   warnings: string[];
@@ -304,6 +311,7 @@ async function foldItem(args: {
     grade: null,
     reasons: [] as string[],
     alertWorthy: false,
+    alertReasons: [] as string[],
     independentSources: 0,
     itemCount: 0,
   };
@@ -370,6 +378,7 @@ async function foldItem(args: {
     grade: graded.data.grade,
     reasons: graded.data.reasons,
     alertWorthy: graded.data.alertWorthy,
+    alertReasons: graded.data.alertReasons,
     independentSources: graded.data.independentSources,
     itemCount: graded.data.itemCount,
     warnings,

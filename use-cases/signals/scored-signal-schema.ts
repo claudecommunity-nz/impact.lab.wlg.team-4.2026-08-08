@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { GradeSchema } from "@/db/vocabulary";
+import { ISSUE_TYPES } from "@/utilities/issue-type";
 
 /**
  * The scored-signal shape — the PRD's published vocabulary, and the ONE place it
@@ -35,7 +36,16 @@ export const ScoredSignalSchema = z.object({
   syntheticContributor: z.boolean(),
   /** A short name for the cluster, or null until the pipeline names it. */
   label: z.string().nullable(),
-  /** "stated" when an item carried coordinates; "inferred" when we averaged. */
+  /**
+   * What KIND of problem this is, classified from the words the reports used —
+   * never free text (AC9.2). It also chooses the decay rate: a flood report and
+   * earthquake damage do not age at the same speed (AC23).
+   */
+  issueType: z.enum(ISSUE_TYPES),
+  /**
+   * "stated" when a SOURCE gave coordinates, "inferred" when we derived them,
+   * "unknown" when nothing could be placed. Never mistake a guess for a fact.
+   */
   locationCertainty: z.enum(["stated", "inferred", "unknown"]),
   /** Distinct source_class values behind the cluster — the diversity axis. */
   sourceClasses: z.array(z.string()),

@@ -5,8 +5,9 @@ import { getGradeEventsUseCase } from "@/use-cases/grade-events/get-grade-events
 import { getGroupUseCase } from "@/use-cases/groups/get-group-use-case";
 import { getSignalsForGroupUseCase } from "@/use-cases/signals/get-signals-for-group-use-case";
 import { createUseCase } from "@/utilities/create-use-case";
+import { originIdFor } from "@/utilities/origin-fingerprint";
 import { ScoredSignalSchema } from "./scored-signal-schema";
-import { toScoredSignal } from "./get-signals-geojson-use-case";
+import { fingerprintItems, toScoredSignal } from "./get-signals-geojson-use-case";
 
 /**
  * One cluster, opened all the way down: every item behind it, grouped by origin,
@@ -28,10 +29,10 @@ export const ProvenanceEntrySchema = z.object({
   /** The raw item's id — the PRD's `itemId`. */
   itemId: z.uuid(),
   /**
-   * Which distinct observation this item traces back to. PLACEHOLDER: until
-   * origin fingerprinting lands, each item is its own origin, so this is the
-   * item's own id. `independentSources` above is the number that matters, and
-   * it says in its reasons that it is not yet real.
+   * Which distinct observation this item traces back to — the id of the
+   * EARLIEST item in its collapsed set, so a reader can go and look at the
+   * thing everything else here is an echo of. An item nothing collapsed with
+   * is its own origin, which is the honest answer rather than a placeholder.
    */
   originId: z.string(),
   source: z.string(),
@@ -70,8 +71,18 @@ export const GradeEventViewSchema = z.object({
 export const SignalDetailSchema = ScoredSignalSchema.extend({
   /** Every item behind this cluster, newest first. Never empty. */
   provenance: z.array(ProvenanceEntrySchema),
-  /** originId → the itemIds tracing to that one observation (AC7.2). */
-  originGroups: z.array(z.object({ originId: z.string(), itemIds: z.array(z.uuid()) })),
+  /**
+   * originId → the itemIds tracing to that one observation (AC8.2), each with
+   * the sentence explaining why they were collapsed. A collapse an analyst
+   * cannot read is a collapse they cannot overrule.
+   */
+  originGroups: z.array(
+    z.object({
+      originId: z.string(),
+      itemIds: z.array(z.uuid()),
+      reasons: z.array(z.string()),
+    }),
+  ),
   /** Oldest first — a history reads forwards. Append-only, never edited. */
   gradeHistory: z.array(GradeEventViewSchema),
 });
@@ -105,12 +116,16 @@ export const getSignalDetailUseCase = createUseCase(
       edges.data.filter((e) => e.rel === MEMBER_OF && e.toId === signalId).map((e) => [e.fromId, e]),
     );
 
+    // The SAME fingerprint the grade was computed from, recomputed from the
+    // same items rather than cached — so the origin count printed beside the
+    // grade and the origin groups printed underneath it can never disagree.
+    const fingerprint = fingerprintItems(items.data);
+
     const provenance = items.data.map((item) => {
       const edge = membershipByItem.get(item.id);
       return {
         itemId: item.id,
-        // Placeholder identity: one item, one origin, until fingerprinting lands.
-        originId: item.id,
+        originId: originIdFor(fingerprint, item.id),
         source: item.source,
         sourceClass: item.sourceClass,
         author: item.author,
@@ -127,20 +142,20 @@ export const getSignalDetailUseCase = createUseCase(
       };
     });
 
-    const originGroups = [...groupBy(provenance)].map(([originId, itemIds]) => ({
-      originId,
-      itemIds,
-    }));
-
     log?.info(
-      { signalId, itemCount: provenance.length, gradeEvents: history.data.length },
+      {
+        signalId,
+        itemCount: provenance.length,
+        independentSources: fingerprint.independentOrigins,
+        gradeEvents: history.data.length,
+      },
       "Opened a signal's provenance and grade history",
     );
 
     return success({
-      ...toScoredSignal({ group: group.data, items: items.data }),
+      ...toScoredSignal({ group: group.data, items: items.data, fingerprint }),
       provenance,
-      originGroups,
+      originGroups: fingerprint.originGroups,
       gradeHistory: history.data.map((event) => ({
         at: event.at,
         fromGrade: event.fromGrade,
@@ -155,12 +170,3 @@ export const getSignalDetailUseCase = createUseCase(
   },
 );
 
-function groupBy(entries: { originId: string; itemId: string }[]): Map<string, string[]> {
-  const out = new Map<string, string[]>();
-  for (const entry of entries) {
-    const existing = out.get(entry.originId);
-    if (existing) existing.push(entry.itemId);
-    else out.set(entry.originId, [entry.itemId]);
-  }
-  return out;
-}

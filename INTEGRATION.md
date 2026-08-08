@@ -234,10 +234,9 @@ You can also send annotations explicitly, with a confidence:
   collapse items into *origins* — by author identity, by quoted link, by
   near-identical text — and publish `independentSources` as the count of
   distinct **origins**, always beside `itemCount`, never instead of it. Send
-  those fields and your reposts collapse correctly. (Origin fingerprinting is
-  the one piece still landing: today `independentSources` is a placeholder of 1
-  and **says so in every `reasons` array**. The field and its meaning will not
-  change when the real thing arrives.)
+  those fields and your reposts collapse correctly — and `signals.detail`
+  returns `originGroups`, each carrying the sentence explaining why its items
+  were treated as one observation, so you can always overrule us by eye.
 
 - **`synthetic: true` if you made it up.** Fixture and drill items are carried
   through to every provenance entry and surface as `syntheticContributor` on the
@@ -306,11 +305,18 @@ This is a real response, from the curl at the top of this guide:
     "label": "F4 — reliability cannot be judged / doubtful"
   },
   "reasons": [
-    "stub: grading module pending",
-    "single origin assumed: origin fingerprinting is not wired yet, so independentSources is reported as 1 regardless of the 1 item in this cluster",
-    "source reliability defaults to F: the registry lookup lands with the rule table"
+    "1 independent origin behind 1 item and nothing yet agrees with it — uncorroborated, which is what \"doubtful\" means here, not \"false\"",
+    "authoritative cross-check: no applicable layer — no authoritative hazard or telemetry layer is wired to this claim yet, so nothing has confirmed or denied this",
+    "source reliability F: no contributing source is in the registry — unknown, not mediocre",
+    "freshness 1.00 — flooding halves every 3h and the most recent report is 0m old"
   ],
-  "alertWorthy": false,
+  "alertWorthy": true,
+  "alertReasons": [
+    "flooding reported at a location we can point to — worth a look now, ahead of any confirmation",
+    "WEAK EVIDENCE: one independent origin behind 1 item — this is uncorroborated, and grades F4 — reliability cannot be judged / doubtful",
+    "WEAK EVIDENCE: no contributing source is in the registry, so their reliability cannot be judged at all",
+    "WEAK EVIDENCE: no authoritative layer applies to this claim, so nothing independent has checked it"
+  ],
   "independentSources": 1,
   "itemCount": 1,
   "datasetId": "live",
@@ -413,12 +419,13 @@ curl -s -G 'http://localhost:3000/api/trpc/signals.geojson' \
           "infoCredibility": 4,
           "label": "F4 — reliability cannot be judged / doubtful"
         },
-        "reasons": ["stub: grading module pending", "…"],
-        "independentSources": 1,
+        "reasons": ["6 independent origins behind 22 items — 16 collapsed as the same observation restated — independent people, not one report repeated", "…"],
+        "independentSources": 6,
         "itemCount": 22,
-        "alertWorthy": false,
+        "alertWorthy": true,
         "syntheticContributor": false,
         "label": "wind — Broadway, Miramar",
+        "issueType": "structural_damage",
         "locationCertainty": "inferred",
         "sourceClasses": ["human_report","media","official_feed","operator_note","sensor","social"],
         "firstSeen": "2026-08-08T06:00:00.000Z",
@@ -511,7 +518,12 @@ Returns every field of the `properties` block above, plus three arrays:
   ],
 
   "originGroups": [
-    { "originId": "f3ae808c-…", "itemIds": ["f3ae808c-…"] }
+    {
+      "originId": "f3ae808c-…",
+      "itemIds": ["f3ae808c-…", "9c21bb40-…", "5de07a11-…"],
+      "reasons": ["near-identical wording (0.93 token overlap) — copy-paste, not corroboration"]
+    },
+    { "originId": "b6667ec8-…", "itemIds": ["b6667ec8-…"], "reasons": [] }
   ],
 
   "gradeHistory": [
@@ -521,9 +533,9 @@ Returns every field of the `properties` block above, plus three arrays:
       "toGrade": { "sourceReliability": "F", "infoCredibility": 4, "label": "F4 — …" },
       "independentSources": 1,
       "itemCount": 1,
-      "reasons": ["stub: grading module pending", "…"],
-      "alertFired": false,
-      "alertReasons": null
+      "reasons": ["1 independent origin behind 1 item and nothing yet agrees with it — …", "…"],
+      "alertFired": true,
+      "alertReasons": ["flooding reported at a location we can point to — worth a look now, ahead of any confirmation", "WEAK EVIDENCE: …"]
     }
   ]
 }
@@ -556,16 +568,41 @@ curl -s -G 'http://localhost:3000/api/trpc/signals.alerts' \
 ```
 
 ```json
-[]
+[
+  {
+    "signalId": "f3828876-baed-432f-b34c-0783014dadfc",
+    "datasetId": "live",
+    "at": "2026-08-08T01:31:25.082Z",
+    "issueType": "flooding",
+    "location": { "lat": -41.3017, "lng": 174.7774 },
+    "grade": {
+      "sourceReliability": "F",
+      "infoCredibility": 3,
+      "label": "F3 — reliability cannot be judged / possibly true"
+    },
+    "alertReasons": [
+      "flooding reported at a location we can point to — worth a look now, ahead of any confirmation",
+      "WEAK EVIDENCE: no contributing source is in the registry, so their reliability cannot be judged at all",
+      "WEAK EVIDENCE: no authoritative layer applies to this claim, so nothing independent has checked it"
+    ],
+    "independentSources": 2,
+    "itemCount": 4
+  }
+]
 ```
 
-**That empty array is the honest answer, not a stub with the lights off.** Alerts
-fire on a grade *transition*, never on a state — a feed that re-delivered the
-same three events every thirty seconds is a feed people stop reading — and the
-grading module currently in place is a placeholder that never sets `alertWorthy`
-(it says so in every `reasons` array it writes). The query is real and reads the
-same append-only log you see in `gradeHistory`; the feed fills itself when the
-rule table lands, with no shape change and nothing for you to migrate.
+**Alerts fire on a grade *transition*, never on a state** — a feed that
+re-delivered the same three events every thirty seconds is a feed people stop
+reading. Re-sending an item that changes nothing emits nothing.
+
+**`alertWorthy` is decided independently of the grade, and this is the point of
+the whole module.** A grade-driven threshold would stay silent through the whole
+of hour zero, because the first report of anything is a single source and grades
+"doubtful" — exactly the window a duty officer is most blind in. So the question
+asked here is a different one: is there somewhere to send someone, and is
+anything authoritative saying it did not happen? A weak early signal therefore
+alerts **with its weakness written into `alertReasons`**, rather than being
+suppressed by a number.
 
 Poll it with `since` = the `at` of the last alert you saw. Inputs: `since`
 (required), `datasetId` (defaults to `live`), `limit` (max 200). Results are

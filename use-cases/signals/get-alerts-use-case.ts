@@ -1,7 +1,11 @@
 import { z } from "zod";
 import { DATASET_LIVE, GradeSchema } from "@/db/vocabulary";
+import { type Signal } from "@/repositories/signals/signal-schema";
 import { getGradeEventsUseCase } from "@/use-cases/grade-events/get-grade-events-use-case";
+import { getSignalsForGroupsUseCase } from "@/use-cases/signals/get-signals-for-groups-use-case";
 import { createUseCase } from "@/utilities/create-use-case";
+import { classifyIssueType, ISSUE_TYPES } from "@/utilities/issue-type";
+import { locate } from "./get-signals-geojson-use-case";
 
 /**
  * What a duty officer has missed since they last looked.
@@ -13,12 +17,13 @@ import { createUseCase } from "@/utilities/create-use-case";
  * log, filtered to the entries that actually fired, after a cursor the caller
  * holds.
  *
- * **This returns [] today, and that is the honest answer, not a stub with the
- * lights off.** The grading module currently in place is a placeholder that
- * never sets `alertWorthy` (it says so in every `reasons` array it writes), so
- * no transition has ever fired an alert. The query below is real, and the feed
- * fills itself the moment the rule table lands in phase B — no shape change,
- * no second endpoint, nothing for a client to migrate.
+ * The thing that fires them is deliberately NOT the grade. A grade-driven
+ * threshold would stay silent for the whole of hour zero — the first report of
+ * anything is a single source and grades "doubtful" — which is exactly the
+ * window a duty officer is most blind in. So `alertWorthy` is decided on its
+ * own terms ("is there somewhere to send someone, and is anything authoritative
+ * saying it did not happen?"), and a weak early signal arrives WITH its
+ * weakness written into `alertReasons` (AC27).
  */
 export const AlertSchema = z.object({
   /** The cluster — the PRD's "signal". */
@@ -26,8 +31,8 @@ export const AlertSchema = z.object({
   datasetId: z.string(),
   /** When the transition that fired this alert was recorded. */
   at: z.date(),
-  /** What kind of thing is being reported. Null until issue extraction lands. */
-  issueType: z.string().nullable(),
+  /** What kind of thing is being reported, from the words the reports used. */
+  issueType: z.enum(ISSUE_TYPES),
   /** Where, in WGS84, or null when the cluster cannot be placed. */
   location: z.object({ lat: z.number(), lng: z.number() }).nullable(),
   grade: GradeSchema,
@@ -68,6 +73,27 @@ export const getAlertsUseCase = createUseCase(
       log,
     });
     if (events.error) return error(events.error);
+    if (events.data.length === 0) {
+      log?.info({ datasetId: dataset, since: since.toISOString(), alerts: 0 }, "Served the alert feed");
+      return success([]);
+    }
+
+    // An alert with no WHAT and no WHERE is a notification, not intelligence:
+    // the two questions a duty officer asks first are "what is it" and "where",
+    // and both are answerable from the items behind the cluster. Read once for
+    // the whole page rather than per alert.
+    const members = await getSignalsForGroupsUseCase({
+      groupIds: [...new Set(events.data.map((e) => e.groupId))],
+      log,
+    });
+    if (members.error) return error(members.error);
+
+    const itemsByGroup = new Map<string, Signal[]>();
+    for (const row of members.data) {
+      const existing = itemsByGroup.get(row.groupId);
+      if (existing) existing.push(row.signal);
+      else itemsByGroup.set(row.groupId, [row.signal]);
+    }
 
     log?.info(
       { datasetId: dataset, since: since.toISOString(), alerts: events.data.length },
@@ -75,17 +101,24 @@ export const getAlertsUseCase = createUseCase(
     );
 
     return success(
-      events.data.map((event) => ({
-        signalId: event.groupId,
-        datasetId: event.datasetId,
-        at: event.at,
-        issueType: null,
-        location: null,
-        grade: event.toGrade,
-        alertReasons: event.alertReasons ?? [],
-        independentSources: event.independentSources,
-        itemCount: event.itemCount,
-      })),
+      events.data.map((event) => {
+        const items = itemsByGroup.get(event.groupId) ?? [];
+        const placed = locate(items);
+        return {
+          signalId: event.groupId,
+          datasetId: event.datasetId,
+          at: event.at,
+          issueType: classifyIssueType(items.map((i) => i.text)),
+          location: placed ? { lat: placed.lat, lng: placed.lng } : null,
+          grade: event.toGrade,
+          alertReasons: event.alertReasons ?? [],
+          // Both figures come from the EVENT, not from a recount: they are what
+          // was true when this alert fired, and re-deriving them now would
+          // quietly rewrite the record a decision was taken against.
+          independentSources: event.independentSources,
+          itemCount: event.itemCount,
+        };
+      }),
     );
   },
 );

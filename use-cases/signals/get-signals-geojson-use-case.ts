@@ -6,8 +6,11 @@ import { getGroupsUseCase } from "@/use-cases/groups/get-groups-use-case";
 import { getGradeEventsUseCase } from "@/use-cases/grade-events/get-grade-events-use-case";
 import { getSignalsForGroupsUseCase } from "@/use-cases/signals/get-signals-for-groups-use-case";
 import { INCIDENT_LEVEL } from "@/use-cases/vectors/assign-signal-use-case";
+import { locationCertaintyOf } from "@/utilities/cluster-facts";
 import { createUseCase } from "@/utilities/create-use-case";
 import { haversineMetres } from "@/utilities/geo";
+import { classifyIssueType } from "@/utilities/issue-type";
+import { fingerprintOrigins, type OriginFingerprint } from "@/utilities/origin-fingerprint";
 import { ScoredSignalSchema, type ScoredSignal } from "./scored-signal-schema";
 
 /**
@@ -206,37 +209,64 @@ export const getSignalsGeojsonUseCase = createUseCase(
 /**
  * The one place a stored cluster becomes the published scored-signal shape.
  *
- * `independentSources` is a PLACEHOLDER of 1 until origin fingerprinting lands
- * (convergence's module seam), and the grading module's reasons say so on every
- * response. It is deliberately not `itemCount` and deliberately not
- * `distinctSources`: an over-count here is the most dangerous possible error,
- * because "four independent sources" is precisely what makes a duty officer act.
+ * `independentSources` is counted by `utilities/origin-fingerprint.ts` from the
+ * items in hand, not read off a column and not `itemCount`. Recomputed here
+ * rather than cached because the items in hand are the ones that survived
+ * `asAt`, and a time-scrubbed map must report the corroboration that existed at
+ * that instant, not the corroboration that exists now. An over-count is the
+ * most dangerous error this module could make: "four independent sources" is
+ * precisely the sentence that makes a duty officer act.
+ *
+ * With an `asAt` grade the number comes from the grade event instead — the
+ * origin count recorded at the moment that verdict was written, which is the
+ * only figure the reasons beside it were ever true about.
  */
 export function toScoredSignal(input: {
   group: Group;
   items: Signal[];
   /** The grade as at an instant, when a time control asked for one. */
   asAtGrade?: { grade: ScoredSignal["grade"]; reasons: string[]; independentSources: number };
+  /** Pass one already computed rather than paying for it twice. */
+  fingerprint?: OriginFingerprint;
 }): ScoredSignal {
   const { group, items } = input;
-  const located = items.filter((i) => i.lat !== null && i.lng !== null);
+  const fingerprint = input.fingerprint ?? fingerprintItems(items);
 
   return {
     signalId: group.id,
     datasetId: group.datasetId,
     grade: input.asAtGrade ? input.asAtGrade.grade : group.grade,
     reasons: input.asAtGrade ? input.asAtGrade.reasons : (group.reasons ?? []),
-    independentSources: input.asAtGrade ? input.asAtGrade.independentSources : 1,
+    independentSources: input.asAtGrade
+      ? input.asAtGrade.independentSources
+      : fingerprint.independentOrigins,
     itemCount: items.length,
     alertWorthy: group.alertWorthy,
     syntheticContributor: items.some((i) => i.synthetic),
     label: group.label,
-    locationCertainty: located.length === 0 ? "unknown" : located.length === 1 ? "stated" : "inferred",
+    issueType: classifyIssueType(items.map((i) => i.text)),
+    locationCertainty: locationCertaintyOf(items),
     sourceClasses: [...new Set(items.map((i) => i.sourceClass))].sort(),
     firstSeen: new Date(Math.min(...items.map((i) => i.occurredAt.getTime()))),
     lastSeen: new Date(Math.max(...items.map((i) => i.occurredAt.getTime()))),
     confirmedBy: group.confirmedBy,
   };
+}
+
+/** Stored rows → the fingerprint module's input shape. The one adapter between them. */
+export function fingerprintItems(items: readonly Signal[]): OriginFingerprint {
+  return fingerprintOrigins(
+    items.map((item) => ({
+      id: item.id,
+      source: item.source,
+      author: item.author,
+      url: item.url,
+      quotedUrls: item.quotedUrls,
+      text: item.text,
+      embedding: item.embedding,
+      occurredAt: item.occurredAt,
+    })),
+  );
 }
 
 /**
@@ -248,7 +278,7 @@ export function toScoredSignal(input: {
  * around an averaged position, and null when there is only one coordinate to
  * average, because that point is exactly where somebody said it was.
  */
-function locate(items: Signal[]): { lat: number; lng: number; radiusM: number | null } | null {
+export function locate(items: Signal[]): { lat: number; lng: number; radiusM: number | null } | null {
   const located = items.filter(
     (i): i is Signal & { lat: number; lng: number } => i.lat !== null && i.lng !== null,
   );
